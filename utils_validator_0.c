@@ -44,6 +44,12 @@ char is_letter(char c)
 	return (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) ? TRUE : FALSE);
 }
 
+/**
+ * is_built_in_cmd - Checks if a command is a built-in command
+ * @cmd: The command to check
+ *
+ * Return: TRUE if it is built-in, otherwise FALSE
+ */
 char is_built_in_cmd(char *cmd)
 {
 	int i;
