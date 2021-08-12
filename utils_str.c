@@ -90,6 +90,13 @@ char *trim_end(char *str, char c, char can_free)
 	return (new_str);
 }
 
+/**
+ * str_cmp - Makes a comparison between two strings
+ * @left: The string on the left side
+ * @right: The string on the right side
+ *
+ * Return: -1 if the left is < than right, 1 if left is > right and othrwise 0
+*/
 int str_cmp(char *left, char *right)
 {
 	int i;
@@ -99,8 +106,10 @@ int str_cmp(char *left, char *right)
 	if (left != NULL && right == NULL)
 		return (1);
 	if (left == NULL && right == NULL)
+	{
 		return (0);
-	if (left != NULL && right != NULL)
+	}
+	else
 	{
 		for (i = 0; *(left + i) != '\0' && *(right + i) != '\0'; i++)
 		{
@@ -108,13 +117,11 @@ int str_cmp(char *left, char *right)
 				return (-1);
 			if (*(left + i) != '\0' && *(right + i) == '\0')
 				return (1);
-			if (*(left + i) == '\0' && *(right + i) == '\0')
-				return (0);
 			if (*(left + i) > *(right + i))
 				return (1);
 			if (*(left + i) < *(right + i))
-				return (0);
+				return (-1);
 		}
+		return (0);
 	}
-	return (-2);
 }
