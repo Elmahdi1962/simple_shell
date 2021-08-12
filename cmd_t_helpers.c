@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
 #include "main.h"
 
 cmd_t *new_cmd_node()
@@ -50,14 +52,14 @@ void add_node_toend(cmd_t **head)
 	if (new == NULL)
 	{
 		perror("memory allocation error on add_node_toend\n");
-		return (void);
+		return;
 	}
 
 	while (current)
 	{
 		if (current->next == NULL)
 		{
-			current->next = &new;
+			current->next = new;
 			break;
 		}
 		current = current->next;
