@@ -51,8 +51,12 @@ void add_node_toend(cmd_t **head)
 
 	if (new == NULL)
 	{
-		perror("memory allocation error on add_node_toend\n");
+		perror("memory allocation error on add_node_toend function\n");
 		return;
+	}
+	if (*head == NULL || head == NULL)
+	{
+		perror("head is NULL in add_node_toend function\n");
 	}
 
 	while (current)
