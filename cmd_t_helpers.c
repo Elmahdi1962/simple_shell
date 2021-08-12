@@ -62,9 +62,5 @@ void add_node_toend(cmd_t **head)
 		}
 		current = current->next;
 	}
-	new->command  = NULL;
-	new->args_count = NULL;
-	new->args  = NULL;
-	new->next_cond = NULL;
 	new->next = NULL;
 }
