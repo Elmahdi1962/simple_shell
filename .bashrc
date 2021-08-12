@@ -9,7 +9,7 @@ fi
 
 #region Helper Functions/Commands
 
-build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh; }
+build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o rash; }
 
 #endregion
 
