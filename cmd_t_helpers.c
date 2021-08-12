@@ -3,6 +3,11 @@
 #include <errno.h>
 #include "main.h"
 
+/**
+ * new_cmd_node - Creates a new node
+ *
+ * Return: The pointer to the newly created noe
+ */
 cmd_t *new_cmd_node()
 {
 	cmd_t *node = NULL;
@@ -38,35 +43,35 @@ void free_list(cmd_t *head)
 	}
 }
 
-
 /**
- * add_node_toend - adds a node to the end of the list
- * @head: head of the list
- * Return: void
+ * add_node_to_end - adds a node to the end of the list
+ * @head: The pointer to the head of the list
+ * @node: The node to add.
  */
-
-void add_node_toend(cmd_t **head)
+void add_node_to_end(cmd_t **head, cmd_t **node)
 {
-	cmd_t *current = *head, *new = malloc(sizeof(cmd_t));
+	cmd_t *tail, *new_node;
 
-	if (new == NULL)
+	tail = head ? *head : NULL;
+	while (tail != NULL && tail->next != NULL)
+		tail = tail->next;
+	new_node =  malloc(sizeof(cmd_t));
+	if (new_node != NULL)
 	{
-		perror("memory allocation error on add_node_toend function\n");
-		return;
-	}
-	if (*head == NULL || head == NULL)
-	{
-		perror("head is NULL in add_node_toend function\n");
-	}
-
-	while (current)
-	{
-		if (current->next == NULL)
+		if (*node != NULL)
 		{
-			current->next = new;
-			break;
+			new_node->command = (*node)->command;
+			new_node->args_count = (*node)->args_count;
+			new_node->args  = (*node)->args;
+			new_node->next_cond = (*node)->next_cond;
+			free(*node);
+			*node = NULL;
 		}
-		current = current->next;
+		if (head == NULL)
+			head = &new_node;
+		else if (head != NULL && *head == NULL)
+			*head = new_node;
+		else if (tail != NULL)
+			tail->next = new_node;
 	}
-	new->next = NULL;
 }
