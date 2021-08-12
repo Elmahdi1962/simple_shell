@@ -7,8 +7,8 @@
 /**
  * The modifiable environment variable for the simple shell
  */
-static char **ENVP;
-static int ENVP_COUNT;
+static char **ENVP __attribute__((unused));
+static int ENVP_COUNT  __attribute__((unused));
 static int SHELL_PROC_ID;
 const int width_size = 0xff;
 /**
@@ -22,8 +22,8 @@ const char HISTORY_PATH[] = "~/.simple_shell_history";
 /**
  * The previous commands run by the program
  */
-static char **CMD_HISTORY;
-static int CMD_HISTORY_COUNT;
+static char **CMD_HISTORY __attribute__((unused));
+static int CMD_HISTORY_COUNT  __attribute__((unused));
 
 /**
  * main - Entry point to the simple shell
@@ -34,8 +34,9 @@ static int CMD_HISTORY_COUNT;
  */
 int main(int ac, char *av[], char *envp[])
 {
+	int i = 0;
 	char interactive = TRUE, running = TRUE;
-	cmd_t *cmds = NULL;
+	cmd_t *cmds = NULL, *cur = NULL;
 
 	if (ac > 1)
 	{
@@ -43,11 +44,33 @@ int main(int ac, char *av[], char *envp[])
 		interactive = FALSE;
 	}
 
+	if (!interactive)
+	{
+		/*  */
+	}
+	else
+	{
+		write(STDOUT_FILENO, PS1, 4);
+		cmds = parse_cmd_line(get_cmd_line(), TRUE);
+		cur = cmds;
+		while (cur != NULL)
+		{
+			printf("cmd: %s ac: %d\n", cur->command, cur->args_count);
+			for (i = 0; i < cur->args_count; i++)
+			{
+				printf("    arg[%d]: %s \n", i, *(cur->args + i));
+			}
+			cur = cur->next;
+		}
+		free_list(cmds);
+	}
+
 	(void)av;
+	(void)cur;
 	(void)envp;
-	(void)CMD_HISTORY;
 	ENVP = envp;
 	(void)ENVP;
+	(void)running;
 	SHELL_PROC_ID = getpid();
 	(void)SHELL_PROC_ID;
 	signal(SIGINT, handle_signal);
@@ -56,8 +79,6 @@ int main(int ac, char *av[], char *envp[])
 		printf("%s\n", envp[i]);
 		i++;
 	} */
-	write(STDOUT_FILENO, PS1, 4);
-	get_cmd_line();
 
 	return (0);
 }

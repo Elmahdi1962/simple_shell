@@ -40,7 +40,9 @@ char *get_cmd_line()
 	}
 	line = _realloc(line, sizeof(char) * size, sizeof(char) * (size + 1));
 	*(line + size) = '\0';
-	printf("%d, %d\n", line[size - 2], line[size - 1]);
+	line = trim_start(line, ' ', TRUE);
+	line = trim_end(line, ' ', TRUE);
+	/* line = trim_start(line, '\n', TRUE); */
 	return (line);
 }
 
@@ -99,7 +101,8 @@ char *get_env_var(char *str)
 
 cmd_t *parse_cmd_line(char *line, char allow_multiple)
 {
-	int i, j;
+	int i, j, k, c = 0;
+	/* size_t args_size = 0; */
 	cmd_t *head = NULL, *node = NULL;
 	char prev_token = 0, *word = NULL;
 	/**
@@ -121,7 +124,7 @@ cmd_t *parse_cmd_line(char *line, char allow_multiple)
 			else if ((*(line + i) == '|') || ((*(line + i) == '&'))
 				|| (*(line + i) == ';'))
 			{
-				if ((prev_token == 1 || prev_token == 2) && ((*(line + i) == ';')
+				if ((*(line + i + 1) != '\0') && (prev_token == 1 || prev_token == 2) && ((*(line + i) == ';')
 						|| ((*(line + i + 1) == '|') || ((*(line + i + 1) == '&')))))
 				{
 					if (node != NULL)
@@ -129,6 +132,7 @@ cmd_t *parse_cmd_line(char *line, char allow_multiple)
 							: ((*(line + i + 1) == '&') ? AND_OP : SEP_OP));
 					prev_token = 3, j = 0;
 					i += ((*(line + i) == ';') ? 0 : 1);
+					node = node == NULL ? node : node->next;
 				}
 				else
 				{
@@ -141,19 +145,37 @@ cmd_t *parse_cmd_line(char *line, char allow_multiple)
 				if (is_whitespace(*(line + i + 1)) || is_operator(*(line + i + 1) == ';')
 					|| ((*(line + i + 1) == '\0')))
 				{
-					word = malloc(sizeof(char) * (i - j + 1));
+					if (!allow_multiple && c == 1 && node == NULL)
+					{
+						/* raise error */
+					}
+					word = malloc(sizeof(char) * (i - j + 2));
 					if (word != NULL)
 					{
+						for (k = 0; k < (i - j + 1); k++)
+							*(word + k) = *(line + j + k);
+						*(word + k) = '\0';
 						if (node == NULL)
 						{
+
 							/* create it */
-							//
+							node = new_cmd_node();
+							if (node != NULL)
+								node->command = word;
+							/* args_size = 0; */
+							c++;
 						}
-						if (node != NULL)
-							node->command = word;
-						//
+						else
+						{
+							node->args = _realloc(node->args, node->args_count * (sizeof(void *)),
+								sizeof(void *) * (node->args_count + 1));
+							if (node->args != NULL)
+							{
+								*(node->args + node->args_count) = word;
+								node->args_count++;
+							}
+						}
 						head = head == NULL ? node : head;
-						/* node = node == NULL ? node : node->next; */
 					}
 				}
 				prev_token = 1;

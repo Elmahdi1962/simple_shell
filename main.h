@@ -20,7 +20,7 @@ enum SHELL_PROP_IDS
 	/* The id for the shell's environment variables */
 	ENVP_ID = 0,
 	ENVP_COUNT_ID = 1,
-	CMD_HISTORY = 4,
+	CMD_HISTORY_ID = 4,
 	CMD_HISTORY_COUNT_ID = 5
 };
 
@@ -72,6 +72,7 @@ void *get_shell_prop(char prop_id);
 char *get_cmd_line();
 void handle_signal(int sig_num);
 char *get_env_var(char *str);
+cmd_t *parse_cmd_line(char *line, char allow_multiple);
 /* ******** ---------------- ******** */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
@@ -103,6 +104,12 @@ char is_whitespace(char c);
 char is_letter(char c);
 char is_operator(char c);
 char is_built_in_cmd(char *cmd);
+/* ******** ---------------- ******** */
+
+/* ******** Validator Utilities (utils_validator_#.c) ******** */
+
+cmd_t *new_cmd_node();
+void free_list(cmd_t *head);
 /* ******** ---------------- ******** */
 
 #endif
