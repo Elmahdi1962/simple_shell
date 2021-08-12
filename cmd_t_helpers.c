@@ -35,3 +35,36 @@ void free_list(cmd_t *head)
 			free(head);
 	}
 }
+
+
+/**
+ * add_node_toend - adds a node to the end of the list
+ * @head: head of the list
+ * Return: void
+ */
+
+void add_node_toend(cmd_t **head)
+{
+	cmd_t *current = *head, *new = malloc(sizeof(cmd_t));
+
+	if (new == NULL)
+	{
+		perror("memory allocation error on add_node_toend\n");
+		return (void);
+	}
+
+	while (current)
+	{
+		if (current->next == NULL)
+		{
+			current->next = &new;
+			break;
+		}
+		current = current->next;
+	}
+	new->command  = NULL;
+	new->args_count = NULL;
+	new->args  = NULL;
+	new->next_cond = NULL;
+	new->next = NULL;
+}
