@@ -11,6 +11,7 @@
 #define NULL ((void *)0)
 #endif
 #define MAX_INT_STR "2147483647"
+#define SIG_SHELL_ERROR 1738
 
 /**
  * SHELL_PROP_IDS - Consists of the shell's property ids
@@ -60,27 +61,60 @@ struct command_node
 	struct command_node *next;
 };
 
+struct built_in_cmd
+{
+	char *cmd_name;
+	int (*run)(int, char**);
+};
+
+struct cmd_help
+{
+	char *cmd_name;
+	void (*run)(void);
+};
+
 typedef struct command_node cmd_t;
 
 /* ******** Program (rash.c) ******** */
 
+void handle_signal(int sig_num);
 void *get_shell_prop(char prop_id);
 /* ******** ---------------- ******** */
 
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 char *get_cmd_line();
-void handle_signal(int sig_num);
 char *get_env_var(char *str);
-cmd_t *parse_cmd_line(char *line, char allow_multiple);
+void set_env_var(char *var, char*val);
+cmd_t *parse_cmd_line(char *line);
 /* ******** ---------------- ******** */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
 /* ******** Built-In Commands (shell_cmds_#.c) ******** */
 
+int exec_built_in_cmd(cmd_t *node);
+int sc_alias(int ac, char *av[]);
+int sc_cd(int ac, char *av[]);
 int sc_env(int ac, char *av[]);
 int sc_exit(int ac, char *av[]);
+int sc_help(int ac, char *av[]);
+int sc_history(int ac, char *av[]);
+int sc_setenv(int ac, char *av[]);
+int sc_unsetenv(int ac, char *av[]);
+/* ******** ---------------- ******** */
+
+/* ******** Built-In Commands Help (shell_cmds_help_#.c) ******** */
+
+void help_program(void);
+void help_alias(void);
+void help_cd(void);
+void help_env(void);
+void help_exit(void);
+void help_help(void);
+void help_history(void);
+void help_setenv(void);
+void help_unsetenv(void);
 /* ******** ---------------- ******** */
 
 /* ******** Math Utilities (utils_math_#.c) ******** */
@@ -95,6 +129,8 @@ char *trim_start(char *str, char c, char can_free);
 char *trim_end(char *str, char c, char can_free);
 int str_len(char *str);
 int str_cmp(char *left, char *right);
+char *str_copy(char *str);
+char *str_cat(char *left, char *right, char can_free);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */
@@ -110,6 +146,7 @@ char is_built_in_cmd(char *cmd);
 
 cmd_t *new_cmd_node();
 void free_list(cmd_t *head);
+void add_node_to_end(cmd_t **head, cmd_t **node);
 /* ******** ---------------- ******** */
 
 #endif

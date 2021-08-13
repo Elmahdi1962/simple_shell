@@ -22,6 +22,8 @@ char *get_cmd_line()
 			for (j = 0; j < incr; j++)
 				*(buf + j) = 0;
 			n = read(STDIN_FILENO, (void *)buf, incr);
+			if (buf[0] == '\n')
+				break;
 			for (j = 0; *(buf + j) != '\n' && j < n; j++)
 				;
 			line = _realloc(line, sizeof(char) * size, sizeof(char) * (size + j));
@@ -33,7 +35,7 @@ char *get_cmd_line()
 					*(line + i) = *(buf + j);
 					i++;
 				}
-				if ((j < n && *(buf + j) == '\n') || *(buf + n) == '\n' || n == 0)
+				if ((j < n && *(buf + j) == '\n') || n == 0)
 					break;
 			}
 		}
@@ -42,64 +44,73 @@ char *get_cmd_line()
 	*(line + size) = '\0';
 	line = trim_start(line, ' ', TRUE);
 	line = trim_end(line, ' ', TRUE);
-	/* line = trim_start(line, '\n', TRUE); */
 	return (line);
 }
 
 /**
- * handle_signal - Handles a signal received by the program
- * @sig_num: The signal's code
- */
-void handle_signal(int sig_num)
-{
-	(void)sig_num;
-}
-
-/**
  * get_env_var - Retrieves the value of an environment variable
- * @str: The name of the environment variable
+ * @var: The name of the environment variable
  *
- * Return: The value of the environment variable, otherwise, NULL
+ * Return: The pointer to the environment variable's value, otherwise, NULL
  */
-char *get_env_var(char *str)
+char *get_env_var(char *var)
 {
 	char **envp = *((char ***)get_shell_prop(ENVP_ID));
 	int n = *((int *)get_shell_prop(ENVP_COUNT_ID));
-	int i, j, k, a;
-	char *val = NULL;
+	int i, j;
 
 	if (envp != NULL)
 	{
 		for (i = 0; i < n; i++)
 		{
-			for (j = 0; (*(*(envp + i) + j) != '\0' && *(*(envp + i) + j) != '='); j++)
+			for (j = 0; (*(var + j) != '\0') && (*(*(envp + i) + j) != '\0'); j++)
 			{
-				if (*(str + j) != '\0' && (*(*(envp + i) + j) != *(str+ j)))
+				if ((*(*(envp + i) + j) != *(var+ j)) || (*(*(envp + i) + j) == '='))
 					break;
 			}
-			if (*(*(envp + i) + j) == '=' && *(str + j) == '\0')
+			if (*(*(envp + i) + j) == '=' && *(var + j) == '\0')
 			{
-				k = j + 1;
-				for (k = j + 1; *(*(envp + i) + k) != '\0'; k++)
-					;
-				val = malloc(sizeof(char) * (k - j + 1));
-				if (val != NULL)
-				{
-					a = 0;
-					for (k = j + 1; *(*(envp + i) + k) != '\0'; k++)
-					{
-						*(val + a) = *(*(envp + i) + k);
-						a++;
-					}
-					return (val);
-				}
+				return (*(envp + i) + j  + 1);
 			}
 		}
 	}
 	return (NULL);
 }
 
-cmd_t *parse_cmd_line(char *line, char allow_multiple)
+/**
+ * set_env_var - Sets the value of an environment variable
+ * @var: The name of the environment variable
+ * @val: The value of the environment variable
+ */
+void set_env_var(char *var, char*val)
+{
+	char **envp = *((char ***)get_shell_prop(ENVP_ID));
+	int n = *((int *)get_shell_prop(ENVP_COUNT_ID));
+	int i, j;
+
+	if (envp != NULL)
+	{
+		for (i = 0; i < n; i++)
+		{
+			for (j = 0; (*(var + j) != '\0') && (*(*(envp + i) + j) != '\0'); j++)
+			{
+				if ((*(*(envp + i) + j) != *(var+ j)) || (*(*(envp + i) + j) == '='))
+					break;
+			}
+			if (*(*(envp + i) + j) == '=' && *(var + j) == '\0')
+			{
+				if (val != NULL)
+				{
+					*(envp + i) = str_cat(str_cat(var, "=", FALSE), str_copy(val), TRUE);
+					break;
+				}
+			}
+		}
+	}
+}
+
+
+cmd_t *parse_cmd_line(char *line)
 {
 	int i, j, k, c = 0;
 	/* size_t args_size = 0; */
@@ -115,7 +126,7 @@ cmd_t *parse_cmd_line(char *line, char allow_multiple)
 
 	if (line != NULL && *line != '\0')
 	{
-		for (i = 0; *(line + i) != '\0'; i++)
+		for (i = 0; *(line + i) != '#' && *(line + i) != '\0'; i++)
 		{
 			if (is_whitespace(*(line + i)))
 			{
@@ -132,23 +143,25 @@ cmd_t *parse_cmd_line(char *line, char allow_multiple)
 							: ((*(line + i + 1) == '&') ? AND_OP : SEP_OP));
 					prev_token = 3, j = 0;
 					i += ((*(line + i) == ';') ? 0 : 1);
-					node = node == NULL ? node : node->next;
+					if (node != NULL)
+						add_node_to_end(&head, &node);
 				}
 				else
 				{
 					/* Syntax error */
+					printf("Syntax error\n");
 				}
+			}
+			else if (*(line + i) == '#')
+			{
+				break;
 			}
 			else
 			{
 				j = prev_token != 1 ? i : j;
-				if (is_whitespace(*(line + i + 1)) || is_operator(*(line + i + 1) == ';')
+				if (is_whitespace(*(line + i + 1)) || is_operator(*(line + i + 1))
 					|| ((*(line + i + 1) == '\0')))
 				{
-					if (!allow_multiple && c == 1 && node == NULL)
-					{
-						/* raise error */
-					}
 					word = malloc(sizeof(char) * (i - j + 2));
 					if (word != NULL)
 					{
@@ -157,12 +170,9 @@ cmd_t *parse_cmd_line(char *line, char allow_multiple)
 						*(word + k) = '\0';
 						if (node == NULL)
 						{
-
-							/* create it */
 							node = new_cmd_node();
 							if (node != NULL)
 								node->command = word;
-							/* args_size = 0; */
 							c++;
 						}
 						else
@@ -175,13 +185,25 @@ cmd_t *parse_cmd_line(char *line, char allow_multiple)
 								node->args_count++;
 							}
 						}
-						head = head == NULL ? node : head;
 					}
 				}
 				prev_token = 1;
 			}
 		}
+		if (node != NULL)
+			add_node_to_end(&head, &node);
 	}
 	return (head);
 }
 
+/* void expand_vars(cmd_t *node)
+{
+	int i, j, k;
+	char *str;
+
+	for (i = 0; i < node->args_count; i++)
+	{
+		//
+	}
+}
+ */

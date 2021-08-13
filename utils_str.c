@@ -125,3 +125,59 @@ int str_cmp(char *left, char *right)
 		return (0);
 	}
 }
+
+/**
+ * str_copy - Makes a copy of a string
+ * @str: The string to copy
+ *
+ * Return: The copied string, otherwise NULL
+ */
+char *str_copy(char *str)
+{
+	char *new_str;
+	int i;
+	int len = str_len(str);
+
+	new_str = malloc(sizeof(char) * (len + 1));
+	if (new_str)
+	{
+		for (i = 0; i < len; i++)
+			*(new_str + i) = *(str + i);
+		*(new_str + i) = '\0';
+	}
+	return (new_str);
+}
+
+
+/**
+ * str_cat - Concatenates two strings
+ * @left: The left string
+ * @right: The right string
+ * @can_free: Specifies if the given strings can be freed
+ *
+ * Return: A pointer to the concatenated string
+ */
+char *str_cat(char *left, char *right, char can_free)
+{
+	int left_length = str_len(left);
+	int right_length = str_len(right);
+	int i;
+	char *str;
+
+	str = malloc(sizeof(char) * (left_length + right_length + 1));
+	if (str)
+	{
+		for (i = 0; *(left + i) != '\0'; i++)
+			*(str + i) = *(left + i);
+		for (i = 0; *(right + i) != '\0'; i++)
+			*(str + left_length + i) = *(right + i);
+		*(str + left_length + i) = '\0';
+	}
+	if (can_free)
+	{
+		free(left);
+		free(right);
+	}
+	return (str);
+}
+
