@@ -1,7 +1,3 @@
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "main.h"
 
 /**
@@ -68,6 +64,18 @@ char *get_cmd_line()
 	return (line);
 }
 
-/* void load_history()
+char **get_variables(char *str, int *vars_count)
 {
-} */
+	int i = 0, j;
+	char **vars = NULL;
+
+	*vars_count = 0;
+	while (str != NULL && *(str + i) != '\0')
+	{
+		if (*(str + i) == '$')
+		{
+			//
+		}
+	}
+	return (vars);
+}

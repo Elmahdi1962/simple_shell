@@ -82,8 +82,8 @@ void read_operator(char *line, int *pos, char prev_token,
 		|| (str_cmp("&&", op_s) == 0)))
 	{
 		if (node != NULL && *node != NULL)
-			(*node)->next_cond = ((*op_s == '|') ? OR_OP
-													: ((*op_s == '&') ? AND_OP : SEP_OP));
+			(*node)->next_cond = ((*op_s == '|') ? OP_OR
+													: ((*op_s == '&') ? OP_AND : OP_SEP));
 		if (node != NULL && *node != NULL)
 			add_node_to_end(head, node);
 	}

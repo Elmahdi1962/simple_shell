@@ -18,7 +18,7 @@ cmd_t *new_cmd_node()
 		node->command  = NULL;
 		node->args_count = 0;
 		node->args  = NULL;
-		node->next_cond = SEP_OP;
+		node->next_cond = OP_NONE;
 		node->next = NULL;
 	}
 	return (node);

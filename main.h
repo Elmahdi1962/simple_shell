@@ -33,22 +33,26 @@ enum SHELL_PROP_IDS
 };
 
 /**
- * Operators - The operator codes for this shell program.
+ * Operator_Types - The operator codes for this shell program.
  */
-enum Operators
+enum Operator_Types
 {
+	/**
+	 * The operator code for no operator
+	 */
+	OP_NONE = 0,
 	/**
 	 * The operator code for a logical AND character (&&)
 	 */
-	AND_OP = 1,
+	OP_AND = 1,
 	/**
 	 * The operator code for a logical OR character (||)
 	 */
-	OR_OP = 2,
+	OP_OR = 2,
 	/**
 	 * The operator code for a command separator character (;)
 	 */
-	SEP_OP = 3
+	OP_SEP = 3
 };
 
 enum Token_Types
