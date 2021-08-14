@@ -148,7 +148,6 @@ char *str_copy(char *str)
 	return (new_str);
 }
 
-
 /**
  * str_cat - Concatenates two strings
  * @left: The left string
@@ -179,5 +178,69 @@ char *str_cat(char *left, char *right, char can_free)
 		free(right);
 	}
 	return (str);
+}
+
+/**
+ * str_split - Splits a string into smaller strings at a given character
+ * @str: The string to split
+ * @c: The character at which to perform the split
+ * @len: The pointer which would contain the number of smaller strings
+ * @can_free: Specifies if the string can be freed
+ *
+ * Return: A pointer to the first string in the array of strings
+*/
+char **str_split(char *str, char c, int *len, char can_free)
+{
+	int i, j = 0, k, n = 0;
+	char **strs = NULL;
+
+	for (i = 0; ; i++)
+	{
+		if (*(str + i) == '\0')
+		{
+			if (i > 0 && *(str + i - 1) != c)
+			{
+				*(strs + n) = strs == NULL ? malloc(sizeof(void *))
+				: _realloc(*(strs + n), sizeof(void *) * n, sizeof(void *) * (n + 1));
+				*(*(strs + n)) = *(strs + n) != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
+				if (*(*(strs + n)) != NULL)
+				{
+					k = 0;
+					for (; j < i; j++)
+					{
+						*(*(strs + n) + k) = *(str + j);
+						k++;
+					}
+					*(*(strs + n) + k) = '\0';
+					n++;
+				}
+			}
+			break;
+		}
+		else if (*(str + i) == c)
+		{
+			j = i == 0 ? i + 1 : j;
+			if (i == 0)
+				continue;
+			*(strs + n) = strs == NULL ? malloc(sizeof(void *))
+				: _realloc(*(strs + n), sizeof(void *) * n, sizeof(void *) * (n + 1));
+			*(*(strs + n)) = *(strs + n) != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
+			if (*(*(strs + n)) != NULL)
+			{
+				k = 0;
+				for (; j < i; j++)
+				{
+					*(*(strs + n) + k) = *(str + j);
+					k++;
+				}
+				*(*(strs + n) + k) = '\0';
+				n++;
+			}
+		}
+	}
+	*len = n;
+	if (can_free)
+		free(str);
+	return (strs);
 }
 
