@@ -50,9 +50,10 @@ char is_binary_file(char *fn)
 	if (read(fd, buf, n) == -1)
 	{
 		perror("couldn't read the file in is_binary_file\n");
+		close(fd);
 		return (-1);
 	}
-
+	close(fd);
 	/*compare buf with ELFMAG*/
 	for ( ; n && *s1 && *s2; --n, ++s1, ++s2)
 	{

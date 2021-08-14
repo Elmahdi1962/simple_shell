@@ -70,12 +70,9 @@ int sc_help(int ac, char *av[])
 	struct cmd_help cmds_help[] = {
 		{"alias", help_alias},
 		{"cd", help_cd},
-		{"env", help_env},
 		{"exit", help_exit},
 		{"help", help_help},
-		{"history", help_history},
-		{"setenv", help_setenv},
-		{"unsetenv", help_unsetenv}
+		{"history", help_history}
 	};
 
 	if (ac > 0)
@@ -90,9 +87,8 @@ int sc_help(int ac, char *av[])
 		}
 	}
 	else
-	{
-		/* Display information about the shell program */
-	}
+		help_program();
+
 	return (0);
 }
 
