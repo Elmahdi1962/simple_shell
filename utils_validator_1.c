@@ -3,7 +3,7 @@
 /**
  * str_is_num - checks if the string is a number
  * @str: the string to check
- * 
+ *
  * Return: true or false
  */
 char str_is_num(char *str)
@@ -16,11 +16,9 @@ char str_is_num(char *str)
 		if (firstc)
 		{
 			if (*string == '-' || *string == '+')
-			{
-				firstc = 0;
 				string++;
-				continue;
-			}
+			firstc = 0;
+			continue;
 		}
 		if (*string >= '0' && *string <= '9')
 			string++;
