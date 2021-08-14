@@ -105,13 +105,17 @@ char can_cancel_input();
 void *get_shell_prop(char prop_id);
 /* ******** ---------------- ******** */
 
-/* ******** CLI Helpers (cli_helpers_#.c) ******** */
+/* ******** Environment Variable Helpers (env_var_helpers.c) ******** */
 
 char *get_env_var(char *str);
 void set_env_var(char *var, char*val);
+void add_env_var(char *var, char*val);
+void remove_env_var(char *var);
+/* ******** ---------------- ******** */
+
+/* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 char *get_cmd_line();
-void expand_vars(cmd_t *node);
 
 cmd_t *parse_cmd_line(char *line);
 char *read_word(char *line, int *pos);
@@ -177,6 +181,7 @@ char is_letter(char c);
 char is_operator(char c);
 char is_quote(char c);
 char is_built_in_cmd(char *cmd);
+char str_is_num(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

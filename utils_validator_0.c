@@ -44,6 +44,11 @@ char is_letter(char c)
 	return (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) ? TRUE : FALSE);
 }
 
+char is_quote(char c)
+{
+	return ((c == '\'' || c == '"') ? TRUE : FALSE);
+}
+
 /**
  * is_built_in_cmd - Checks if a command is a built-in command
  * @cmd: The command to check

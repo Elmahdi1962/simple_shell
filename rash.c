@@ -1,6 +1,9 @@
 #include <signal.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include "main.h"
 
@@ -8,6 +11,7 @@
  * The modifiable environment variable for the simple shell
  */
 static char **ENVP;
+static char *EXEC_NAME;
 static int ENVP_COUNT;
 static int SHELL_PROC_ID;
 static char error_set;
@@ -45,17 +49,19 @@ int main(int ac, char *av[], char *envp[])
 	ENVP = envp;
 	for (ENVP_COUNT = 0; ENVP[ENVP_COUNT] != NULL; ENVP_COUNT++)
 		;
+	EXEC_NAME = av[0];
 	SHELL_PROC_ID = getpid();
 	signal(SIGINT, handle_signal);
 	/* signal(SIG_SHELL_ERROR, handle_signal); */
-	/* add_env_var("PS1", "($) ");
-	add_env_var("SHELL", av[0]); */
+	/* add_env_var("PS1", "($) "); */
+	/* add_env_var("SHELL", av[0]); */
 	if (ac > 1)
 	{
 		/* Run in non-interactive mode */
 		interactive = FALSE;
 	}
-
+	/* write(STDOUT_FILENO, "\033[2J", 4); */
+	/* write(STDOUT_FILENO, "\033[H", 3); */
 	if (!interactive)
 	{
 		/*  */
@@ -88,6 +94,7 @@ int main(int ac, char *av[], char *envp[])
 			}
 			free(cmd_line);
 		/* } */
+		/* open(STDIN_FILENO, O_RDWR); */
 		printf("---\n");
 	}
 
@@ -110,10 +117,6 @@ void handle_signal(int sig_num)
 	}
 	else if (sig_num == SIGINT)
 	{
-		write(STDIN_FILENO, "\r", 1);
-		write(STDIN_FILENO, "\n", 1);
-		fflush(STDIN_FILENO);
-		/* write(STDIN_FILENO, "\x07", 1); */
 	}
 }
 
@@ -135,6 +138,8 @@ void *get_shell_prop(char prop_id)
 		return (&CMD_HISTORY);
 	case CMD_HISTORY_COUNT_ID:
 		return (&CMD_HISTORY_COUNT);
+	case EXEC_NAME_ID:
+		return (&EXEC_NAME);
 	default:
 		break;
 	}

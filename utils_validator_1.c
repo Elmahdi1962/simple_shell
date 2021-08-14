@@ -3,9 +3,9 @@
 /**
  * str_is_num - checks if the string is a number
  * @str: the string to check
+ * 
  * Return: true or false
  */
-
 char str_is_num(char *str)
 {
 	char *string = str;

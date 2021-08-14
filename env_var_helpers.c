@@ -69,7 +69,6 @@ void add_env_var(char *var, char*val)
 {
 	char **envp = *((char ***)get_shell_prop(ENVP_ID));
 	int *n = (int *)get_shell_prop(ENVP_COUNT_ID);
-	int i, j;
 
 	if (envp != NULL)
 	{
@@ -100,7 +99,7 @@ void remove_env_var(char *var)
 	{
 		if (get_env_var(var) != NULL)
 		{
-			for (i == 0; i < *n; i++)
+			for (i = 0; i < *n; i++)
 			{
 				for (j = 0; (*(var + j) != '\0') && (*(*(envp + i) + j) != '\0'); j++)
 				{
