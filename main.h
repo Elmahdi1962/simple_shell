@@ -1,6 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -13,6 +18,7 @@
 #define MAX_INT_STR "2147483647"
 #define SIG_SHELL_ERROR 1738
 
+
 /**
  * SHELL_PROP_IDS - Consists of the shell's property ids
  */
@@ -22,7 +28,8 @@ enum SHELL_PROP_IDS
 	ENVP_ID = 0,
 	ENVP_COUNT_ID = 1,
 	CMD_HISTORY_ID = 4,
-	CMD_HISTORY_COUNT_ID = 5
+	CMD_HISTORY_COUNT_ID = 5,
+	EXEC_NAME_ID = 6
 };
 
 /**
@@ -43,6 +50,15 @@ enum Operators
 	 */
 	SEP_OP = 3
 };
+
+enum Token_Types
+{
+	TKN_BEG = 0,
+	TKN_WORD = 1,
+	TKN_SPACE = 2,
+	TKN_OP = 3
+};
+
 
 /**
  * command_node - Represent a command and its arguments.
@@ -67,6 +83,12 @@ struct built_in_cmd
 	int (*run)(int, char**);
 };
 
+struct alias_s
+{
+	char *name;
+	char *cmds;
+};
+
 struct cmd_help
 {
 	char *cmd_name;
@@ -74,19 +96,35 @@ struct cmd_help
 };
 
 typedef struct command_node cmd_t;
+typedef struct alias_s alias_t;
 
 /* ******** Program (rash.c) ******** */
 
 void handle_signal(int sig_num);
+char can_cancel_input();
 void *get_shell_prop(char prop_id);
 /* ******** ---------------- ******** */
 
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
-char *get_cmd_line();
 char *get_env_var(char *str);
 void set_env_var(char *var, char*val);
+
+char *get_cmd_line();
+void expand_vars(cmd_t *node);
+
 cmd_t *parse_cmd_line(char *line);
+char *read_word(char *line, int *pos);
+void read_operator(char *line, int *pos, char prev_token,
+	cmd_t **head, cmd_t **node, char **error);
+cmd_t *parse_cmd_line1(char *line);
+/* ******** ---------------- ******** */
+
+/* ******** IO Helpers (io_helpers_#.c) ******** */
+
+char get_char(int fd, char action);
+char *read_line(int fd, char action);
+char **read_all_lines(char *file_name, int *lines);
 /* ******** ---------------- ******** */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
@@ -117,13 +155,9 @@ void help_setenv(void);
 void help_unsetenv(void);
 /* ******** ---------------- ******** */
 
-/* ******** Math Utilities (utils_math_#.c) ******** */
-
-int str_to_int(char *num);
-/* ******** ---------------- ******** */
-
 /* ******** String Utilities (utils_str_#.c) ******** */
 
+int str_to_int(char *num);
 void mem_set(char *str, int n, char c);
 char *trim_start(char *str, char c, char can_free);
 char *trim_end(char *str, char c, char can_free);
@@ -131,6 +165,8 @@ int str_len(char *str);
 int str_cmp(char *left, char *right);
 char *str_copy(char *str);
 char *str_cat(char *left, char *right, char can_free);
+char **str_split(char *str, char c, int *len, char can_free);
+char *str_replace(char *str, char *sub_str, char *rep_str, char can_free);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */
@@ -139,6 +175,7 @@ char is_digit(char c);
 char is_whitespace(char c);
 char is_letter(char c);
 char is_operator(char c);
+char is_quote(char c);
 char is_built_in_cmd(char *cmd);
 /* ******** ---------------- ******** */
 

@@ -2,6 +2,31 @@
 #include "main.h"
 
 /**
+ * str_to_int - Converts a string to an int
+ * @num: The string to convert
+ *
+ * Return: The converted number
+ */
+int str_to_int(char *num)
+{
+	int i = 1, len, exp = 1;
+	int res = 0;
+
+	len = str_len(num);
+	for (i = len - 1; i >= 0; i--)
+	{
+		if (*(num + i) == '-')
+			res *= -1;
+		else if (is_digit(*(num + i)))
+		{
+			res += (*(num + i) - '0') * exp;
+			exp *= 10;
+		}
+	}
+	return (res);
+}
+
+/**
  * str_len - Computes the length of a string
  * @str: The source string
  *
@@ -241,5 +266,74 @@ char **str_split(char *str, char c, int *len, char can_free)
 	if (can_free)
 		free(str);
 	return (strs);
+}
+
+/**
+ * str_replace - Replaces a string with a given string in another string
+ * @str: The source string
+ * @sub_str: The string to look for in the source string
+ * @rep_str: The string to use as a replacement
+ * @can_free: Specifies whether the given strings can be freed
+ *
+ * Return: The string containing the replaced values, otherwise, NULL
+*/
+char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
+{
+	char *res = str != NULL ? str_copy(str) : NULL, *tmp;
+	int rep_len = str_len(rep_str);
+	int sub_len = str_len(sub_str);
+	int res_len = str_len(str);
+	int i = 0, j = 0, a, b, c;
+
+	if (res != NULL && sub_str != NULL && rep_str != NULL)
+	{
+		while (res != NULL && *(res + i) != '\0')
+		{
+			if (*(res + i) == *sub_str)
+			{
+				for (j = 0; (*(sub_str + j) != '\0') && (*(res + i) != '\0'); j++, i++)
+				{
+					if (*(sub_str + j) != *(res + i))
+						break;
+				}
+				i -= j;
+				if (j == sub_len)
+				{
+					/* make replacement */
+					res_len = res_len + (rep_len == sub_len ? 0 :  rep_len - sub_len);
+					tmp = malloc(sizeof(char) * (res_len + 1));
+					if (tmp != NULL)
+					{
+						for (a = 0, b = 0, c = 0; a < res_len; a++)
+						{
+							c =  (a == i) ? i + sub_len : c;
+							if (a >= i && a < (i + rep_len))
+							{
+								*(tmp + a) = *(rep_str + b);
+								b++;
+							}
+							else
+							{
+								*(tmp + a) = *(res + c);
+								c++;
+							}
+						}
+						*(tmp + a) = '\0';
+					}
+					free(res);
+					res = tmp;
+					i += (rep_len == sub_len ? rep_len :  rep_len - sub_len);
+				}
+			}
+			i++;
+		}
+	}
+	if (can_free)
+	{
+		free(str);
+		free(sub_str);
+		free(rep_str);
+	}
+	return (res);
 }
 
