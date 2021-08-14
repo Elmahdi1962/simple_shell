@@ -121,7 +121,6 @@ cmd_t *parse_cmd_line(char *line);
 char *read_word(char *line, int *pos);
 void read_operator(char *line, int *pos, char prev_token,
 	cmd_t **head, cmd_t **node, char **error);
-cmd_t *parse_cmd_line1(char *line);
 /* ******** ---------------- ******** */
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */

@@ -6,7 +6,7 @@
 
 cmd_t *parse_cmd_line(char *line)
 {
-	int i = 0, j, c;
+	int i = 0, c;
 	cmd_t *head = NULL, *node = NULL;
 	char prev_token = TKN_BEG, *word, *error = NULL;
 
@@ -14,9 +14,9 @@ cmd_t *parse_cmd_line(char *line)
 	{
 		for (i = 0; *(line + i) != '#' && *(line + i) != '\0' && error == NULL;)
 		{
-			if (is_whitespace(*(line + i)) && prev_token != TKN_BEG)
+			if (is_whitespace(*(line + i)))
 			{
-				prev_token = TKN_SPACE, j = 0, i++;
+				prev_token = TKN_SPACE, i++;
 			}
 			else if (is_operator(*(line + i)))
 			{
@@ -25,7 +25,6 @@ cmd_t *parse_cmd_line(char *line)
 			}
 			else
 			{
-				j = prev_token != TKN_WORD ? i : j;
 				word = read_word(line, &i);
 				if (word != NULL)
 				{
@@ -105,7 +104,7 @@ void read_operator(char *line, int *pos, char prev_token,
 
 char *read_word(char *line, int *pos)
 {
-	int i = *pos, j = *pos, k = 0, quote_d = 0, len;
+	int i = *pos, j = *pos, k = 0, quote_d = 0, len = 0;
 	char quote = 0, *word;
 
 	while (*(line + i) != '\0')
@@ -126,9 +125,7 @@ char *read_word(char *line, int *pos)
 		else if (quote_d == 0)
 		{
 			if (is_operator(*(line + i)) || (is_whitespace(*(line + i))) || (*(line + i) == '#'))
-			{
 				break;
-			}
 		}
 		i++, len++;
 	}
@@ -142,89 +139,12 @@ char *read_word(char *line, int *pos)
 			j++;
 		}
 		*(word + k) = '\0';
+		if (is_quote(*word))
+		{
+			word = trim_start(word, *word, TRUE);
+			word = trim_end(word, *word, TRUE);
+		}
 	}
 	*pos = i;
 	return (word);
-}
-
-/**
-	 * token_types:
-	 * 0 -> Beginning
-	 * 1 -> word
-	 * 2 -> space
-	 * 3 -> operator
-	 */
-
-cmd_t *parse_cmd_line_1(char *line)
-{
-	int i, j, k, c = 0, quote_d = 0;
-	cmd_t *head = NULL, *node = NULL;
-	char prev_token = TKN_BEG, *word = NULL;
-
-	if (line != NULL && *line != '\0')
-	{
-		for (i = 0; *(line + i) != '#' && *(line + i) != '\0'; i++)
-		{
-			if (is_whitespace(*(line + i)) && quote_d == 0)
-			{
-				prev_token = 2, j = 0;
-			}
-			else if ((*(line + i) == '|') || ((*(line + i) == '&')) || (*(line + i) == ';'))
-			{
-				if ((*(line + i + 1) != '\0') && (prev_token == TKN_WORD || prev_token == TKN_SPACE) && ((*(line + i) == ';') || ((*(line + i + 1) == '|') || ((*(line + i + 1) == '&')))))
-				{
-					if (node != NULL)
-						node->next_cond = ((*(line + i + 1) == '|') ? OR_OP
-																												: ((*(line + i + 1) == '&') ? AND_OP : SEP_OP));
-					prev_token = 3, j = 0;
-					i += ((*(line + i) == ';') ? 0 : 1);
-					if (node != NULL)
-						add_node_to_end(&head, &node);
-				}
-				else
-				{
-					perror("Syntax error\n");
-				}
-			}
-			else if (*(line + i) == '#')
-			{
-				break;
-			}
-			else
-			{
-				j = prev_token != TKN_WORD ? i : j;
-				if (is_whitespace(*(line + i + 1)) || is_operator(*(line + i + 1)) || ((*(line + i + 1) == '\0')))
-				{
-					word = malloc(sizeof(char) * (i - j + 2));
-					if (word != NULL)
-					{
-						for (k = 0; k < (i - j + 1); k++)
-							*(word + k) = *(line + j + k);
-						*(word + k) = '\0';
-						if (node == NULL)
-						{
-							node = new_cmd_node();
-							if (node != NULL)
-								node->command = word;
-							c++;
-						}
-						else
-						{
-							node->args = _realloc(node->args, node->args_count * (sizeof(void *)),
-																		sizeof(void *) * (node->args_count + 1));
-							if (node->args != NULL)
-							{
-								*(node->args + node->args_count) = word;
-								node->args_count++;
-							}
-						}
-					}
-				}
-				prev_token = TKN_WORD;
-			}
-		}
-		if (node != NULL)
-			add_node_to_end(&head, &node);
-	}
-	return (head);
 }
