@@ -1,0 +1,10 @@
+unsetenv : removes an environment variable. The memory for the entry and the environment variable is released
+
+Syntax:
+
+unsetenv <variable-name>
+
+Required Argument:
+
+   variable-name:
+        specifies a UNIX environment variable that you want to unset.
