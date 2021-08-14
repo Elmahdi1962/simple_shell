@@ -161,14 +161,14 @@ char *str_cat(char *left, char *right, char can_free)
 	int left_length = str_len(left);
 	int right_length = str_len(right);
 	int i;
-	char *str;
+	char *str = NULL;
 
 	str = malloc(sizeof(char) * (left_length + right_length + 1));
-	if (str)
+	if (str != NULL)
 	{
-		for (i = 0; *(left + i) != '\0'; i++)
+		for (i = 0; left != NULL && *(left + i) != '\0'; i++)
 			*(str + i) = *(left + i);
-		for (i = 0; *(right + i) != '\0'; i++)
+		for (i = 0; right != NULL && *(right + i) != '\0'; i++)
 			*(str + left_length + i) = *(right + i);
 		*(str + left_length + i) = '\0';
 	}
@@ -198,12 +198,11 @@ char **str_split(char *str, char c, int *len, char can_free)
 	{
 		if (*(str + i) == '\0')
 		{
-			if (i > 0 && *(str + i - 1) != c)
+			if ((i > 0) && (*(str + i - 1) != c))
 			{
-				*(strs + n) = strs == NULL ? malloc(sizeof(void *))
-				: _realloc(*(strs + n), sizeof(void *) * n, sizeof(void *) * (n + 1));
-				*(*(strs + n)) = *(strs + n) != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
-				if (*(*(strs + n)) != NULL)
+				strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
+				*(strs + n) = strs != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
+				if (*(strs + n) != NULL)
 				{
 					k = 0;
 					for (; j < i; j++)
@@ -219,13 +218,11 @@ char **str_split(char *str, char c, int *len, char can_free)
 		}
 		else if (*(str + i) == c)
 		{
-			j = i == 0 ? i + 1 : j;
 			if (i == 0)
 				continue;
-			*(strs + n) = strs == NULL ? malloc(sizeof(void *))
-				: _realloc(*(strs + n), sizeof(void *) * n, sizeof(void *) * (n + 1));
-			*(*(strs + n)) = *(strs + n) != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
-			if (*(*(strs + n)) != NULL)
+			strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
+			*(strs + n) = strs != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
+			if (*(strs + n) != NULL)
 			{
 				k = 0;
 				for (; j < i; j++)
@@ -234,11 +231,13 @@ char **str_split(char *str, char c, int *len, char can_free)
 					k++;
 				}
 				*(*(strs + n) + k) = '\0';
+				j = i + 1;
 				n++;
 			}
 		}
 	}
-	*len = n;
+	if (len != NULL)
+		*len = n;
 	if (can_free)
 		free(str);
 	return (strs);
