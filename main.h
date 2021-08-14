@@ -188,6 +188,7 @@ char str_is_num(char *str);
 cmd_t *new_cmd_node();
 void free_list(cmd_t *head);
 void add_node_to_end(cmd_t **head, cmd_t **node);
+char is_binary_file(char *fn);
 /* ******** ---------------- ******** */
 
 #endif
