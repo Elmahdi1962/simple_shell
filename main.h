@@ -232,6 +232,7 @@ char is_built_in_cmd(cmd_t *cmd);
 char str_is_num(char *str);
 char is_binary_file(char *fn);
 char is_variable(char *str);
+char is_exec_file(char *fn);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

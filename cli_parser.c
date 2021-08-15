@@ -144,14 +144,7 @@ char *read_variable(char *str, int pos)
 {
 	int i = pos, j, len;
 	char *var = NULL;
-	int m;
-	char **dirs;
 
-	dirs = str_split(get_env_var("PATH"), ':', &m, FALSE);
-	for (j = 0; j < m; j++)
-	{
-		printf("dir[%d]: %s\n", j, *(dirs + j));
-	}
 	printf("[](r_v): %d\n", i);
 	while (*(str + i) != '\0')
 	{
