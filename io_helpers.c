@@ -6,7 +6,7 @@
  * @lines: A pointer to the lines in the file
  *
  * return: A 2D array of the files contents, otherwise NULL
-*/
+ */
 char **read_all_lines(char *file, int *lines)
 {
 	int j, n, fd, buf_size = 126;

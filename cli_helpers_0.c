@@ -8,7 +8,7 @@
 char *get_cmd_line()
 {
 	size_t size = 0;
-	int i = 0, j, k, n = 0, incr = 10, quote_d = 0;
+	int i = 0, j, k, n = 0, incr = 10, quote_o = 0;
 	char *buf = NULL, *line = NULL, q_a = 0;
 
 	buf = malloc(sizeof(char) * incr);
@@ -21,21 +21,21 @@ char *get_cmd_line()
 			n = read(STDIN_FILENO, (void *)buf, incr);
 			if (n < 0)
 				return (NULL);
-			if (buf[0] == '\n' && quote_d == 0)
+			if (buf[0] == '\n' && quote_o == 0)
 				break;
-			for (j = 0; !((quote_d == 0) && (*(buf + j) == '\n')) && (j < n); j++)
+			for (j = 0; !((quote_o == 0) && (*(buf + j) == '\n')) && (j < n); j++)
 			{
 				if (is_quote(*(buf + j)))
 				{
 					if (q_a == 0)
 					{
 						q_a = *(buf + j);
-						quote_d = 1;
+						quote_o = 1;
 					}
 					else if ((*(buf + j) == q_a))
 					{
 						q_a = 0;
-						quote_d = 0;
+						quote_o = 0;
 					}
 				}
 			}
@@ -48,12 +48,12 @@ char *get_cmd_line()
 					*(line + i) = *(buf + k);
 					i++;
 				}
-				if ((j <= n && *(buf + j) == '\n' && quote_d == 0) || n == 0)
+				if ((j <= n && *(buf + j) == '\n' && quote_o == 0) || n == 0)
 					break;
 			}
 		}
 	}
-	if (n == 0 && !((quote_d == 0) && (*(buf + j) == '\n')))
+	if (n == 0 && !((quote_o == 0) && (*(buf + j) == '\n')))
 	{
 		perror("Syntax error\n");
 		free(line), free(buf);
@@ -62,42 +62,6 @@ char *get_cmd_line()
 	line = _realloc(line, sizeof(char) * size, sizeof(char) * (size + 1));
 	*(line + size) = '\0';
 	return (line);
-}
-
-/**
- * get_variables - Retrieves an array of variables from a string
- * @str: The source string
- * @vars_count
- *
- * Return: The list of variables, otherwise NULL
-*/
-char **get_variables(char *str, int *vars_count)
-{
-	int i = 0, p = 0;
-	char **vars = NULL, *tmp;
-
-	*vars_count = 0;
-	while ((str != NULL) && (*(str + i) != '\0'))
-	{
-		if (*(str + i) == '$')
-		{
-			tmp = read_variable(str, &i);
-			printf("[%d](e_v): %d, %s\n", p, str_len(tmp), tmp);
-			if (tmp != NULL)
-			{
-				vars = _realloc(vars, sizeof(void *) * p, sizeof(void *) * (p + 1));
-				*(vars + p) = str_cat(str_copy("$"), tmp, TRUE);
-				p++;
-			}
-			/* i += j; */
-		}
-		else
-		{
-			i++;
-		}
-	}
-	*vars_count = p;
-	return (vars);
 }
 
 /**
@@ -129,14 +93,55 @@ void expand_variables(cmd_t **node)
 	}
 }
 
+
+/**
+ * get_variables - Retrieves an array of variables from a string
+ * @str: The source string
+ * @vars_count
+ *
+ * Return: The list of variables, otherwise NULL
+*/
+char **get_variables(char *str, int *vars_count)
+{
+	int i = 0, p = 0;
+	char **vars = NULL, *tmp;
+
+	*vars_count = 0;
+	while ((str != NULL) && (*(str + i) != '\0'))
+	{
+		if (*(str + i) == '$')
+		{
+			tmp = read_variable(str, i + 1);
+			printf("[%d](e_v): %d, %s\n", p, str_len(tmp), tmp);
+			if (tmp != NULL)
+			{
+				vars = _realloc(vars, sizeof(void *) * p, sizeof(void *) * (p + 1));
+				*(vars + p) = str_cat(str_copy("$"), tmp, TRUE);
+				p++;
+				i += (str_len(tmp));
+			}
+			else
+			{
+				i++;
+			}
+		}
+		else
+		{
+			i++;
+		}
+	}
+	*vars_count = p;
+	return (vars);
+}
+
 void print_prompt()
 {
 	char *ps1 = get_env_var("PS1");
 	int j, n;
 	char **vars = NULL, *var_val;
-
+	
 	vars = get_variables(ps1, &n);
-	printf("[]: %s\n", ps1);
+	printf("[] (p_p): %s\n", ps1);
 	if (vars != NULL)
 	{
 		for (j = 0; j < n; j++)

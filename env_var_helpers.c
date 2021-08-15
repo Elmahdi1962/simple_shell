@@ -8,10 +8,13 @@
  */
 char *get_env_var(char *var)
 {
-	char **envp = *((char ***)get_shell_prop(ENVP_ID));
-	int n = *((int *)get_shell_prop(ENVP_COUNT_ID));
-	int i, j;
+	char **envp;
+	int n, i, j;
 
+	if (var == NULL)
+		return (NULL);
+	envp = *((char ***)get_shell_prop(ENVP_ID));
+	n = *((int *)get_shell_prop(ENVP_COUNT_ID));
 	if (envp != NULL)
 	{
 		for (i = 0; i < n; i++)
