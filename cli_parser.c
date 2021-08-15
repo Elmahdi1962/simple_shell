@@ -1,7 +1,3 @@
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "main.h"
 
 cmd_t *parse_cmd_line(char *line)
@@ -141,10 +137,12 @@ char *read_word(char *line, int *pos)
 		*(word + k) = '\0';
 		if (is_quote(*word))
 		{
-			word = trim_start(word, *word, TRUE);
-			word = trim_end(word, *word, TRUE);
+			quote = *word;
+			word = trim_start(word, quote, TRUE);
+			word = trim_end(word, quote, TRUE);
 		}
 	}
 	*pos = i;
 	return (word);
 }
+

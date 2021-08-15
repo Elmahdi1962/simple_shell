@@ -337,3 +337,52 @@ char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
 	return (res);
 }
 
+
+/**
+ * long_to_str - Converts a long to its string representation
+ * @num: The long integer
+ *
+ * Return: The string representation of the long integer
+ */
+char *long_to_str(long num)
+{
+	char *str;
+	long rem = num;
+	char sign = rem < 0 ? -1 : 1;
+	char size = 20, j;
+
+	str = malloc(sizeof(char) * (size + 1));
+	if (str)
+	{
+		*(str + size) = '\0';
+		mem_set(str, size, '0');
+		j = size - 1;
+		if (rem == 0)
+			*(str + j) = '0';
+
+		while ((sign == -1 && rem < 0) || (sign == 1 && rem > 0))
+		{
+			*(str + j) = (rem % 10) * sign + '0';
+			rem /= 10;
+			j--;
+		}
+		if (sign < 0)
+			*(str + j) = '-';
+		str = trim_start(str, '0', TRUE);
+		str = num == 0 ? str_cat("0", "", FALSE) : str;
+	}
+	return (str);
+}
+
+/* char *str_join(int n, char *strs[])
+{
+	int i;
+	char *str = NULL;
+
+	for (i = 0; i < n; i++)
+	{
+		;
+	}
+	return (str);
+}
+ */

@@ -64,18 +64,75 @@ char *get_cmd_line()
 	return (line);
 }
 
+/**
+ * get_variables - Retrieves an array of variables from a string
+ * @str: The source string
+ * @vars_count
+ *
+ * Return: The list of variables, otherwise NULL
+*/
 char **get_variables(char *str, int *vars_count)
 {
-	int i = 0, j;
-	char **vars = NULL;
+	int i = 0, j, p = 0, q;
+	char **vars = NULL, stop = FALSE;
 
 	*vars_count = 0;
 	while (str != NULL && *(str + i) != '\0')
 	{
 		if (*(str + i) == '$')
 		{
-			//
+			for (j = 1; !stop && *(str + i + j) != '\0'; j++)
+			{
+				if ((*(str + i + j) == '?') || (*(str + i + j) == '$'))
+					stop = TRUE;
+				else if (is_letter(*(str + i + j)) || (is_digit(*(str + i + j)) && j > 1))
+					continue;
+				else
+					j = 0, stop = TRUE;
+			}
+			vars = j == 0 ? vars : _realloc(vars, sizeof(void *) * p, sizeof(void *) * (p + 1));
+			if (vars != NULL && j > 0)
+			{
+				*(vars + p) = malloc(sizeof(char) * (j + 1));
+				if (*(vars + p) != NULL)
+				{
+					for (q = 0; *(str + i + q) != '\0'; q++)
+						*(*(vars + p) + q) = *(str + i + q);
+					*(*(vars + p) + q) = '\0';
+				}
+				p++;
+			}
 		}
 	}
+	*vars_count = p;
 	return (vars);
+}
+
+/**
+ * expand_variables - Expands the variables in a node
+ * @node: The node
+ */
+void expand_variables(cmd_t **node)
+{
+	int i, j, n;
+	char **vars = NULL, *var_val;
+
+	for (i = 0; i < (*node)->args_count; i++)
+	{
+		vars = get_variables((*node)->args[i], &n);
+		if (vars != NULL)
+		{
+			for (j = 0; j < n; j++)
+			{
+				if (str_cmp("$?", *(vars + j)) == 0)
+					var_val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
+				else if (str_cmp("$$", *(vars + j)) == 0)
+					var_val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
+				else
+					var_val = str_copy(get_env_var(*(vars + j)));
+				(*node)->args[i] = str_replace((*node)->args[i],
+					*(vars + j), var_val, TRUE);
+			}
+		}
+	}
 }

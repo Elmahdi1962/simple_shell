@@ -29,7 +29,9 @@ enum SHELL_PROP_IDS
 	ENVP_COUNT_ID = 1,
 	CMD_HISTORY_ID = 4,
 	CMD_HISTORY_COUNT_ID = 5,
-	EXEC_NAME_ID = 6
+	EXEC_NAME_ID = 6,
+	SHELL_PID_ID = 7,
+	NODE_EXIT_CODE_ID = 8
 };
 
 /**
@@ -120,6 +122,8 @@ void remove_env_var(char *var);
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 char *get_cmd_line();
+char **get_variables(char *str, int *vars_count);
+void expand_variables(cmd_t **node);
 
 cmd_t *parse_cmd_line(char *line);
 char *read_word(char *line, int *pos);
@@ -174,6 +178,7 @@ char *str_copy(char *str);
 char *str_cat(char *left, char *right, char can_free);
 char **str_split(char *str, char c, int *len, char can_free);
 char *str_replace(char *str, char *sub_str, char *rep_str, char can_free);
+char *long_to_str(long num);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */
