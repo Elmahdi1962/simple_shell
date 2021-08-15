@@ -36,7 +36,7 @@ int sc_alias(int ac, char *av[])
 
 	for (i = 0; i < ac; i++)
 	{
-		
+
 	}
 	(void)av;
 	return (0);
@@ -111,7 +111,7 @@ int sc_exit(int ac, char *av[])
 			return (2);
 		}
 	}
-	/* write history to file */
+	save_history();
 	exit(status);
 	return (status);
 }
@@ -175,11 +175,36 @@ int sc_help(int ac, char *av[])
 	return (0);
 }
 
+/**
+ * sc_history - Prints the history of this shell
+ */
 int sc_history(int ac, char *av[])
 {
-	(void)ac;
+	int i, j, max_width, width;
+	char **history = *((char ***)get_shell_prop(CMD_HISTORY_ID));
+	int hist_count = *((int *)get_shell_prop(CMD_HISTORY_COUNT_ID));
+	char *num;
+
+	if (ac == 0)
+	{
+		max_width = str_len(long_to_str(hist_count));
+		for (i = 0; i < hist_count; i++)
+		{
+			num = long_to_str(i);
+			width = str_len(num);
+
+			write(STDOUT_FILENO, " ", 1);
+			for (j = 0; j < (max_width - width); j++)
+				write(STDOUT_FILENO, " ", 1);
+			write(STDOUT_FILENO, num, width);
+			write(STDOUT_FILENO, " ", 1);
+			write(STDOUT_FILENO, *(history + i), str_len(*(history + i)));
+			write(STDOUT_FILENO, "\n", 1);
+			free(num);
+		}
+	}
 	(void)av;
-	return (0);
+	return (EC_SUCCESS);
 }
 
 int sc_setenv(int ac, char *av[])
