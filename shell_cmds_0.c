@@ -1,10 +1,15 @@
-#include <stdlib.h>
 #include "main.h"
 
+/**
+ * exec_built_in_cmd - Executes a built-in command
+ * @node: The built-in command's node
+ *
+ * Return: The exit code of the command
+ */
 int exec_built_in_cmd(cmd_t *node)
 {
 	int i;
-	struct built_in_cmd built_in_cmds[] = {
+	struct built_in_cmd_s built_in_cmds[] = {
 		{"alias", sc_alias},
 		{"cd", sc_cd},
 		{"env", sc_env},
@@ -15,7 +20,7 @@ int exec_built_in_cmd(cmd_t *node)
 		{"unsetenv", sc_unsetenv}
 	};
 
-	for (i = 0; i < 9; i++)
+	for (i = 0; i < 8; i++)
 	{
 		if (str_cmp(built_in_cmds[i].cmd_name, node->command) == 0)
 		{
@@ -34,36 +39,100 @@ int sc_alias(int ac, char *av[])
 
 int sc_cd(int ac, char *av[])
 {
-	(void)ac;
-	(void)av;
-	return (0);
+	int i;
+	char *pwd = get_env_var("PWD");
+	char *old_pwd = get_env_var("OLDPWD");
+
+	if (ac == 0)
+	{
+		set_env_var("OLDPWD", pwd);
+		set_env_var("PWD", get_env_var("HOME"));
+		chdir(get_env_var("HOME"));
+	}
+	else
+	{
+		if (str_cmp("-", av[0]) == 0)
+		{
+			/* Switch PWD and OLDPWD */
+			set_env_var("OLDPWD", pwd);
+			set_env_var("PWD", old_pwd);
+			chdir(old_pwd);
+		}
+		else
+		{
+			i = chdir(av[0]);
+			printf(">> %d, %d\n", i, errno);
+			if (i >= 0)
+			{
+				set_env_var("OLDPWD", pwd);
+				set_env_var("PWD", av[0]);
+			}
+			else
+			{
+				printf("can't cd to ");
+				return (EC_INVALID_ARGS);
+			}
+		}
+	}
+	return (EC_SUCCESS);
 }
 
 int sc_exit(int ac, char *av[])
 {
-	int status = 0;
+	int status = EC_SUCCESS;
 
 	if (av == NULL)
 	{
 		/* TODO: Print error message */
 		/* return (-1); */
 	}
-	if (ac >= 1)
+	if (ac > 0)
 	{
-		;
+		if (str_is_num(av[0]))
+		{
+			status = str_to_int(av[0]);
+		}
+		else
+		{
+			/* Raise error */
+			return (2);
+		}
 	}
 	/* write history to file */
 	exit(status);
-	return (0);
+	return (status);
 }
 
+/**
+ * sc_env - Prints the shell's environment variables
+ * @ac: The number of arguments
+ * @av: The arguments
+ *
+ * Return: 0 if successful
+ */
 int sc_env(int ac, char *av[])
 {
+	char **envp = *((char ***)get_shell_prop(ENVP_ID));
+	int n = *((int *)get_shell_prop(ENVP_COUNT_ID));
+	int i;
+
 	(void)ac;
 	(void)av;
+	for (i = 0; i < n; i++)
+	{
+		write(STDOUT_FILENO, *(envp + i), str_len(*(envp + i)));
+		write(STDOUT_FILENO, "\n", 1);
+	}
 	return (0);
 }
 
+/**
+ * sc_help - Prints the help page of a built-in command
+ * @ac: The number of arguments
+ * @av: The arguments
+ *
+ * Return: 0 if successful
+ */
 int sc_help(int ac, char *av[])
 {
 	int i;
@@ -87,8 +156,9 @@ int sc_help(int ac, char *av[])
 		}
 	}
 	else
+	{
 		help_program();
-
+	}
 	return (0);
 }
 

@@ -1,6 +1,5 @@
 #include "main.h"
 #include <elf.h>
-#include <fcntl.h>
 
 /**
  * str_is_num - checks if the string is a number
@@ -35,7 +34,6 @@ char str_is_num(char *str)
  * @fn: file file name
  * Return: True or False
  */
-
 char is_binary_file(char *fn)
 {
 	unsigned char buf[5];
@@ -62,4 +60,26 @@ char is_binary_file(char *fn)
 	}
 
 	return (TRUE);
+}
+
+/**
+ * is_variable - Checks if the given string is a variable
+ * @str: The string to check
+ *
+ * Return: TRUE if it is a variable, otherwise FALSE
+ */
+char is_variable(char *str)
+{
+	int i = 0;
+
+	while (*(str + i) != '\0')
+	{
+		if (is_digit(*(str + i)) && i == 0)
+			break;
+		else if ((is_digit(*(str + i)) && (i > 0))
+			|| (is_letter(*(str + i)))
+			|| (*(str + i) == '_'))
+			i++;
+	}
+	return (*(str + i) == '\0' && i > 0 ? TRUE : FALSE);
 }

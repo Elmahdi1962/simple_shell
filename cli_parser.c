@@ -146,3 +146,30 @@ char *read_word(char *line, int *pos)
 	return (word);
 }
 
+
+char *read_variable(char *str, int *pos)
+{
+	int i = *pos + 1, j, len;
+	char *var = NULL;
+
+	printf("[](r_v): \n");
+	while (*(str + i) != '\0')
+	{
+		if (is_digit(*(str + i)) && (i == *pos + 1))
+			break;
+		else if ((is_digit(*(str + i)) && (i > *pos + 1))
+			|| (is_letter(*(str + i)))
+			|| (*(str + i) == '_'))
+			i++;
+	}
+	len = i - *pos - 1;
+	var = len > 0 ? malloc(sizeof(char) * (len + 1)) : NULL;
+	if (var != NULL)
+	{
+		printf("[](r_v): \n");
+		for (j = 0; j < len; j++)
+			*(var + j) = *(str + *pos + 1), (*pos)++;
+		*(var + j) = '\0';
+	}
+	return (var);
+}

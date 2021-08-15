@@ -1,9 +1,13 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <dirent.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 
 #ifndef TRUE
@@ -65,6 +69,16 @@ enum Token_Types
 	TKN_OP = 3
 };
 
+/**
+ * Exit codes for the built-in commands
+ */
+enum Exit_Codes
+{
+	EC_SUCCESS = 0,
+	/* The argument was invalid */
+	EC_INVALID_ARGS = 2
+};
+
 
 /**
  * command_node - Represent a command and its arguments.
@@ -83,9 +97,16 @@ struct command_node
 	struct command_node *next;
 };
 
-struct built_in_cmd
+/**
+ * struct built_in_cmd_s - Represents a built-in command node
+ * @cmd_name: The name of the built-in command
+ * @run: The handler for the built-in command
+ */
+struct built_in_cmd_s
 {
+	/* The name of the built-in command */
 	char *cmd_name;
+	/* The handler for the built-in command */
 	int (*run)(int, char**);
 };
 
@@ -106,6 +127,7 @@ typedef struct alias_s alias_t;
 
 /* ******** Program (rash.c) ******** */
 
+void print_node(cmd_t *node);
 void handle_signal(int sig_num);
 char can_cancel_input();
 void *get_shell_prop(char prop_id);
@@ -122,13 +144,19 @@ void remove_env_var(char *var);
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 char *get_cmd_line();
+int get_var_length(char *str, int pos);
 char **get_variables(char *str, int *vars_count);
 void expand_variables(cmd_t **node);
+void print_prompt();
+/* ******** ---------------- ******** */
+
+/* ******** CLI Parser (cli_parser.c) ******** */
 
 cmd_t *parse_cmd_line(char *line);
 char *read_word(char *line, int *pos);
 void read_operator(char *line, int *pos, char prev_token,
 	cmd_t **head, cmd_t **node, char **error);
+char *read_variable(char *str, int *pos);
 /* ******** ---------------- ******** */
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
@@ -188,8 +216,10 @@ char is_whitespace(char c);
 char is_letter(char c);
 char is_operator(char c);
 char is_quote(char c);
-char is_built_in_cmd(char *cmd);
+char is_built_in_cmd(cmd_t *cmd);
 char str_is_num(char *str);
+char is_binary_file(char *fn);
+char is_variable(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

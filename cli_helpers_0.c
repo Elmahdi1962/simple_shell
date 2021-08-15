@@ -73,35 +73,27 @@ char *get_cmd_line()
 */
 char **get_variables(char *str, int *vars_count)
 {
-	int i = 0, j, p = 0, q;
-	char **vars = NULL, stop = FALSE;
+	int i = 0, p = 0;
+	char **vars = NULL, *tmp;
 
 	*vars_count = 0;
-	while (str != NULL && *(str + i) != '\0')
+	while ((str != NULL) && (*(str + i) != '\0'))
 	{
 		if (*(str + i) == '$')
 		{
-			for (j = 1; !stop && *(str + i + j) != '\0'; j++)
+			tmp = read_variable(str, &i);
+			printf("[%d](e_v): %d, %s\n", p, str_len(tmp), tmp);
+			if (tmp != NULL)
 			{
-				if ((*(str + i + j) == '?') || (*(str + i + j) == '$'))
-					stop = TRUE;
-				else if (is_letter(*(str + i + j)) || (is_digit(*(str + i + j)) && j > 1))
-					continue;
-				else
-					j = 0, stop = TRUE;
-			}
-			vars = j == 0 ? vars : _realloc(vars, sizeof(void *) * p, sizeof(void *) * (p + 1));
-			if (vars != NULL && j > 0)
-			{
-				*(vars + p) = malloc(sizeof(char) * (j + 1));
-				if (*(vars + p) != NULL)
-				{
-					for (q = 0; *(str + i + q) != '\0'; q++)
-						*(*(vars + p) + q) = *(str + i + q);
-					*(*(vars + p) + q) = '\0';
-				}
+				vars = _realloc(vars, sizeof(void *) * p, sizeof(void *) * (p + 1));
+				*(vars + p) = str_cat(str_copy("$"), tmp, TRUE);
 				p++;
 			}
+			/* i += j; */
+		}
+		else
+		{
+			i++;
 		}
 	}
 	*vars_count = p;
@@ -135,4 +127,28 @@ void expand_variables(cmd_t **node)
 			}
 		}
 	}
+}
+
+void print_prompt()
+{
+	char *ps1 = get_env_var("PS1");
+	int j, n;
+	char **vars = NULL, *var_val;
+
+	vars = get_variables(ps1, &n);
+	printf("[]: %s\n", ps1);
+	if (vars != NULL)
+	{
+		for (j = 0; j < n; j++)
+		{
+			if (str_cmp("$?", *(vars + j)) == 0)
+				var_val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
+			else if (str_cmp("$$", *(vars + j)) == 0)
+				var_val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
+			else
+				var_val = str_copy(get_env_var(*(vars + j)));
+			ps1 = str_replace(ps1, *(vars + j), var_val, TRUE);
+		}
+	}
+	write(STDOUT_FILENO, ps1, str_len(ps1));
 }
