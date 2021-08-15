@@ -206,6 +206,30 @@ char *str_cat(char *left, char *right, char can_free)
 }
 
 /**
+ * copy_range - Copies a range of chracters from a to b inclusive
+ * @str: The string to copy from
+ * @s: The start index
+ * @b: The end index
+ *
+ * Return: A newly created string, otherwise NULL
+ */
+char *copy_range(char *str, int a, int b)
+{
+	int len = str_len(str), i = 0;
+	int start = MIN(a, b), end = MAX(a, b);
+	char *res = NULL;
+
+	res = malloc(sizeof(char) * (end - start + 1));
+	if (start < len && end <= len)
+	{
+		for (i = 0; i < (end - start + 1); i++)
+			*(res + i) = *(str + start + i);
+		*(res + i) = '\0';
+	}
+	return (res);
+}
+
+/**
  * str_split - Splits a string into smaller strings at a given character
  * @str: The string to split
  * @c: The character at which to perform the split
@@ -216,50 +240,24 @@ char *str_cat(char *left, char *right, char can_free)
 */
 char **str_split(char *str, char c, int *len, char can_free)
 {
-	int i, j = 0, k, n = 0;
+	int i, j = 0, n = 0;
 	char **strs = NULL;
 
-	for (i = 0; ; i++)
+	for (i = 0; *(str + i) != '\0'; i++)
 	{
-		if (*(str + i) == '\0')
+		if (*(str + i) == c)
 		{
-			if ((i > 0) && (*(str + i - 1) != c))
-			{
-				strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
-				*(strs + n) = strs != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
-				if (*(strs + n) != NULL)
-				{
-					k = 0;
-					for (; j < i; j++)
-					{
-						*(*(strs + n) + k) = *(str + j);
-						k++;
-					}
-					*(*(strs + n) + k) = '\0';
-					n++;
-				}
-			}
-			break;
-		}
-		else if (*(str + i) == c)
-		{
-			if (i == 0)
-				continue;
 			strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
-			*(strs + n) = strs != NULL ? malloc(sizeof(char) * (i - j + 1)) : NULL;
-			if (*(strs + n) != NULL)
-			{
-				k = 0;
-				for (; j < i; j++)
-				{
-					*(*(strs + n) + k) = *(str + j);
-					k++;
-				}
-				*(*(strs + n) + k) = '\0';
-				j = i + 1;
-				n++;
-			}
+			*(strs + n) = copy_range(str, j, i - 1);
+			j = i + 1;
+			n++;
 		}
+	}
+	if (*(str + i - 1) != c)
+	{
+		strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
+		*(strs + n) = copy_range(str, j, i);
+		n++;
 	}
 	if (len != NULL)
 		*len = n;

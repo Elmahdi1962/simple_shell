@@ -19,6 +19,12 @@
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
+#ifndef MIN
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+#ifndef MAX
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
 #define MAX_INT_STR "2147483647"
 #define SIG_SHELL_ERROR 1738
 
@@ -35,7 +41,8 @@ enum SHELL_PROP_IDS
 	CMD_HISTORY_COUNT_ID = 5,
 	EXEC_NAME_ID = 6,
 	SHELL_PID_ID = 7,
-	NODE_EXIT_CODE_ID = 8
+	NODE_EXIT_CODE_ID = 8,
+	ALIAS_LIST_ID = 9
 };
 
 /**
@@ -112,13 +119,16 @@ struct built_in_cmd_s
 
 struct alias_s
 {
+	/* The name of the alias command */
 	char *name;
-	char *cmds;
+	struct command_node *cmd;
 };
 
 struct cmd_help
 {
+	/* The name of the built-in command */
 	char *cmd_name;
+	/* The handler for the built-in command's help */
 	void (*run)(void);
 };
 
@@ -145,8 +155,8 @@ void remove_env_var(char *var);
 
 char *get_cmd_line();
 int get_var_length(char *str, int pos);
-char **get_variables(char *str, int *vars_count);
 void expand_variables(cmd_t **node);
+char **get_variables(char *str, int *vars_count);
 void print_prompt();
 /* ******** ---------------- ******** */
 
@@ -156,7 +166,8 @@ cmd_t *parse_cmd_line(char *line);
 char *read_word(char *line, int *pos);
 void read_operator(char *line, int *pos, char prev_token,
 	cmd_t **head, cmd_t **node, char **error);
-char *read_variable(char *str, int *pos);
+char *read_variable(char *str, int pos);
+char *dissolve_tokens(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
@@ -204,6 +215,7 @@ int str_len(char *str);
 int str_cmp(char *left, char *right);
 char *str_copy(char *str);
 char *str_cat(char *left, char *right, char can_free);
+char *copy_range(char *str, int a, int b);
 char **str_split(char *str, char c, int *len, char can_free);
 char *str_replace(char *str, char *sub_str, char *rep_str, char can_free);
 char *long_to_str(long num);

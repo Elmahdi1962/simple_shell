@@ -42,6 +42,7 @@ static int LINE_NUM;
  * The exit code of the last executed process in this shell program
  */
 static int NODE_EXIT_CODE;
+static alias_t ALIAS_LIST;
 
 /**
  * main - Entry point to the simple shell program
@@ -183,6 +184,8 @@ void *get_shell_prop(char prop_id)
 		return (&SHELL_PID);
 	case NODE_EXIT_CODE_ID:
 		return (&NODE_EXIT_CODE);
+	case ALIAS_LIST_ID:
+		return (&ALIAS_LIST);
 	default:
 		break;
 	}

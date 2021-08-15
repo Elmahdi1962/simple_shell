@@ -32,7 +32,12 @@ int exec_built_in_cmd(cmd_t *node)
 
 int sc_alias(int ac, char *av[])
 {
-	(void)ac;
+	int i;
+
+	for (i = 0; i < ac; i++)
+	{
+		
+	}
 	(void)av;
 	return (0);
 }
@@ -54,9 +59,17 @@ int sc_cd(int ac, char *av[])
 		if (str_cmp("-", av[0]) == 0)
 		{
 			/* Switch PWD and OLDPWD */
-			set_env_var("OLDPWD", pwd);
-			set_env_var("PWD", old_pwd);
-			chdir(old_pwd);
+			if (old_pwd != NULL)
+			{
+				set_env_var("OLDPWD", pwd);
+				set_env_var("PWD", old_pwd);
+				chdir(old_pwd);
+			}
+			else
+			{
+				printf("OLDPWD not set");
+				return (EC_INVALID_ARGS);
+			}
 		}
 		else
 		{
