@@ -1,5 +1,10 @@
 #include "main.h"
 #include <elf.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 
 /**
  * str_is_num - checks if the string is a number
@@ -82,4 +87,22 @@ char is_variable(char *str)
 			i++;
 	}
 	return (*(str + i) == '\0' && i > 0 ? TRUE : FALSE);
+}
+
+/**
+ * is_exec_file - checks if a file is a binary file
+ * @fn:  file name
+ * Return: True or False
+ */
+
+char is_exec_file(char *fn)
+{
+	struct stat sb;
+
+	if (stat(fn, &sb) == 0 && sb.st_mode & S_IXUSR)
+	{
+		return (TRUE);
+	}
+	return (FALSE);
+
 }
