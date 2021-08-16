@@ -1,35 +1,49 @@
-.TH RAgnar SHell 1 "12 August 2021" "version 0.1" "Programmer's Manual"
+." Process this file with
+." groff -man -Tascii man_1_simple_shell
+." Render on terminal with
+." man ./man_1_simple_shell
+."
+.TH man 1 "26 August 2021" "v 1.0" "simple_shell man page"
 
-.SH NAME
-.B RAgnar SHell (RASH)
-- command interpreter (shell)
+.SH Name
+.B rash
+- ALX RAgnar SHell
 
-.SH SYNOPSIS
-.PP
-.B ./rash [command_string | file]
+.SH Synopsis
+rash [file]
+OR
+command_string | rash
 
-.PP
-.B
-.SH DESCRIPTION
-simpl shell
-.PP
+.SH Description
+The
+.B _printf
+function produces output according to a
+.IB format
+as described below.
 
-.SH BUILTINS
-
-|----------|--------------------------------------------|
-
-|`nothing`   | nothing at the moment                          |
-
-|----------|--------------------------------------------|
-
-.PP
-The Ragnar will compile with the following:
-gcc -Wall -Wextra -Werror -pedantic *.c -o rash
-.B
-.PP
 .SH OPTION
 currently no options are supported
-.SH BUGS
-No Known Bugs At the moment
-.SH AUTHORS
-.B Elmahdi Mamoun && Bezaleel Olakunori
+
+.SH
+Example
+/-------/
+.PP
+.nf
+.RS
+#include "holberton.h"
+_printf("Wind: %d%s and Precipitation: %d%%\\n", 28, "km/h", 0x1a);
+.RE
+.fi
+.EX
+
+.SH
+Authors
+Written by Bezaleel Olakunori and Elmahdi Mamoun
+
+.SH Reporting Bugs
+Report
+.SB simple_shell
+bugs to <https://github.com/Elmahdi1962/simple_shell/issues>
+
+.SH See Also
+https://linux.die.net/man/1/bash
