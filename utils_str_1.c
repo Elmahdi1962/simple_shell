@@ -103,6 +103,7 @@ char *copy_range(char *str, int a, int b)
 	int len = str_len(str), i;
 	int start = MIN(a, b);
 	int end = MAX(a, b);
+	char *res;
 
 	res = malloc(sizeof(char) * (end - start + 2));
 	if (start < len && end <= len)

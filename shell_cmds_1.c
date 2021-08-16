@@ -10,8 +10,8 @@
 int sc_history(int ac, char *av[])
 {
 	int i, j, max_width, width;
-	char **history = *((char ***)get_shell_prop(CMD_HISTORY_ID));
-	int hist_count = *((int *)get_shell_prop(CMD_HISTORY_COUNT_ID));
+	int hist_count;
+	char **history = get_history(&hist_count);
 	char *num;
 
 	if (ac == 0)

@@ -113,11 +113,14 @@ void save_history()
 
 /**
  * get_history - Retrieves this shell's past commands
+ * @size: The pointer to the size of the history buffer
  *
  * Return: A list of stings, otherwise, NULL
  */
-char **get_history()
+char **get_history(int *size)
 {
+	if (size != NULL)
+		*size = (Is_Full ? HISTORY_SIZE : Line_Num);
 	return (Cmd_History);
 }
 
