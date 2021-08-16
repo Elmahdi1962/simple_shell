@@ -1,12 +1,11 @@
 #include "main.h"
-#include <stdlib.h>
-
+/* FIXME: The functions in this file lead to a lot of memory leaks */
 /**
  * check_path - checks if the file exists
  * @str: file name it could enclude ./ like "./program"
+ *
  * Return: full path or NULL
  */
-
 char *check_path(char *str)
 {
 	char *pwd = get_env_var("PWD"), *full_path, *file_path = str;
@@ -47,7 +46,7 @@ char *check_path(char *str)
 	/*the file path doesn't start with . or / */
 	/*Checking if it's one of the built out commands programs in one of the paths in PATH*/
 	full_path = search_path(file_path);
-	
+
 	return (full_path);
 }
 

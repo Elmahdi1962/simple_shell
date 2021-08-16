@@ -25,13 +25,15 @@ static int Line_Num;
  */
 void manage_history(int op)
 {
-	int i, n = 0;
-	char **file_lines = NULL;
+	int i, n = 0, fd;
+	char **file_lines = NULL, *file_path;
 
 	if (op == MO_INIT)
 	{
 		/* Load history file */
-		file_lines = read_all_lines(HISTORY_PATH, O_RDONLY | O_CREAT, &n);
+		file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
+		fd = open(file_path, O_RDONLY | O_TRUNC | O_CREAT, 0666);
+		file_lines = read_all_lines(fd, &n);
 		if (file_lines != NULL)
 		{
 			for (i = 0; i < MIN(n, HISTORY_SIZE); i++)
@@ -42,6 +44,7 @@ void manage_history(int op)
 			free(file_lines);
 			Line_Num = (n % HISTORY_SIZE);
 		}
+		close(fd);
 	}
 	else if (op == MO_FREE)
 	{
@@ -91,8 +94,10 @@ void add_to_history(char *str)
 void save_history()
 {
 	int fd, i;
+	char *file_path;
 
-	fd = open(HISTORY_PATH, O_WRONLY | O_TRUNC | O_CREAT);
+	file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
+	fd = open(file_path, O_WRONLY | O_TRUNC | O_CREAT);
 	if (fd >= 0)
 	{
 		for (i = 0; i < (Is_Full ? HISTORY_SIZE : Line_Num); i++)

@@ -106,7 +106,7 @@ char *long_to_str(long num)
 	return (str);
 }
 
-/*
+
 char *rep_range(char *str, char *val, int a, int b)
 {
 	int len = str_len(str), val_len = str_len(val), i = 0, j = 0, k = 0;
@@ -114,6 +114,7 @@ char *rep_range(char *str, char *val, int a, int b)
 	char *res = NULL;
 
 	size = val_len > (end - start + 1);
+	if ((end - start + 1) > val_len)
 	res = malloc(sizeof(char) * (size + 1));
 	if (res != NULL)
 	{
@@ -134,4 +135,4 @@ char *rep_range(char *str, char *val, int a, int b)
 	*(res + i) = '\0';
 	return (res);
 }
- */
+

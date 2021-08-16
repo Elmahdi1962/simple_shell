@@ -42,10 +42,15 @@ int main(int ac, char *av[], char *envp[])
 	char interactive, **file_lines = NULL;
 	char *cmd_line = NULL;
 	cmd_t *cmds = NULL, *cur = NULL;
+	char *p0, *p1;
 
 	init_shell(ac, av, envp, &cmd_lines_count, &file_lines, &interactive);
 	/* write(STDOUT_FILENO, "\033[2J", 4); */
 	/* write(STDOUT_FILENO, "\033[H", 3); */
+	printf("[]: %s\n", get_env_var("PWD"));
+	p0 = "Harry_Potter_Was_Very_Good";
+	p1 = rep_range(p0, "1236", 2, 4);
+	printf("old_val: %s\nnew_val: %s\n", p0, p1);
 
 	while (a < cmd_lines_count)
 	{
@@ -114,6 +119,8 @@ void print_node(cmd_t *node)
 void init_shell(int ac, char *av[], char *envp[],
 	int *cmd_lines_count, char ***file_lines, char *interactive)
 {
+	int fd;
+
 	if (ac > 2)
 	{
 		write(STDERR_FILENO, "Usage: ", 7);
@@ -125,7 +132,9 @@ void init_shell(int ac, char *av[], char *envp[],
 	if (ac == 2)
 	{
 		/* TODO: Load first arg as a file */
-		*file_lines = read_all_lines(av[1], O_RDONLY, cmd_lines_count);
+		fd = open(av[1], O_RDONLY);
+		*file_lines = read_all_lines(fd, cmd_lines_count);
+		close(fd);
 		exit(127);
 	}
 	ENVP = envp;

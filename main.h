@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #ifndef TRUE
@@ -183,12 +184,6 @@ void add_env_var(char *var, char*val);
 void remove_env_var(char *var);
 /* ******** ---------------- ******** */
 
-/* ******** History (history.c) ******** */
-
-void add_to_history(char *str);
-void save_history();
-/* ******** ---------------- ******** */
-
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 char *get_cmd_line();
@@ -212,15 +207,20 @@ void dissolve_cmd_parts(cmd_t *node);
 
 /* char get_char(int fd, char action); */
 /* char *read_line(int fd, char action); */
-char **read_all_lines(char *file_name, int flags, int *lines);
+char **read_all_lines(int fd, int *lines);
 void print_text(int fd, char *text[], int n);
 /* ******** ---------------- ******** */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
-/* ******** Built-In Commands (shell_cmds_#.c) ******** */
+/* ******** Executors (executor.c) ******** */
 
 int exec_built_in_cmd(cmd_t *node);
+int exec_program(cmd_t *node, char *program_path);
+/* ******** ---------------- ******** */
+
+/* ******** Built-In Commands (shell_cmds_#.c) ******** */
+
 int sc_alias(int ac, char *av[]);
 int sc_cd(int ac, char *av[]);
 int sc_env(int ac, char *av[]);

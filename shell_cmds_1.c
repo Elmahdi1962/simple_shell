@@ -45,7 +45,14 @@ int sc_setenv(int ac, char *av[])
 
 int sc_unsetenv(int ac, char *av[])
 {
-	(void)ac;
-	(void)av;
-	return (0);
+	if (ac == 1)
+	{
+		remove_env_var(av[0]);
+		return (EC_SUCCESS);
+	}
+	else
+	{
+		printf("Inavlid format");
+		return (EC_INVALID_ARGS);
+	}
 }

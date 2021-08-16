@@ -2,21 +2,19 @@
 
 /**
  * read_all_lines - Reads all the lines in a text file
- * @file_name: The path to the file
- * @flags: The flags to use when reading the file
+ * @fd: The file's handle
  * @lines: A pointer to the lines in the file
  *
  * return: A 2D array of the files contents, otherwise NULL
  */
-char **read_all_lines(char *file, int flags, int *lines)
+char **read_all_lines(int fd, int *lines)
 {
-	int j, n, fd, buf_size = 126;
+	int j, n, buf_size = 1 << 7;
 	char *buf = NULL;
 	char *str = NULL;
 
-	if (file == NULL)
+	if (fd < 0)
 		return (NULL);
-	fd = open(file, flags);
 	if (fd >= 0)
 	{
 		buf = malloc(sizeof(char) * (buf_size + 1));
