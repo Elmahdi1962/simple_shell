@@ -100,9 +100,9 @@ char *str_cat(char *left, char *right, char can_free)
  */
 char *copy_range(char *str, int a, int b)
 {
-	int len = str_len(str), i = 0;
-	int start = MIN(a, b), end = MAX(a, b);
-	char *res = NULL;
+	int len = str_len(str), i;
+	int start = MIN(a, b);
+	int end = MAX(a, b);
 
 	res = malloc(sizeof(char) * (end - start + 2));
 	if (start < len && end <= len)
@@ -128,6 +128,11 @@ char **str_split(char *str, char c, int *len, char can_free)
 	int i, j = 0, n = 0;
 	char **strs = NULL;
 
+	if (str == NULL)
+	{
+		perror("str is null\n");
+		return (NULL);
+	}
 	if (str != NULL)
 	{
 		for (i = 0; *(str + i) != '\0'; i++)

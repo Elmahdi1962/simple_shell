@@ -211,7 +211,10 @@ char **read_all_lines(int fd, int *lines);
 void print_text(int fd, char *text[], int n);
 /* ******** ---------------- ******** */
 
+
+/* ******** Memory Helpers (mem_helpers.c) ******** */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void free_array(char **list, int length);
 
 /* ******** Executors (executor.c) ******** */
 
@@ -275,6 +278,7 @@ char is_variable(char *str);
 char is_exec_file(char *fn);
 char is_alias(char *str);
 char is_name_value_pair(char *str, char **name_out, char **value_out);
+int is_regular_file(const char *path);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

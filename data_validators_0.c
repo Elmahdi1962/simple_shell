@@ -13,18 +13,21 @@ char *check_path(char *str)
 
 	if (*str == '.')
 	{
-		full_path = str_cat(pwd, file_path, FALSE);
+		full_path = str_cat(pwd, file_path+1, FALSE);
 		fd = open(full_path, O_RDONLY);
 		if (fd >= 0)
 		{
 			close(fd);
-			if (is_exec_file("test"))
+
+			if (is_exec_file(full_path) && is_regular_file(full_path))
 			{
 				return(full_path);
 			}
-			perror("file is not executable\n");
+
+			free(full_path);
 			return(NULL);
 		}
+		free(full_path);
 		return (NULL);
 	}
 	if (*str == '/')
@@ -34,11 +37,10 @@ char *check_path(char *str)
 		if (fd >= 0)
 		{
 			close(fd);
-			if (is_exec_file(full_path))
+			if (is_exec_file(full_path) && is_regular_file(full_path))
 			{
 				return(full_path);
 			}
-			perror("file is not executable\n");
 			return(NULL);
 		}
 		return (NULL);
@@ -57,21 +59,31 @@ char *check_path(char *str)
  */
 char *search_path(char *command)
 {
-	int fd, len;
-	char *pwd = get_env_var("PWD");
-	char **paths = str_split(pwd, ':', &len, FALSE), *full_path;
+	int fd, len = 0, length;
+	char *path = get_env_var("PATH");
+	char **paths = str_split(path, ':', &len, FALSE), *full_path, *tmp_path;
 
+	if (path == NULL || paths == NULL)
+	{
+		return (NULL);
+	}
+	length = len;
 	for (;len > 0; len--)
 	{
-		full_path = str_cat(paths[len - 1], command, TRUE);
+		full_path = str_cat(paths[len - 1], "/", FALSE);
+		tmp_path = full_path;
+		full_path = str_cat(tmp_path, command, FALSE);
+		free(tmp_path);
+
 		fd = open(full_path, O_RDONLY);
 		if (fd >0)
 		{
-			free(paths);
+			free_array(paths, length);
+			close(fd);
 			return (full_path);
 		}
-		close(fd);
+		free(full_path);
 	}
-	free(paths);
+	free_array(paths, length);
 	return (NULL);
 }

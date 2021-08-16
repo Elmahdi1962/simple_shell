@@ -42,3 +42,19 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 	}
 }
 
+/**
+ * free_array - frees a 2d list
+ * @list: pointer to the list to free
+ * Return: void
+ */
+
+void free_array(char **list, int length)
+{
+	int i;
+
+	for (i = 0; i < length; i++)
+	{
+		free(list[i]);
+	}
+	free(list);
+}

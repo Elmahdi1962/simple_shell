@@ -73,3 +73,16 @@ char is_name_value_pair(char *str, char **name_out, char **value_out)
 		return (FALSE);
 	}
 }
+
+/** is_regular_file - check if the path is a file or a directory
+ * @path: file or folder path
+ *
+ * Return: 1 if is a regular file 0 if not
+ */
+int is_regular_file(const char *path)
+{
+	struct stat path_stat;
+
+	stat(path, &path_stat);
+	return S_ISREG(path_stat.st_mode);
+}
