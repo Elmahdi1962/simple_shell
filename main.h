@@ -216,7 +216,10 @@ char *read_line(int fd, char action);
 char **read_all_lines(char *file_name, int flags, int *lines);
 /* ******** ---------------- ******** */
 
+
+/* ******** Memory Helpers (mem_helpers.c) ******** */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void free_array(char **list);
 
 /* ******** Built-In Commands (shell_cmds_#.c) ******** */
 

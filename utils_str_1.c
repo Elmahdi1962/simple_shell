@@ -128,6 +128,11 @@ char **str_split(char *str, char c, int *len, char can_free)
 	int i, j = 0, n = 0;
 	char **strs = NULL;
 
+	if (str == NULL)
+	{
+		perror("str is null\n");
+		return (NULL);
+	}
 	if (str != NULL)
 	{
 		for (i = 0; *(str + i) != '\0'; i++)
