@@ -11,7 +11,7 @@ fi
 
 #region Helper Functions
 
-build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o rash; }
+build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g *.c -o rash; }
 
 run () { ./rash; }
 

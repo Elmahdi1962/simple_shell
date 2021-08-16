@@ -253,4 +253,9 @@ void add_node_to_end(cmd_t **head, cmd_t **node);
 char is_binary_file(char *fn);
 /* ******** ---------------- ******** */
 
+/* ******** DATA Validator (data_validators_#.c) ******** */
+
+char *check_path(char *str);
+char *search_path(char *command);
+/* ******** ---------------- ******** */
 #endif
