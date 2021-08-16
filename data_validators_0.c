@@ -9,7 +9,7 @@
 
 char *check_path(char *str)
 {
-	char *pwd = get_env_var("PWD"), *full_path, *file_path = str, *errorMessage;
+	char *pwd = get_env_var("PWD"), *full_path, *file_path = str;
 	int fd;
 
 	if (*str == '.')
@@ -25,15 +25,9 @@ char *check_path(char *str)
 				return(full_path);
 			}
 
-			errorMessage = str_cat("rash: ", file_path, FALSE);
-			perror(errorMessage);
-			free(errorMessage);
 			free(full_path);
 			return(NULL);
 		}
-		errorMessage = str_cat("rash: ", file_path, FALSE);
-		perror(errorMessage);
-		free(errorMessage);
 		free(full_path);
 		return (NULL);
 	}
@@ -48,14 +42,8 @@ char *check_path(char *str)
 			{
 				return(full_path);
 			}
-			errorMessage = str_cat("rash: ", full_path, FALSE);
-			perror(errorMessage);
-			free(errorMessage);
 			return(NULL);
 		}
-		errorMessage = str_cat("rash: ", full_path, FALSE);
-		perror(errorMessage);
-		free(errorMessage);
 		return (NULL);
 	}
 	/*the file path doesn't start with . or / */
@@ -72,7 +60,7 @@ char *check_path(char *str)
  */
 char *search_path(char *command)
 {
-	int fd, len = 0;
+	int fd, len = 0, length;
 	char *path = get_env_var("PATH");
 	char **paths = str_split(path, ':', &len, FALSE), *full_path, *tmp_path;
 
@@ -80,6 +68,7 @@ char *search_path(char *command)
 	{
 		return (NULL);
 	}
+	length = len;
 	for (;len > 0; len--)
 	{
 		full_path = str_cat(paths[len - 1], "/", FALSE);
@@ -90,13 +79,12 @@ char *search_path(char *command)
 		fd = open(full_path, O_RDONLY);
 		if (fd >0)
 		{
-			free_array(paths);
+			free_array(paths, length);
 			close(fd);
 			return (full_path);
 		}
 		free(full_path);
 	}
-	perror("command doesn't exist\n");
-	free_array(paths);
+	free_array(paths, length);
 	return (NULL);
 }

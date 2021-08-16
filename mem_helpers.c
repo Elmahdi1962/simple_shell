@@ -48,11 +48,11 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
  * Return: void
  */
 
-void free_array(char **list)
+void free_array(char **list, int length)
 {
 	int i;
 
-	for (i = 0; list[i] != NULL; i++)
+	for (i = 0; i < length; i++)
 	{
 		free(list[i]);
 	}
