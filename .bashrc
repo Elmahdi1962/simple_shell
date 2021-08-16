@@ -1,15 +1,21 @@
 #!/bin/bash
 
+#region Prompt Modifier
 branch_test=`git branch`
 if [[ ${#branch_test} > 0 ]]; then
 	export PS1='\[\033]0;$TITLEPREFIX:$PWD\007\]\n\[\033[32m\]\u@PC \[\033[33m\]${PWD##*/}\[\033[36m\] (`git branch | cut -c 3-`)\[\033[0m\]\n$ '
 else
 	export PS1='\[\033]0;$TITLEPREFIX:$PWD\007\]\n\[\033[32m\]\u@PC \[\033[33m\]${PWD##*/}\[\033[36m\]\[\033[0m\]\n$ '
 fi
+#endregion
 
-#region Helper Functions/Commands
+#region Helper Functions
 
 build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o rash; }
+
+run () { ./rash; }
+
+vueman () { man ./man_1_simple_shell; }
 
 #endregion
 
