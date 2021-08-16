@@ -1,10 +1,4 @@
 #include "main.h"
-#include <elf.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
 
 /**
  * str_is_num - checks if the string is a number
@@ -104,5 +98,19 @@ char is_exec_file(char *fn)
 		return (TRUE);
 	}
 	return (FALSE);
-
 }
+
+char is_alias(char *str)
+{
+	alias_t *aliases = *((alias_t **)get_shell_prop(ALIAS_LIST_ID));
+	alias_t *cur = aliases == NULL ? NULL : aliases;
+
+	while (cur != NULL)
+	{
+		if (str_cmp(str, cur->name) == 0)
+			return (TRUE);
+		cur = cur->next;
+	}
+	return (FALSE);
+}
+

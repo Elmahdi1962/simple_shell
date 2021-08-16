@@ -1,5 +1,11 @@
 #include "main.h"
 
+/**
+ * parse_cmd_line - Processes a line of command into a list of command nodes
+ * @line: The line of commands
+ *
+ * Return: The list of command nodes
+ */
 cmd_t *parse_cmd_line(char *line)
 {
 	int i = 0, c;
@@ -98,6 +104,13 @@ void read_operator(char *line, int *pos, char prev_token,
 	*pos = i;
 }
 
+/**
+ * read_word - Reads a word from the given line
+ * @line: The line to read from
+ * @pos: The position in the line to start from
+ *
+ * Return: The word, otherwise NULL
+ */
 char *read_word(char *line, int *pos)
 {
 	int i = *pos, j = *pos, k = 0, quote_o = 0, len = 0;
@@ -139,13 +152,18 @@ char *read_word(char *line, int *pos)
 	return (word);
 }
 
-
+/**
+ * read_variable - Reads a variable from the given string
+ * @str: The string to read from
+ * @pos: The position in the string to start from
+ *
+ * Return: The variable, otherwise NULL
+ */
 char *read_variable(char *str, int pos)
 {
 	int i = pos, j, len;
 	char *var = NULL;
 
-	printf("[](r_v): %d\n", i);
 	while (*(str + i) != '\0')
 	{
 		if ( ((*(str + i) == '$') && (i == pos))
@@ -161,20 +179,25 @@ char *read_variable(char *str, int pos)
 		else
 			break;
 	}
-	printf("[](r_v): %d\n", i);
 	len = i - pos;
 	var = len > 0 ? malloc(sizeof(char) * (len + 1)) : NULL;
 	if (var != NULL)
 	{
-		for (j = 0; j < len; j++)
-			*(var + j) = *(str + pos);
+		for (j = 0, i = pos; j < len; j++, i++)
+			*(var + j) = *(str + i);
 		*(var + j) = '\0';
-		printf("[](r_v): %s\n", var);
 	}
 	return (var);
 }
 
-char *dissolve_tokens(char *str)
+/**
+ * dissolve_tokens - Performs a context-aware dissolution of tokens
+ * @str: The source string
+ * @can_free: Specifies if the given string can be freed
+ *
+ * Return: The dissolved string, otherwise NULL
+ */
+char *dissolve_tokens(char *str, char can_free)
 {
 	size_t size = 0;
 	const char incr = 0x40;
@@ -231,7 +254,7 @@ char *dissolve_tokens(char *str)
 				else
 				{
 					/* insert variable */
-					var_len = str_len(var);
+					var_len = str_len(var) + 1;
 					val_len = str_len(val);
 					if ((j + val_len) > size)
 					{
@@ -267,5 +290,23 @@ char *dissolve_tokens(char *str)
 	}
 	res = _realloc(res, sizeof(char) * j, sizeof(char) * (j + 1));
 	*(res + j) = '\0';
+	if (can_free && str != NULL)
+		free(str);
 	return (res);
 }
+
+/**
+ * dissolve_cmd_parts - Dissolves the parts of the command node
+ * @node: The command node
+ */
+void dissolve_cmd_parts(cmd_t *node)
+{
+	int i;
+
+	node->command = dissolve_tokens(node->command, TRUE);
+	for (i = 0; i < node->args_count; i++)
+	{
+		*(node->args + i) = dissolve_tokens(*(node->args + i), TRUE);
+	}
+}
+

@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <dirent.h>
+#include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -122,6 +123,7 @@ struct alias_s
 	/* The name of the alias command */
 	char *name;
 	struct command_node *cmd;
+	struct alias_s *next;
 };
 
 struct cmd_help
@@ -137,6 +139,7 @@ typedef struct alias_s alias_t;
 
 /* ******** Program (rash.c) ******** */
 
+void init_shell(int ac, char *av[], char *envp[]);
 void print_node(cmd_t *node);
 void handle_signal(int sig_num);
 char can_cancel_input();
@@ -151,11 +154,16 @@ void add_env_var(char *var, char*val);
 void remove_env_var(char *var);
 /* ******** ---------------- ******** */
 
+/* ******** History (history.c) ******** */
+
+void add_to_history(char *str);
+void save_history();
+/* ******** ---------------- ******** */
+
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 char *get_cmd_line();
 int get_var_length(char *str, int pos);
-void expand_variables(cmd_t **node);
 char **get_variables(char *str, int *vars_count);
 void print_prompt();
 /* ******** ---------------- ******** */
@@ -167,7 +175,8 @@ char *read_word(char *line, int *pos);
 void read_operator(char *line, int *pos, char prev_token,
 	cmd_t **head, cmd_t **node, char **error);
 char *read_variable(char *str, int pos);
-char *dissolve_tokens(char *str);
+char *dissolve_tokens(char *str, char can_free);
+void dissolve_cmd_parts(cmd_t *node);
 /* ******** ---------------- ******** */
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
@@ -233,6 +242,7 @@ char str_is_num(char *str);
 char is_binary_file(char *fn);
 char is_variable(char *str);
 char is_exec_file(char *fn);
+char is_alias(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

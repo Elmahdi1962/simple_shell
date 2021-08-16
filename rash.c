@@ -26,10 +26,6 @@ static char *SHELL_PID;
 static char *ERROR_MSG;
 /* static char error_set; */
 /**
- * The path containing the previous commands that were run
- */
-const char HISTORY_PATH[] = "~/.simple_shell_history";
-/**
  * The previous commands run by the program
  */
 static char **CMD_HISTORY;
@@ -42,7 +38,7 @@ static int LINE_NUM;
  * The exit code of the last executed process in this shell program
  */
 static int NODE_EXIT_CODE;
-static alias_t ALIAS_LIST;
+static alias_t *ALIAS_LIST;
 
 /**
  * main - Entry point to the simple shell program
@@ -58,20 +54,14 @@ int main(int ac, char *av[], char *envp[])
 	char *cmd_line = NULL;
 	cmd_t *cmds = NULL, *cur = NULL;
 
-	ENVP = envp;
-	for (ENVP_COUNT = 0; ENVP[ENVP_COUNT] != NULL; ENVP_COUNT++)
-		;
-	EXEC_NAME = av[0];
-	SHELL_PID = long_to_str(getpid());
-	signal(SIGINT, handle_signal);
-	signal(SIG_SHELL_ERROR, handle_signal);
-	add_env_var("SHELL", av[0]);
 	/* printf("%d, %s, %d\n", ac, av[0], isatty(STDIN_FILENO)); */
 	if (ac > 1)
 	{
 		/* TODO: Load first arg as a file */
+		file_lines = read_all_lines(av[1], &cmd_lines_count);
 		exit(127);
 	}
+	init_shell(ac, av, envp);
 	interactive = !isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE;
 	/* write(STDOUT_FILENO, "\033[2J", 4); */
 	/* write(STDOUT_FILENO, "\033[H", 3); */
@@ -91,11 +81,17 @@ int main(int ac, char *av[], char *envp[])
 			cur = cmds;
 			while (cur != NULL)
 			{
+				dissolve_cmd_parts(cur);
 				if (file_lines != NULL && cur->next != NULL)
 				{
 					perror("There should be only one command per line\n");
 					break;
 				}
+				if (is_alias(cur->command))
+				{
+					/* TODO: Try to insert in current position */
+				}
+				printf(":: %s\n", cur->command);
 				if (is_built_in_cmd(cur))
 				{
 					NODE_EXIT_CODE = exec_built_in_cmd(cur);
@@ -105,7 +101,7 @@ int main(int ac, char *av[], char *envp[])
 					perror("not found");
 					NODE_EXIT_CODE = 127;
 				}
-				print_node(cur);
+				/* print_node(cur); */
 				cur = cur->next;
 			}
 			free_list(cmds);
@@ -113,7 +109,6 @@ int main(int ac, char *av[], char *envp[])
 		free(cmd_line);
 		a += (!interactive ? 1 : 0);
 	}
-	/* printf("---\n"); */
 	return (0);
 }
 
@@ -127,6 +122,23 @@ void print_node(cmd_t *node)
 	{
 		printf("    arg[%d]: %s \n", i, *(node->args + i));
 	}
+}
+
+/**
+ * init_shell - Entry point to the simple shell program
+ * @ac: The number of arguments passed
+ * @av: The arguments passed
+ */
+void init_shell(int ac, char *av[], char *envp[])
+{
+	ENVP = envp;
+	for (ENVP_COUNT = 0; ENVP[ENVP_COUNT] != NULL; ENVP_COUNT++)
+		;
+	EXEC_NAME = av[0];
+	SHELL_PID = long_to_str(getpid());
+	signal(SIGINT, handle_signal);
+	signal(SIG_SHELL_ERROR, handle_signal);
+	add_env_var("SHELL", av[0]);
 }
 
 /**

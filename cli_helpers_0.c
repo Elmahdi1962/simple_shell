@@ -65,36 +65,6 @@ char *get_cmd_line()
 }
 
 /**
- * expand_variables - Expands the variables in a node
- * @node: The node
- */
-void expand_variables(cmd_t **node)
-{
-	int i, j, n;
-	char **vars = NULL, *var_val;
-
-	for (i = 0; i < (*node)->args_count; i++)
-	{
-		vars = get_variables((*node)->args[i], &n);
-		if (vars != NULL)
-		{
-			for (j = 0; j < n; j++)
-			{
-				if (str_cmp("$?", *(vars + j)) == 0)
-					var_val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
-				else if (str_cmp("$$", *(vars + j)) == 0)
-					var_val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
-				else
-					var_val = str_copy(get_env_var(*(vars + j)));
-				(*node)->args[i] = str_replace((*node)->args[i],
-					*(vars + j), var_val, TRUE);
-			}
-		}
-	}
-}
-
-
-/**
  * get_variables - Retrieves an array of variables from a string
  * @str: The source string
  * @vars_count
@@ -112,7 +82,6 @@ char **get_variables(char *str, int *vars_count)
 		if (*(str + i) == '$')
 		{
 			tmp = read_variable(str, i + 1);
-			printf("[%d](e_v): %d, %s\n", p, str_len(tmp), tmp);
 			if (tmp != NULL)
 			{
 				vars = _realloc(vars, sizeof(void *) * p, sizeof(void *) * (p + 1));
@@ -134,14 +103,16 @@ char **get_variables(char *str, int *vars_count)
 	return (vars);
 }
 
+/**
+ * print_prompt - Prints the prompt for this shell program
+ */
 void print_prompt()
 {
-	char *ps1 = get_env_var("PS1");
+	char *ps1 = str_copy(get_env_var("PS1"));
 	int j, n;
-	char **vars = NULL, *var_val;
-	
+	char **vars = NULL, *var_val = NULL;
+
 	vars = get_variables(ps1, &n);
-	printf("[] (p_p): %s\n", ps1);
 	if (vars != NULL)
 	{
 		for (j = 0; j < n; j++)
@@ -151,9 +122,10 @@ void print_prompt()
 			else if (str_cmp("$$", *(vars + j)) == 0)
 				var_val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
 			else
-				var_val = str_copy(get_env_var(*(vars + j)));
+				var_val = str_copy(get_env_var(*(vars + j) + 1));
 			ps1 = str_replace(ps1, *(vars + j), var_val, TRUE);
 		}
+		free(vars);
 	}
 	write(STDOUT_FILENO, ps1, str_len(ps1));
 }
