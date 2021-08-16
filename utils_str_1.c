@@ -100,18 +100,20 @@ char *str_cat(char *left, char *right, char can_free)
  */
 char *copy_range(char *str, int a, int b)
 {
-	int len = str_len(str), i = 0;
-	int start = MIN(a, b), end = MAX(a, b);
-	char *res = NULL;
+	int len = str_len(str), i;
+    int start = MIN(a, b);
+    int end = MAX(a, b);
+    int reslen = end - start;
+    char *res = malloc(sizeof(char) * (reslen + 1));
 
-	res = malloc(sizeof(char) * (end - start + 1));
-	if (start < len && end <= len)
-	{
-		for (i = 0; i < (end - start + 1); i++)
-			*(res + i) = *(str + start + i);
-		*(res + i) = '\0';
-	}
-	return (res);
+    if (start < len && end <= len)
+    {
+		for (i=0; i < reslen; i++)
+       		res[i] = str[start + i];
+        res[i] = '\0';
+    }
+	
+    return res;
 }
 
 /**
