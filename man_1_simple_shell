@@ -1,49 +1,120 @@
 ." Process this file with
 ." groff -man -Tascii man_1_simple_shell
 ." Render on terminal with
-." man ./man_1_simple_shell
+." man ./man_1_simple_shell or viewman
 ."
-.TH man 1 "26 August 2021" "v 1.0" "simple_shell man page"
+.Dd August 26, 2021
+.Os
+.Dt RASH 1
+.Sh NAME
+.Nm rash
+.Nd command interpreter (shell)
 
-.SH Name
-.B rash
-- ALX RAgnar SHell
+.Sh SYNOPSIS
+.Nm
+.Bk -words
+.Op file
+.Bk
+.Ek
 
-.SH Synopsis
-rash [file]
-OR
-command_string | rash
-
-.SH Description
+.Sh DESCRIPTION
 The
 .B _printf
 function produces output according to a
 .IB format
 as described below.
 
-.SH OPTION
-currently no options are supported
+.Ss Lexical Structure
+The shell reads input in terms of lines from a file and breaks it up into
+words at whitespace (blanks and tabs), and at certain sequences of
+characters that are special to the shell called
+.Dq operators .
+Following is a list of operators:
+.Bl -ohang -offset indent
+.It "Control operators:"
+.Dl &&  \&;  || \*[Lt]newline\*[Gt]
+.El
+
+.Ss Quoting
+Quoting is used to remove the special meaning of certain characters or
+words to the shell, such as operators or whitespace.
+There are two types of quoting: matched single quotes,
+and matched double quotes.
+
+.Ss Single Quotes
+Enclosing characters in single quotes preserves the literal meaning of all
+the characters (except single quotes, making it impossible to put
+single-quotes in a single-quoted string).
+
+.Ss Double Quotes
+Enclosing characters within double quotes preserves the literal
+meaning of all characters except dollarsign as they're used to signify
+the start of a variable or special parameters like ? and $.
+
+.Ss Aliases
+An alias is a name and corresponding value set using the alias builtin command.
+Whenever a word is read, the shell
+checks the word to see if it matches an alias.
+If it does, it replaces it in the input stream with its value.
+For example, if there is an alias called
+.Dq put
+with the value
+.Dq "echo -e" ,
+then the input:
+.Pp
+.Dl put "\e[31mCool\e[0m" Aq return
+.Pp
+would become
+.Pp
+.Dl echo -e "\e[31mCool\e[0m" Aq return
+.Pp
+Aliases provide a convenient way for naive users to create shorthands for
+commands.
+They can also be used to create lexically obscure code.
+This use is discouraged.
+
+."-------------------------------
+." Continue from here
+
+
+.SH Option
+Currently no options are supported
+
+.SH Comments
+
 
 .SH
-Example
-/-------/
-.PP
-.nf
-.RS
-#include "holberton.h"
-_printf("Wind: %d%s and Precipitation: %d%%\\n", 28, "km/h", 0x1a);
-.RE
-.fi
-.EX
+HISTORY
+On startup, the history is initialized from the file .simple_shell_history in the $HOME directory.
+This file is truncated to
+contain no more than 4096 lines of command strings. When the shell startsup,
+the first line number is set to  the number of lines in the .simple_shell_history file modulo 4096
+(the history size).
 
 .SH
-Authors
-Written by Bezaleel Olakunori and Elmahdi Mamoun
+Shell Builtin Commands
+.SS
+.B alias
+[name[=value] ...]
+Running .B alias with no arguments prints the list of
+aliases in the form
+name='value'
+
+.SH
+AUTHORS
+Bezaleel Olakunori, ALX
+
+bezaleeloci@gmail.com
+
+Elmahdi Mamoun, ALX
+
+mamounelmahdi1962@gmail.com
 
 .SH Reporting Bugs
 Report
 .SB simple_shell
 bugs to <https://github.com/Elmahdi1962/simple_shell/issues>
 
-.SH See Also
+.SH SEE ALSO
+https://linux.die.net/man/1/sh
 https://linux.die.net/man/1/bash

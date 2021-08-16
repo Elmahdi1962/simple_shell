@@ -133,7 +133,7 @@ char *read_word(char *line, int *pos)
 		}
 		else if (quote_o == 0)
 		{
-			if (is_operator(*(line + i)) || (is_whitespace(*(line + i))) || (*(line + i) == '#'))
+			if (is_operator(*(line + i)) || (is_whitespace(*(line + i))))
 				break;
 		}
 		i++, len++;

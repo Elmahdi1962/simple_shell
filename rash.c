@@ -26,19 +26,9 @@ static char *SHELL_PID;
 static char *ERROR_MSG;
 /* static char error_set; */
 /**
- * The previous commands run by the program
- */
-static char **CMD_HISTORY;
-static int CMD_HISTORY_COUNT;
-/**
- * The current line number of the shell program
- */
-static int LINE_NUM;
-/**
  * The exit code of the last executed process in this shell program
  */
 static int NODE_EXIT_CODE;
-static alias_t *ALIAS_LIST;
 
 /**
  * main - Entry point to the simple shell program
@@ -54,15 +44,7 @@ int main(int ac, char *av[], char *envp[])
 	char *cmd_line = NULL;
 	cmd_t *cmds = NULL, *cur = NULL;
 
-	/* printf("%d, %s, %d\n", ac, av[0], isatty(STDIN_FILENO)); */
-	if (ac > 1)
-	{
-		/* TODO: Load first arg as a file */
-		file_lines = read_all_lines(av[1], &cmd_lines_count);
-		exit(127);
-	}
-	init_shell(ac, av, envp);
-	interactive = !isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE;
+	init_shell(ac, av, envp, &cmd_lines_count, &file_lines, &interactive);
 	/* write(STDOUT_FILENO, "\033[2J", 4); */
 	/* write(STDOUT_FILENO, "\033[H", 3); */
 
@@ -73,10 +55,7 @@ int main(int ac, char *av[], char *envp[])
 		cmd_line = file_lines == NULL ? get_cmd_line() : *(file_lines + a);
 		if (str_len(cmd_line) > 0)
 		{
-			CMD_HISTORY = _realloc(CMD_HISTORY, sizeof(void *) * CMD_HISTORY_COUNT,
-				sizeof(void *) * (CMD_HISTORY_COUNT + 1));
-			*(CMD_HISTORY + CMD_HISTORY_COUNT) = str_copy(cmd_line);
-			CMD_HISTORY_COUNT++;
+			add_to_history(cmd_line);
 			cmds = parse_cmd_line(cmd_line);
 			cur = cmds;
 			while (cur != NULL)
@@ -128,17 +107,38 @@ void print_node(cmd_t *node)
  * init_shell - Entry point to the simple shell program
  * @ac: The number of arguments passed
  * @av: The arguments passed
+ * @cmd_lines_count: The number of lines of commands strings in a passed file
+ * @file_lines: The lines of command strings in a passed file
+ * @interactive: The pointer to the interactive variable
  */
-void init_shell(int ac, char *av[], char *envp[])
+void init_shell(int ac, char *av[], char *envp[],
+	int *cmd_lines_count, char ***file_lines, char *interactive)
 {
+	if (ac > 2)
+	{
+		write(STDERR_FILENO, "Usage: ", 7);
+		write(STDERR_FILENO, av[0], str_len(av[0]));
+		write(STDERR_FILENO, "[file]", 6);
+		write(STDERR_FILENO, "\n", 1);
+		exit(EC_INVALID_ARGS);
+	}
+	if (ac == 2)
+	{
+		/* TODO: Load first arg as a file */
+		*file_lines = read_all_lines(av[1], cmd_lines_count);
+		exit(127);
+	}
 	ENVP = envp;
 	for (ENVP_COUNT = 0; ENVP[ENVP_COUNT] != NULL; ENVP_COUNT++)
 		;
 	EXEC_NAME = av[0];
 	SHELL_PID = long_to_str(getpid());
+	*interactive = !isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE;
 	signal(SIGINT, handle_signal);
 	signal(SIG_SHELL_ERROR, handle_signal);
 	add_env_var("SHELL", av[0]);
+	manage_aliases(MO_INIT);
+	/* manage_aliases(MO_INIT); */
 }
 
 /**
@@ -151,7 +151,7 @@ void handle_signal(int sig_num)
 
 	if (sig_num == SIG_SHELL_ERROR)
 	{
-		buf = long_to_str(LINE_NUM);
+		buf = long_to_str(get_line_num());
 		write(STDERR_FILENO, EXEC_NAME, str_len(EXEC_NAME));
 		write(STDERR_FILENO, ": ", 2);
 		if (buf != NULL)
@@ -186,18 +186,12 @@ void *get_shell_prop(char prop_id)
 		return (&ENVP);
 	case ENVP_COUNT_ID:
 		return (&ENVP_COUNT);
-	case CMD_HISTORY_ID:
-		return (&CMD_HISTORY);
-	case CMD_HISTORY_COUNT_ID:
-		return (&CMD_HISTORY_COUNT);
 	case EXEC_NAME_ID:
 		return (&EXEC_NAME);
 	case SHELL_PID_ID:
 		return (&SHELL_PID);
 	case NODE_EXIT_CODE_ID:
 		return (&NODE_EXIT_CODE);
-	case ALIAS_LIST_ID:
-		return (&ALIAS_LIST);
 	default:
 		break;
 	}

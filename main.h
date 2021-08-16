@@ -78,6 +78,17 @@ enum Token_Types
 };
 
 /**
+ * Operation codes for managing some resources
+ */
+enum Management_Operations
+{
+	/* Initialize the resources */
+	MO_INIT = 0,
+	/* Free the resources */
+	MO_FREE = 1
+};
+
+/**
  * Exit codes for the built-in commands
  */
 enum Exit_Codes
@@ -86,7 +97,6 @@ enum Exit_Codes
 	/* The argument was invalid */
 	EC_INVALID_ARGS = 2
 };
-
 
 /**
  * command_node - Represent a command and its arguments.
@@ -120,10 +130,10 @@ struct built_in_cmd_s
 
 struct alias_s
 {
-	/* The name of the alias command */
+	/* The name of the alias */
 	char *name;
-	struct command_node *cmd;
-	struct alias_s *next;
+	/* The value of the alias */
+	char *value;
 };
 
 struct cmd_help
@@ -139,11 +149,29 @@ typedef struct alias_s alias_t;
 
 /* ******** Program (rash.c) ******** */
 
-void init_shell(int ac, char *av[], char *envp[]);
+void init_shell(int ac, char *av[], char *envp[],
+	int *cmd_lines_count, char ***file_lines, char *interactive);
 void print_node(cmd_t *node);
 void handle_signal(int sig_num);
 char can_cancel_input();
 void *get_shell_prop(char prop_id);
+/* ******** ---------------- ******** */
+
+/* ******** Alias Manager (alias_manager.c) ******** */
+
+void manage_aliases(char op);
+void add_alias(char *name, char *value);
+char *get_alias_value(char *str);
+alias_t **get_aliases(int *len);
+/* ******** ---------------- ******** */
+
+/* ******** History Manager (history_manager.c) ******** */
+
+void manage_history(int op);
+void add_to_history(char *str);
+void save_history();
+char **get_history();
+int get_line_num();
 /* ******** ---------------- ******** */
 
 /* ******** Environment Variable Helpers (env_var_helpers.c) ******** */

@@ -10,12 +10,12 @@ fi
 #endregion
 
 #region Helper Functions
+SHELL_NAME="rash"
 
-build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g *.c -o rash; }
-
-run () { ./rash; }
-
-vueman () { man ./man_1_simple_shell; }
+build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g *.c -o $SHELL_NAME; }
+run () { ./$SHELL_NAME; }
+install () { cp ./$SHELL_NAME /usr/bin; tar -czvf $SHELL_NAME.1.gz man_1_simple_shell; cp ./$SHELL_NAME.1.gz /usr/share/man/man1/$SHELL_NAME.1.gz; }
+viewman () { man ./man_1_simple_shell; }
 
 #endregion
 

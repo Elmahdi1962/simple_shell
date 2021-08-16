@@ -29,6 +29,37 @@ char str_is_num(char *str)
 }
 
 /**
+ * is_built_in_cmd - Checks if a command is a built-in command
+ * @cmd: The command to check
+ *
+ * Return: TRUE if it is built-in, otherwise FALSE
+ */
+char is_built_in_cmd(cmd_t *node)
+{
+	int i;
+	char *built_in_cmds[] = {
+		"alias",
+		"cd",
+		"env",
+		"exit",
+		"help",
+		"history",
+		"setenv",
+		"unsetenv",
+		NULL
+	};
+
+	for (i = 0; *(built_in_cmds + i) != NULL; i++)
+	{
+		if (str_cmp("env", node->command) == 0)
+			return (node->args_count == 0 ? TRUE : FALSE);
+		else if (str_cmp(*(built_in_cmds + i), node->command) == 0)
+			return (TRUE);
+	}
+	return (FALSE);
+}
+
+/**
  * is_binary_file - checks if a file is a binary file
  * @fn: file file name
  * Return: True or False
@@ -84,11 +115,11 @@ char is_variable(char *str)
 }
 
 /**
- * is_exec_file - checks if a file is a binary file
- * @fn:  file name
+ * is_exec_file - Checks if a file is a binary file
+ * @fn: The name of the file
+ *
  * Return: True or False
  */
-
 char is_exec_file(char *fn)
 {
 	struct stat sb;
@@ -99,18 +130,3 @@ char is_exec_file(char *fn)
 	}
 	return (FALSE);
 }
-
-char is_alias(char *str)
-{
-	alias_t *aliases = *((alias_t **)get_shell_prop(ALIAS_LIST_ID));
-	alias_t *cur = aliases == NULL ? NULL : aliases;
-
-	while (cur != NULL)
-	{
-		if (str_cmp(str, cur->name) == 0)
-			return (TRUE);
-		cur = cur->next;
-	}
-	return (FALSE);
-}
-

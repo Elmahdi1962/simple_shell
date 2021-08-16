@@ -20,4 +20,5 @@ Load the bash script into your terminal using `source .bashrc`. This would enabl
 
 1. `build` - Builds the program
 2. `run` - Runs the built version of the program
-3. `vueman` - Opens the man page for the program
+3. `install` - Installs the built version of the program
+4. `viewman` - Opens the man page for the program
