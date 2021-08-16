@@ -276,6 +276,7 @@ char is_binary_file(char *fn);
 char is_variable(char *str);
 char is_exec_file(char *fn);
 char is_alias(char *str);
+int is_regular_file(const char *path);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

@@ -9,23 +9,32 @@
 
 char *check_path(char *str)
 {
-	char *pwd = get_env_var("PWD"), *full_path, *file_path = str;
+	char *pwd = get_env_var("PWD"), *full_path, *file_path = str, *errorMessage;
 	int fd;
 
 	if (*str == '.')
 	{
-		full_path = str_cat(pwd, file_path, FALSE);
+		full_path = str_cat(pwd, file_path+1, FALSE);
 		fd = open(full_path, O_RDONLY);
 		if (fd >= 0)
 		{
 			close(fd);
-			if (is_exec_file("test"))
+
+			if (is_exec_file(full_path) && is_regular_file(full_path))
 			{
 				return(full_path);
 			}
-			perror("file is not executable\n");
+
+			errorMessage = str_cat("rash: ", file_path, FALSE);
+			perror(errorMessage);
+			free(errorMessage);
+			free(full_path);
 			return(NULL);
 		}
+		errorMessage = str_cat("rash: ", file_path, FALSE);
+		perror(errorMessage);
+		free(errorMessage);
+		free(full_path);
 		return (NULL);
 	}
 	if (*str == '/')
@@ -35,13 +44,18 @@ char *check_path(char *str)
 		if (fd >= 0)
 		{
 			close(fd);
-			if (is_exec_file(full_path))
+			if (is_exec_file(full_path) && is_regular_file(full_path))
 			{
 				return(full_path);
 			}
-			perror("file is not executable\n");
+			errorMessage = str_cat("rash: ", full_path, FALSE);
+			perror(errorMessage);
+			free(errorMessage);
 			return(NULL);
 		}
+		errorMessage = str_cat("rash: ", full_path, FALSE);
+		perror(errorMessage);
+		free(errorMessage);
 		return (NULL);
 	}
 	/*the file path doesn't start with . or / */
@@ -82,6 +96,7 @@ char *search_path(char *command)
 		}
 		free(full_path);
 	}
+	perror("command doesn't exist\n");
 	free_array(paths);
 	return (NULL);
 }
