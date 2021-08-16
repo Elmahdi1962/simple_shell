@@ -4,9 +4,10 @@ static alias_t **Alias_List;
 static int Alias_Count;
 
 /**
- * manage_aliases - Performs some management operations on the aliases
+ * manage_aliases - Performs some management operations \
+ * on the aliases
  * @op: The operation to perform
-*/
+ */
 void manage_aliases(char op)
 {
 	int i;

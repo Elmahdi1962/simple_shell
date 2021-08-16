@@ -26,6 +26,7 @@
 #ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
+#define HISTORY_PATH "~/.simple_shell_history"
 #define MAX_INT_STR "2147483647"
 #define SIG_SHELL_ERROR 1738
 
@@ -163,6 +164,7 @@ void manage_aliases(char op);
 void add_alias(char *name, char *value);
 char *get_alias_value(char *str);
 alias_t **get_aliases(int *len);
+void remove_alias(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** History Manager (history_manager.c) ******** */
@@ -211,7 +213,7 @@ void dissolve_cmd_parts(cmd_t *node);
 
 char get_char(int fd, char action);
 char *read_line(int fd, char action);
-char **read_all_lines(char *file_name, int *lines);
+char **read_all_lines(char *file_name, int flags, int *lines);
 /* ******** ---------------- ******** */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);

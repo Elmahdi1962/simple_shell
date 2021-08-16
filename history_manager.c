@@ -1,10 +1,6 @@
 #include "main.h"
 
 /**
- * The path containing the previous commands that were run
- */
-const char HISTORY_PATH[] = "~/.simple_shell_history";
-/**
  * The maximum size of the history buffer
  */
 const short HISTORY_SIZE = 1 << 12;
@@ -22,17 +18,29 @@ static char Is_Full;
  */
 static int Line_Num;
 
+/**
+ * manage_history - Performs some management operations \
+ * on the commands history
+ * @op: The operation to perform
+ */
 void manage_history(int op)
 {
-	int i, fd;
+	int i, n = 0;
+	char **file_lines = NULL;
 
 	if (op == MO_INIT)
 	{
-		/* Load history file*/
-		fd = open(HISTORY_PATH, O_RDONLY | O_CREAT);
-		if (fd >= 0)
+		/* Load history file */
+		file_lines = read_all_lines(HISTORY_PATH, O_RDONLY | O_CREAT, &n);
+		if (file_lines != NULL)
 		{
-			close(fd);
+			for (i = 0; i < MIN(n, HISTORY_SIZE); i++)
+			{
+				add_to_history(*(file_lines + i));
+				free(*(file_lines + i));
+			}
+			free(file_lines);
+			Line_Num = (n % HISTORY_SIZE);
 		}
 	}
 	else if (op == MO_FREE)
@@ -69,6 +77,8 @@ void add_to_history(char *str)
 	{
 		Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
 			sizeof(void *) * (size + 1));
+		if (Is_Full)
+			free(*(Cmd_History + Line_Num));
 		*(Cmd_History + Line_Num) = str_copy(str);
 		Is_Full = Is_Full ? Is_Full : (Line_Num + 1 == HISTORY_SIZE ? TRUE : FALSE);
 		Line_Num = ((Line_Num + 1) % HISTORY_SIZE);

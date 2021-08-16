@@ -24,7 +24,6 @@ static char *EXEC_NAME;
  */
 static char *SHELL_PID;
 static char *ERROR_MSG;
-/* static char error_set; */
 /**
  * The exit code of the last executed process in this shell program
  */
@@ -91,6 +90,7 @@ int main(int ac, char *av[], char *envp[])
 	return (0);
 }
 
+/* TODO: Remove when program is stable */
 void print_node(cmd_t *node)
 {
 	int i;
@@ -125,7 +125,7 @@ void init_shell(int ac, char *av[], char *envp[],
 	if (ac == 2)
 	{
 		/* TODO: Load first arg as a file */
-		*file_lines = read_all_lines(av[1], cmd_lines_count);
+		*file_lines = read_all_lines(av[1], O_RDONLY, cmd_lines_count);
 		exit(127);
 	}
 	ENVP = envp;
@@ -138,7 +138,7 @@ void init_shell(int ac, char *av[], char *envp[],
 	signal(SIG_SHELL_ERROR, handle_signal);
 	add_env_var("SHELL", av[0]);
 	manage_aliases(MO_INIT);
-	/* manage_aliases(MO_INIT); */
+	manage_history(MO_INIT);
 }
 
 /**

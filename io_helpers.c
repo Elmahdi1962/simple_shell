@@ -3,11 +3,12 @@
 /**
  * read_all_lines - Reads all the lines in a text file
  * @file_name: The path to the file
+ * @flags: The flags to use when reading the file
  * @lines: A pointer to the lines in the file
  *
  * return: A 2D array of the files contents, otherwise NULL
  */
-char **read_all_lines(char *file, int *lines)
+char **read_all_lines(char *file, int flags, int *lines)
 {
 	int j, n, fd, buf_size = 126;
 	char *buf = NULL;
@@ -15,7 +16,7 @@ char **read_all_lines(char *file, int *lines)
 
 	if (file == NULL)
 		return (NULL);
-	fd = open(file, O_RDONLY);
+	fd = open(file, flags);
 	if (fd >= 0)
 	{
 		buf = malloc(sizeof(char) * (buf_size + 1));
@@ -39,4 +40,3 @@ char **read_all_lines(char *file, int *lines)
 	}
 	return (str_split(str, '\n', lines, TRUE));
 }
-

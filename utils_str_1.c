@@ -128,25 +128,28 @@ char **str_split(char *str, char c, int *len, char can_free)
 	int i, j = 0, n = 0;
 	char **strs = NULL;
 
-	for (i = 0; *(str + i) != '\0'; i++)
+	if (str != NULL)
 	{
-		if (*(str + i) == c)
+		for (i = 0; *(str + i) != '\0'; i++)
+		{
+			if (*(str + i) == c)
+			{
+				strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
+				*(strs + n) = copy_range(str, j, i - 1);
+				j = i + 1;
+				n++;
+			}
+		}
+		if (*(str + i - 1) != c)
 		{
 			strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
-			*(strs + n) = copy_range(str, j, i - 1);
-			j = i + 1;
+			*(strs + n) = copy_range(str, j, i);
 			n++;
 		}
 	}
-	if (*(str + i - 1) != c)
-	{
-		strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
-		*(strs + n) = copy_range(str, j, i);
-		n++;
-	}
 	if (len != NULL)
 		*len = n;
-	if (can_free)
+	if (can_free && str != NULL)
 		free(str);
 	return (strs);
 }
