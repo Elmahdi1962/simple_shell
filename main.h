@@ -26,10 +26,9 @@
 #ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
-#define HISTORY_PATH "~/.simple_shell_history"
+#define HISTORY_FILE "/.simple_shell_history"
 #define MAX_INT_STR "2147483647"
 #define SIG_SHELL_ERROR 1738
-
 
 /**
  * SHELL_PROP_IDS - Consists of the shell's property ids
@@ -211,9 +210,10 @@ void dissolve_cmd_parts(cmd_t *node);
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
 
-char get_char(int fd, char action);
-char *read_line(int fd, char action);
+/* char get_char(int fd, char action); */
+/* char *read_line(int fd, char action); */
 char **read_all_lines(char *file_name, int flags, int *lines);
+void print_text(int fd, char *text[], int n);
 /* ******** ---------------- ******** */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
@@ -258,6 +258,7 @@ char *copy_range(char *str, int a, int b);
 char **str_split(char *str, char c, int *len, char can_free);
 char *str_replace(char *str, char *sub_str, char *rep_str, char can_free);
 char *long_to_str(long num);
+char *rep_range(char *str, char *val, int a, int b);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */
@@ -273,6 +274,7 @@ char is_binary_file(char *fn);
 char is_variable(char *str);
 char is_exec_file(char *fn);
 char is_alias(char *str);
+char is_name_value_pair(char *str, char **name_out, char **value_out);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

@@ -40,3 +40,17 @@ char **read_all_lines(char *file, int flags, int *lines)
 	}
 	return (str_split(str, '\n', lines, TRUE));
 }
+
+/**
+ * print_text - Writes an array of strings to a file handle
+ * @fd: The file handle to write to
+ * @text: The array of strings to write
+ * @n: The number of items in the array of strings
+ */
+void print_text(int fd, char *text[], int n)
+{
+	int i;
+
+	for (i = 0; i < n; i++)
+		write(fd, text[i], str_len(text[i]));
+}
