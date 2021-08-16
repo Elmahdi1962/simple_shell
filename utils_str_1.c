@@ -108,7 +108,7 @@ char *copy_range(char *str, int a, int b)
 
     if (start < len && end <= len)
     {
-		for (i=0; i < reslen; i++)
+		for (i=0; i <= reslen; i++)
        		res[i] = str[start + i];
         res[i] = '\0';
     }
