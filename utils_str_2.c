@@ -106,33 +106,47 @@ char *long_to_str(long num)
 	return (str);
 }
 
-
+/**
+ * rep_range - Replaces a range of text in a string
+ * @str: The source string
+ * @val: The value to use as a replacement
+ * @a: The starting index
+ * @b: The ending index
+ *
+ * Return: The replaced string, otherwise NULL
+ */
 char *rep_range(char *str, char *val, int a, int b)
 {
-	int len = str_len(str), val_len = str_len(val), i = 0, j = 0, k = 0;
+	int len = str_len(str), in_len = str_len(val), i = 0, j = 0, k = 0;
 	int start = MIN(a, b), end = MAX(a, b), size;
 	char *res = NULL;
+	int out_len = end - start + 1, offset;
 
-	size = val_len > (end - start + 1);
-	if ((end - start + 1) > val_len)
+	offset = (in_len - out_len < 0 ? 0 : in_len - out_len);
+	size = len + (in_len == out_len ? 0 :  in_len - out_len);
 	res = malloc(sizeof(char) * (size + 1));
 	if (res != NULL)
 	{
-		for (i = 0; i < size; i++)
+		for (i = 0; i < size; )
 		{
-			if (i >= a && i <= b)
+			if (i == start)
 			{
-				*(res + i) = *(val + j);
-				j++;
+				for (j = 0; j < in_len; j++)
+				{
+					*(res + i) = *(val + j);
+					i++;
+				}
+				k = start + out_len;
 			}
 			else
 			{
 				*(res + i) = *(str + k);
 				k++;
+				i++;
 			}
 		}
+		*(res + i) = '\0';
 	}
-	*(res + i) = '\0';
 	return (res);
 }
 
