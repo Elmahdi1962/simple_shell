@@ -17,6 +17,7 @@ build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g -ggdb3 *.c -o $SHEL
 run () { ./$SHELL_NAME; }
 install () { cp ./$SHELL_NAME /usr/bin; tar -czvf $SHELL_NAME.1.gz man_1_simple_shell; cp ./$SHELL_NAME.1.gz /usr/share/man/man1/$SHELL_NAME.1.gz; }
 viewman () { man ./man_1_simple_shell; }
+val () { valgrind -s --leak-check=full --track-origins=yes --show-leak-kinds=all ./rash; }
 
 #endregion
 
