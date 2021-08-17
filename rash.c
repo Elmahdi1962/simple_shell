@@ -78,6 +78,7 @@ int main(int ac, char *av[], char *envp[])
 				}
 				else if (is_normal_program(cur, &tmp))
 				{
+					printf("program: %s\n", tmp);
 					NODE_EXIT_CODE = exec_program(cur, tmp);
 					free(tmp);
 				}
@@ -158,7 +159,6 @@ void init_shell(int ac, char *av[], char *envp[],
 	manage_history(MO_INIT);
 }
 
-
 /**
  * handle_signal - Handles a signal received by the program
  * @sig_num: The signal's code
@@ -216,6 +216,9 @@ void *get_shell_prop(char prop_id)
 	return (NULL);
 }
 
+/**
+ * clean_up_shell - Frees resources used by this shell instance
+ */
 void clean_up_shell(void)
 {
 	/* save_history(); */
