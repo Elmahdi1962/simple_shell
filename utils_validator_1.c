@@ -16,9 +16,18 @@ char str_is_num(char *str)
 		if (firstc)
 		{
 			if (*string == '-' || *string == '+')
+			{
 				string++;
-			firstc = 0;
-			continue;
+				continue;
+			}
+
+			if (*string >= '0' && *string <= '9')
+			{
+				string++;
+				continue;
+			}
+
+			return (FALSE);
 		}
 		if (*string >= '0' && *string <= '9')
 			string++;
