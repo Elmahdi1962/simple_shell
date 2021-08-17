@@ -6,7 +6,7 @@
  * @right: The string on the right side
  *
  * Return: TRUE if they're equal and not NULL, otherwise FALSE
-*/
+ */
 int str_eql(char *left, char *right)
 {
 	int i;
@@ -112,21 +112,18 @@ char *copy_range(char *str, int a, int b)
  * str_split - Splits a string into smaller strings at a given character
  * @str: The string to split
  * @c: The character at which to perform the split
- * @len: The pointer which would contain the number of smaller strings
+ * @len_out: The pointer which would contain the number of smaller strings
  * @can_free: Specifies if the string can be freed
  *
  * Return: A pointer to the first string in the array of strings
 */
-char **str_split(char *str, char c, int *len, char can_free)
+char **str_split(char *str, char c, int *len_out, char can_free)
 {
 	int i, j = 0, n = 0;
 	char **strs = NULL;
 
 	if (str == NULL)
-	{
-		perror("str is null\n");
 		return (NULL);
-	}
 	if (str != NULL)
 	{
 		for (i = 0; *(str + i) != '\0'; i++)
@@ -146,8 +143,8 @@ char **str_split(char *str, char c, int *len, char can_free)
 			n++;
 		}
 	}
-	if (len != NULL)
-		*len = n;
+	if (len_out != NULL)
+		*len_out = n;
 	if (can_free && str != NULL)
 		free(str);
 	return (strs);

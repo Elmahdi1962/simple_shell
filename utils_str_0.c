@@ -14,12 +14,18 @@ int str_to_int(char *num)
 	len = str_len(num);
 	for (i = len - 1; i >= 0; i--)
 	{
-		if (*(num + i) == '-')
+		if ((*(num + i) == '-') && (i == 0))
+		{
 			res *= -1;
+		}
 		else if (is_digit(*(num + i)))
 		{
 			res += (*(num + i) - '0') * exp;
 			exp *= 10;
+		}
+		else
+		{
+			return (0);
 		}
 	}
 	return (res);
@@ -41,11 +47,10 @@ int str_len(char *str)
 }
 
 /**
- * mem_set - Fills a section of a string with a given character
- * \ (starts from position 0)
- * @str: The string containing the section to be filled
- * @n: The length of the section to fill
- * @c: The character to fill the section with
+ * mem_set - Fills a section of a buffer with a given byte
+ * @str: The buffer containing the section to be filled
+ * @n: The length of the buffer to fill
+ * @c: The byte to fill the buffer's section with
  */
 void mem_set(char *str, int n, char c)
 {
