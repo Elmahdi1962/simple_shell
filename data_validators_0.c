@@ -5,6 +5,8 @@
  * @str: file name it could enclude ./ like "./program"
  *
  * Return: full path or NULL
+ * NOTE : IF THIS FUNCTION RETURNED A PATH (NOT NULL) THEN YOU NEED TO FREE THAT VARIABLE
+ * AFTER FINISHING USING IT
  */
 char *check_path(char *str)
 {
