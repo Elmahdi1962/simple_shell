@@ -284,6 +284,7 @@ char is_alias_name(char *str);
 char is_alias_assignment(char *str, char **name_out, char **value_out);
 int is_regular_file(const char *path);
 char is_binary_file(char *fn);
+char is_normal_program(cmd_t *node, char **path_out);
 /* ******** ---------------- ******** */
 
 /* ******** Cmd_t Helpers (cmd_t_helpers.c) ******** */

@@ -37,20 +37,10 @@ int main(int ac, char *av[], char *envp[])
 {
 	int a = 0, cmd_lines_count = 1;
 	char interactive, continuation = FALSE, **file_lines = NULL;
-	char *cmd_line = NULL;
+	char *cmd_line = NULL, *tmp = NULL;
 	cmd_t *cmds = NULL, *cur = NULL;
-	/* char *p0, *p1; */
 
 	init_shell(ac, av, envp, &cmd_lines_count, &file_lines, &interactive);
-	/* p0 = "Harry_Potter_Was_Very_Good";
-	p1 = rep_range(p0, "1234", 2, 3);
-	printf("old_val: %s\nnew_val: %s\n", p0, p1);
-	free(p1);
-	p1 = rep_range(p0, "1234", 2, 2);
-	printf("old_val: %s\nnew_val: %s\n", p0, p1);
-	free(p1);
-	printf("env == e: %d\n", str_eql("env", "e")); */
-
 	while (a < cmd_lines_count)
 	{
 		if (interactive && !continuation)
@@ -81,10 +71,15 @@ int main(int ac, char *av[], char *envp[])
 					write(STDOUT_FILENO, "There should be only one command per line\n", 42);
 					break;
 				}
-				printf(":: %s, %s\n", cur->command, cmd_line);
+				/* printf(":: %s, %s\n", cur->command, cmd_line); */
 				if (is_built_in_cmd(cur) == TRUE)
 				{
 					NODE_EXIT_CODE = exec_built_in_cmd(cur);
+				}
+				else if (is_normal_program(cur, &tmp))
+				{
+					NODE_EXIT_CODE = exec_program(cur, tmp);
+					free(tmp);
 				}
 				else
 				{
@@ -92,7 +87,12 @@ int main(int ac, char *av[], char *envp[])
 					NODE_EXIT_CODE = 127;
 				}
 				/* print_node(cur); */
-				cur = cur->next;
+				if (((cur->next_cond == OP_OR) && (NODE_EXIT_CODE != 0))
+					|| ((cur->next_cond == OP_AND) && (NODE_EXIT_CODE == 0))
+					|| (cur->next_cond == OP_SEP))
+					cur = cur->next;
+				else
+					cur = NULL;
 			}
 			free_list(cmds);
 			free(cmd_line);
@@ -151,14 +151,7 @@ void init_shell(int ac, char *av[], char *envp[],
 	EXEC_NAME = av[0];
 	SHELL_PID = long_to_str(getpid());
 	*interactive = !isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE;
-	/* TODO: Enable the signal handlers when the errors are fixed */
-	/* signal(SIGHUP, handle_signal); */
 	signal(SIGINT, handle_signal);
-	/* signal(SIGQUIT, handle_signal);
-	signal(SIGABRT, handle_signal);
-	signal(SIGKILL, handle_signal);
-	signal(SIGTERM, handle_signal);
-	signal(SIGTSTP, handle_signal); */
 	signal(SIG_SHELL_ERROR, handle_signal);
 	add_env_var("SHELL", av[0]);
 	manage_aliases(MO_INIT);

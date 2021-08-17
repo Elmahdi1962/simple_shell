@@ -113,7 +113,7 @@ int sc_cd(int ac, char *av[])
 
 int sc_exit(int ac, char *av[])
 {
-	int status = EC_SUCCESS;
+	int status = *((int *)get_shell_prop(NODE_EXIT_CODE_ID));
 
 	if (ac > 0)
 	{

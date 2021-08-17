@@ -72,8 +72,10 @@ int exec_program(cmd_t *node, char *program_path)
 		rc_wait = wait(NULL);
 		/* TODO: Store the exit code */
 		printf("exit code: %d rc_w: %d\n", exit_code, rc_wait);
-		free(arg_list);
-		free(env);
+		if ((arg_list != NULL) && (exit_code != 0))
+			free(arg_list);
+		if ((env != NULL) && (exit_code != 0))
+			free(env);
 	}
 	return (exit_code);
 }
