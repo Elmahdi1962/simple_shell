@@ -1,5 +1,5 @@
 #include "main.h"
-/* FIXME: The functions in this file lead to a lot of memory leaks */
+
 /**
  * check_path - checks if the file exists
  * @str: file name it could enclude ./ like "./program"
