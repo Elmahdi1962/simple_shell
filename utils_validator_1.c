@@ -25,7 +25,7 @@ char str_is_num(char *str)
 
 /**
  * is_built_in_cmd - Checks if a command is a built-in command
- * @cmd: The command to check
+ * @node: The command node to check
  *
  * Return: TRUE if it is built-in, otherwise FALSE
  */

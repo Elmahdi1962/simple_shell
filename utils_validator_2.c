@@ -53,7 +53,7 @@ char is_alias_name(char *str)
 }
 
 /**
- * is_name_value_pair - Checks if a string is an alias assignment \
+ * is_alias_assignment - Checks if a string is an alias assignment \
  * sets the remaining parameters appropriately if TRUE
  * @str: The string to check
  * @name_out: The pointer to the output name
@@ -95,22 +95,23 @@ char is_alias_assignment(char *str, char **name_out, char **value_out)
 	return (is_assignment);
 }
 
-/** is_regular_file - check if the path is a file or a directory
- * @path: file or folder path
+/**
+ * is_regular_file - Checks if the path is a file or a directory
+ * @path: The file or folder path
  *
- * Return: 1 if is a regular file 0 if not
+ * Return: TRUE if it is a regular file, FALSE if not
  */
 int is_regular_file(const char *path)
 {
 	struct stat path_stat;
 
 	stat(path, &path_stat);
-	return S_ISREG(path_stat.st_mode);
+	return (S_ISREG(path_stat.st_mode));
 }
 
 /**
  * is_normal_program - Checks if a command node is a normal program
- * @cmd: The command node to check
+ * @node: The command node to check
  * @path_out: The pointer to the path of the program if it exists
  *
  * Return: TRUE if it is a normal program, otherwise FALSE
