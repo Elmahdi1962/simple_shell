@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 /**
  * str_replace - Replaces a string with a given string in another string
  * @str: The source string
@@ -107,7 +106,7 @@ char *long_to_str(long num)
 }
 
 /**
- * rep_range - Replaces a range of text in a string
+ * rep_range - Replaces a range of characters in a string
  * @str: The source string
  * @val: The value to use as a replacement
  * @a: The starting index
@@ -120,9 +119,8 @@ char *rep_range(char *str, char *val, int a, int b)
 	int len = str_len(str), in_len = str_len(val), i = 0, j = 0, k = 0;
 	int start = MIN(a, b), end = MAX(a, b), size;
 	char *res = NULL;
-	int out_len = end - start + 1, offset;
+	int out_len = end - start + 1;
 
-	offset = (in_len - out_len < 0 ? 0 : in_len - out_len);
 	size = len + (in_len == out_len ? 0 :  in_len - out_len);
 	res = malloc(sizeof(char) * (size + 1));
 	if (res != NULL)
@@ -149,4 +147,3 @@ char *rep_range(char *str, char *val, int a, int b)
 	}
 	return (res);
 }
-

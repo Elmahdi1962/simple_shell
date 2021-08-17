@@ -21,7 +21,7 @@ int str_cmp(char *left, char *right)
 	}
 	else
 	{
-		for (i = 0; *(left + i) != '\0' && *(right + i) != '\0'; i++)
+		for (i = 0; *(left + i) != '\0' || *(right + i) != '\0'; i++)
 		{
 			if (*(left + i) == '\0' && *(right + i) != '\0')
 				return (-1);

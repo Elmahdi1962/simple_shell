@@ -38,6 +38,8 @@ char *get_cmd_line()
 						quote_o = 0;
 					}
 				}
+				if (buf[j] == '\n' && quote_o == 1)
+					write(STDOUT_FILENO, "> ", 2), fflush(stdout);
 			}
 			line = _realloc(line, sizeof(char) * size, sizeof(char) * (size + j));
 			if (line != NULL)
@@ -127,5 +129,5 @@ void print_prompt()
 		}
 		free(vars);
 	}
-	write(STDOUT_FILENO, ps1, str_len(ps1));
+	write(STDOUT_FILENO, ps1, str_len(ps1)), fflush(stdout);
 }

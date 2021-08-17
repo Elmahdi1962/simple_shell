@@ -1,4 +1,5 @@
 #include "main.h"
+#include <wait.h>
 
 /**
  * exec_built_in_cmd - Executes a built-in command

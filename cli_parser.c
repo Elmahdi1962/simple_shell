@@ -8,7 +8,7 @@
  */
 cmd_t *parse_cmd_line(char *line)
 {
-	int i = 0, c;
+	int i = 0;
 	cmd_t *head = NULL, *node = NULL;
 	char prev_token = TKN_BEG, *word, *error = NULL;
 
@@ -28,26 +28,7 @@ cmd_t *parse_cmd_line(char *line)
 			else
 			{
 				word = read_word(line, &i);
-				if (word != NULL)
-				{
-					if (node == NULL)
-					{
-						node = new_cmd_node();
-						if (node != NULL)
-							node->command = word;
-						c++;
-					}
-					else
-					{
-						node->args = _realloc(node->args, node->args_count * (sizeof(void *)),
-																	sizeof(void *) * (node->args_count + 1));
-						if (node->args != NULL)
-						{
-							*(node->args + node->args_count) = word;
-							node->args_count++;
-						}
-					}
-				}
+				insert_word(&line, word, &node, &i);
 				prev_token = TKN_WORD;
 			}
 		}
@@ -55,6 +36,47 @@ cmd_t *parse_cmd_line(char *line)
 			add_node_to_end(&head, &node);
 	}
 	return (head);
+}
+
+void insert_word(char **str, char *word, cmd_t **node, int *pos)
+{
+	char *tmp;
+
+	if (node != NULL)
+	{
+		if (word != NULL)
+		{
+			if (*node == NULL)
+			{
+				if (is_alias(word))
+				{
+					tmp = get_alias_value(word);
+					(void)tmp;
+					(void)pos;
+					(void)str;
+					/* rep_range(*str, str_len(word), *i - str_len(word), *i); */
+				}
+				else
+				{
+					*node = new_cmd_node();
+					if (*node != NULL)
+					{
+						(*node)->command = word;
+					}
+				}
+			}
+			else
+			{
+				(*node)->args = _realloc((*node)->args, (*node)->args_count * (sizeof(void *)),
+															sizeof(void *) * ((*node)->args_count + 1));
+				if ((*node)->args != NULL)
+				{
+					*((*node)->args + (*node)->args_count) = word;
+					(*node)->args_count++;
+				}
+			}
+		}
+	}
 }
 
 void read_operator(char *line, int *pos, char prev_token,
@@ -121,15 +143,9 @@ char *read_word(char *line, int *pos)
 		if (is_quote(*(line + i)))
 		{
 			if (quote == 0)
-			{
-				quote = *(line + i);
-				quote_o = 1;
-			}
+				quote = *(line + i), quote_o = 1;
 			else if ((*(line + i) == quote))
-			{
-				quote = 0;
-				quote_o = 0;
-			}
+				quote = 0, quote_o = 0;
 		}
 		else if (quote_o == 0)
 		{
@@ -142,10 +158,7 @@ char *read_word(char *line, int *pos)
 	if (word != NULL)
 	{
 		for (k = 0; k < len; k++)
-		{
-			*(word + k) = *(line + j);
-			j++;
-		}
+			*(word + k) = *(line + j), j++;
 		*(word + k) = '\0';
 	}
 	*pos = i;
@@ -309,4 +322,3 @@ void dissolve_cmd_parts(cmd_t *node)
 		*(node->args + i) = dissolve_tokens(*(node->args + i), TRUE);
 	}
 }
-

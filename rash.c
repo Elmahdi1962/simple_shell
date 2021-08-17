@@ -39,28 +39,42 @@ static int NODE_EXIT_CODE;
 int main(int ac, char *av[], char *envp[])
 {
 	int a = 0, cmd_lines_count = 1;
-	char interactive, **file_lines = NULL;
+	char interactive, continuation = FALSE, **file_lines = NULL;
 	char *cmd_line = NULL;
 	cmd_t *cmds = NULL, *cur = NULL;
-	char *p0, *p1;
+	/* char *p0, *p1; */
 
 	init_shell(ac, av, envp, &cmd_lines_count, &file_lines, &interactive);
-	/* write(STDOUT_FILENO, "\033[2J", 4); */
-	/* write(STDOUT_FILENO, "\033[H", 3); */
-	printf("[]: %s\n", get_env_var("PWD"));
-	p0 = "Harry_Potter_Was_Very_Good";
-	p1 = rep_range(p0, "1236", 2, 4);
+	/* p0 = "Harry_Potter_Was_Very_Good";
+	p1 = rep_range(p0, "1234", 2, 3);
 	printf("old_val: %s\nnew_val: %s\n", p0, p1);
+	free(p1);
+	p1 = rep_range(p0, "1234", 2, 2);
+	printf("old_val: %s\nnew_val: %s\n", p0, p1);
+	free(p1);
+	printf("env == e: %d\n", str_cmp("env", "e")); */
 
 	while (a < cmd_lines_count)
 	{
-		if (interactive)
+		if (interactive && !continuation)
 			print_prompt();
-		cmd_line = file_lines == NULL ? get_cmd_line() : *(file_lines + a);
+		if (interactive && continuation)
+			write(STDOUT_FILENO, "> ", 2), fflush(stdout);
+		if (cmd_line == NULL)
+			cmd_line = file_lines == NULL ? get_cmd_line() : *(file_lines + a);
+		else
+			cmd_line = file_lines == NULL ? str_cat(cmd_line, get_cmd_line(), TRUE)
+				: *(file_lines + a);
 		if (str_len(cmd_line) > 0)
 		{
 			add_to_history(cmd_line);
 			cmds = parse_cmd_line(cmd_line);
+			continuation = list_tail(cmds)->command == NULL ? TRUE : FALSE;
+			if (continuation)
+			{
+				free_list(cmds);
+				continue;
+			}
 			cur = cmds;
 			while (cur != NULL)
 			{
@@ -69,10 +83,6 @@ int main(int ac, char *av[], char *envp[])
 				{
 					perror("There should be only one command per line\n");
 					break;
-				}
-				if (is_alias(cur->command))
-				{
-					/* TODO: Try to insert in current position */
 				}
 				printf(":: %s\n", cur->command);
 				if (is_built_in_cmd(cur))
@@ -143,12 +153,20 @@ void init_shell(int ac, char *av[], char *envp[],
 	EXEC_NAME = av[0];
 	SHELL_PID = long_to_str(getpid());
 	*interactive = !isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE;
+	/* TODO: Enable the signal handlers when the errors are fixed */
+	/* signal(SIGHUP, handle_signal); */
 	signal(SIGINT, handle_signal);
+	/* signal(SIGQUIT, handle_signal);
+	signal(SIGABRT, handle_signal);
+	signal(SIGKILL, handle_signal);
+	signal(SIGTERM, handle_signal);
+	signal(SIGTSTP, handle_signal); */
 	signal(SIG_SHELL_ERROR, handle_signal);
 	add_env_var("SHELL", av[0]);
 	manage_aliases(MO_INIT);
 	manage_history(MO_INIT);
 }
+
 
 /**
  * handle_signal - Handles a signal received by the program
@@ -205,4 +223,13 @@ void *get_shell_prop(char prop_id)
 		break;
 	}
 	return (NULL);
+}
+
+void clean_up_shell(void)
+{
+	/* save_history(); */
+	manage_aliases(MO_FREE);
+	manage_history(MO_FREE);
+	if (ERROR_MSG != NULL)
+		free(ERROR_MSG);
 }

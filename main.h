@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <unistd.h>
 
 #ifndef TRUE
@@ -27,7 +26,9 @@
 #ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
+/* The file name used to store this shell's history */
 #define HISTORY_FILE "/.simple_shell_history"
+/* The string representation of INT32_MAX */
 #define MAX_INT_STR "2147483647"
 #define SIG_SHELL_ERROR 1738
 
@@ -39,12 +40,9 @@ enum SHELL_PROP_IDS
 	/* The id for the shell's environment variables */
 	ENVP_ID = 0,
 	ENVP_COUNT_ID = 1,
-	CMD_HISTORY_ID = 4,
-	CMD_HISTORY_COUNT_ID = 5,
 	EXEC_NAME_ID = 6,
 	SHELL_PID_ID = 7,
-	NODE_EXIT_CODE_ID = 8,
-	ALIAS_LIST_ID = 9
+	NODE_EXIT_CODE_ID = 8
 };
 
 /**
@@ -52,21 +50,13 @@ enum SHELL_PROP_IDS
  */
 enum Operator_Types
 {
-	/**
-	 * The operator code for no operator
-	 */
+	/* The operator code for no operator */
 	OP_NONE = 0,
-	/**
-	 * The operator code for a logical AND character (&&)
-	 */
+	/* The operator code for a logical AND character (&&) */
 	OP_AND = 1,
-	/**
-	 * The operator code for a logical OR character (||)
-	 */
+	/* The operator code for a logical OR character (||) */
 	OP_OR = 2,
-	/**
-	 * The operator code for a command separator character (;)
-	 */
+	/* The operator code for a command separator character (;) */
 	OP_SEP = 3
 };
 
@@ -94,6 +84,7 @@ enum Management_Operations
  */
 enum Exit_Codes
 {
+	/* The command executed successfully */
 	EC_SUCCESS = 0,
 	/* The argument was invalid */
 	EC_INVALID_ARGS = 2
@@ -109,10 +100,15 @@ enum Exit_Codes
  */
 struct command_node
 {
+	/* The name of the command */
 	char *command;
+	/* The number of arguments provided */
 	int args_count;
+	/* The arguments provided */
 	char **args;
+	/* The condition for executing the next command */
 	char next_cond;
+	/* The next command that can be executed */
 	struct command_node *next;
 };
 
@@ -129,6 +125,11 @@ struct built_in_cmd_s
 	int (*run)(int, char**);
 };
 
+/**
+ * struct alias_s - Represents an alias command
+ * @name: The name of the alias
+ * @value: The value of the alias
+ */
 struct alias_s
 {
 	/* The name of the alias */
@@ -154,8 +155,8 @@ void init_shell(int ac, char *av[], char *envp[],
 	int *cmd_lines_count, char ***file_lines, char *interactive);
 void print_node(cmd_t *node);
 void handle_signal(int sig_num);
-char can_cancel_input();
 void *get_shell_prop(char prop_id);
+void clean_up_shell(void);
 /* ******** ---------------- ******** */
 
 /* ******** Alias Manager (alias_manager.c) ******** */
@@ -172,7 +173,7 @@ void remove_alias(char *str);
 void manage_history(int op);
 void add_to_history(char *str);
 void save_history();
-char **get_history();
+char **get_history(int *size);
 int get_line_num();
 /* ******** ---------------- ******** */
 
@@ -196,6 +197,7 @@ void print_prompt();
 
 cmd_t *parse_cmd_line(char *line);
 char *read_word(char *line, int *pos);
+void insert_word(char **str, char *word, cmd_t **node, int *pos);
 void read_operator(char *line, int *pos, char prev_token,
 	cmd_t **head, cmd_t **node, char **error);
 char *read_variable(char *str, int pos);
@@ -277,16 +279,18 @@ char is_binary_file(char *fn);
 char is_variable(char *str);
 char is_exec_file(char *fn);
 char is_alias(char *str);
-char is_name_value_pair(char *str, char **name_out, char **value_out);
+char is_alias_name(char *str);
+char is_alias_assignment(char *str, char **name_out, char **value_out);
 int is_regular_file(const char *path);
+char is_binary_file(char *fn);
 /* ******** ---------------- ******** */
 
-/* ******** Validator Utilities (utils_validator_#.c) ******** */
+/* ******** Cmd_t Helpers (cmd_t_helpers.c) ******** */
 
 cmd_t *new_cmd_node();
 void free_list(cmd_t *head);
 void add_node_to_end(cmd_t **head, cmd_t **node);
-char is_binary_file(char *fn);
+cmd_t *list_tail(cmd_t *head);
 /* ******** ---------------- ******** */
 
 /* ******** DATA Validator (data_validators_#.c) ******** */

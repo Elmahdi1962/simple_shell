@@ -54,7 +54,7 @@ void add_alias(char *name, char *value)
 			{
 				if ((*(Alias_List + i))->value != NULL)
 					free((*(Alias_List + i))->value);
-				(*(Alias_List + i))->value = str_copy(value);
+				(*(Alias_List + i))->value = value;
 			}
 		}
 	}
@@ -64,8 +64,8 @@ void add_alias(char *name, char *value)
 		*(Alias_List + Alias_Count) = malloc(sizeof(alias_t));
 		if (*(Alias_List + Alias_Count) != NULL)
 		{
-			(*(Alias_List + Alias_Count))->name = str_copy(name);
-			(*(Alias_List + Alias_Count))->value = str_copy(value);
+			(*(Alias_List + Alias_Count))->name = name;
+			(*(Alias_List + Alias_Count))->value = value;
 		}
 		Alias_Count++;
 	}

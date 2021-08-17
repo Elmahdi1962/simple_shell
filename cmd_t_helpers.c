@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
 #include "main.h"
 
 /**
@@ -74,4 +71,19 @@ void add_node_to_end(cmd_t **head, cmd_t **node)
 		else if (tail != NULL)
 			tail->next = new_node;
 	}
+}
+
+/**
+ * list_tail - Gets the tail of a linked list
+ * @head: The head of the linked list
+ *
+ * Return: The tail, otherwise NULL
+ */
+cmd_t *list_tail(cmd_t *head)
+{
+	cmd_t *tail = head;
+
+	while (tail != NULL && tail->next != NULL)
+		tail = tail->next;
+	return (tail);
 }

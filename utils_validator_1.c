@@ -102,7 +102,7 @@ char is_variable(char *str)
 {
 	int i = 0;
 
-	while (*(str + i) != '\0')
+	while ((str != NULL) && (*(str + i) != '\0'))
 	{
 		if (is_digit(*(str + i)) && i == 0)
 			break;
@@ -110,8 +110,13 @@ char is_variable(char *str)
 			|| (is_letter(*(str + i)))
 			|| (*(str + i) == '_'))
 			i++;
+		else
+			break;
 	}
-	return (*(str + i) == '\0' && i > 0 ? TRUE : FALSE);
+	if ((str != NULL) && (*(str + i) == '\0') && (i > 0))
+		return (TRUE);
+	else
+		return (FALSE);
 }
 
 /**

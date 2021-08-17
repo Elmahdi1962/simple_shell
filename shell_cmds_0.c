@@ -14,7 +14,7 @@ int sc_alias(int ac, char *av[])
 	alias_t **aliases = (ac == 0 ? get_aliases(&n) : NULL);
 	char *name, *value;
 
-	if (ac == 0)
+	if (ac <= 0)
 	{
 		for (i = 0; i < n; i++)
 		{
@@ -26,10 +26,12 @@ int sc_alias(int ac, char *av[])
 	}
 	else
 	{
+		printf("-- sc_alias ac: %d\n", ac);
 		for (i = 0; i < ac; i++)
 		{
 			if (is_variable(av[i]))
 			{
+				printf("(s_a): %s is a variable\n", av[i]);
 				value = get_alias_value(av[i]);
 				if (value != NULL)
 				{
@@ -46,12 +48,14 @@ int sc_alias(int ac, char *av[])
 					return (1);
 				}
 			}
-			else if (is_name_value_pair(av[i], &name, &value))
+			else if (is_alias_assignment(av[i], &name, &value))
 			{
+				printf("(s_a): name: %s, val: %s\n", name, value);
 				add_alias(name, value);
 			}
 			else
 			{
+				printf("(s_a): Invalid arguments\n");
 				return (EC_INVALID_ARGS);
 			}
 		}
@@ -126,7 +130,7 @@ int sc_exit(int ac, char *av[])
 			return (2);
 		}
 	}
-	save_history();
+	clean_up_shell();
 	exit(status);
 	return (status);
 }
