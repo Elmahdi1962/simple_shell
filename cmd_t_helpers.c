@@ -47,7 +47,7 @@ void free_list(cmd_t *head)
  */
 void add_node_to_end(cmd_t **head, cmd_t **node)
 {
-	cmd_t *tail, *new_node;
+	cmd_t *tail = NULL, *new_node = NULL;
 
 	tail = head ? *head : NULL;
 	while (tail != NULL && tail->next != NULL)

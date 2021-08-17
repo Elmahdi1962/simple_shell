@@ -110,8 +110,8 @@ void save_history()
 			write(fd, "\n", 1);
 		}
 		close(fd);
-		free(file_path);
 	}
+	free(file_path);
 }
 
 /**

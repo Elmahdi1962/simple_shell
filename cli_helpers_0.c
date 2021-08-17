@@ -8,57 +8,54 @@
 char *get_cmd_line()
 {
 	size_t size = 0;
-	int i = 0, j, k, n = 0, incr = 10, quote_o = 0;
-	char *buf = NULL, *line = NULL, q_a = 0;
+	int i = 0, j, k, n = 0, incr = 1024, quote_o = 0;
+	char *line = NULL, q_a = 0;
+	static char buf[1024];
 
-	buf = malloc(sizeof(char) * incr);
-	if (buf != NULL)
+	mem_set(buf, incr, '\0');
+	while (TRUE && (n = read(STDIN_FILENO, (void *)buf, incr)))
 	{
-		while (TRUE)
+		if (n < 0)
+			return (NULL);
+		if (buf[0] == '\n' && quote_o == 0)
+			break;
+		for (j = 0; !((quote_o == 0) && (*(buf + j) == '\n')) && (j < n); j++)
 		{
-			for (j = 0; j < incr; j++)
-				*(buf + j) = 0;
-			n = read(STDIN_FILENO, (void *)buf, incr);
-			if (n < 0)
-				return (NULL);
-			if (buf[0] == '\n' && quote_o == 0)
-				break;
-			for (j = 0; !((quote_o == 0) && (*(buf + j) == '\n')) && (j < n); j++)
+			if (is_quote(*(buf + j)))
 			{
-				if (is_quote(*(buf + j)))
+				if (q_a == 0)
 				{
-					if (q_a == 0)
-					{
-						q_a = *(buf + j);
-						quote_o = 1;
-					}
-					else if ((*(buf + j) == q_a))
-					{
-						q_a = 0;
-						quote_o = 0;
-					}
+					q_a = buf[j];
+					quote_o = 1;
 				}
-				if (buf[j] == '\n' && quote_o == 1)
-					write(STDOUT_FILENO, "> ", 2), fflush(stdout);
-			}
-			line = _realloc(line, sizeof(char) * size, sizeof(char) * (size + j));
-			if (line != NULL)
-			{
-				size += j;
-				for (k = 0; k < j; k++)
+				else if ((*(buf + j) == q_a))
 				{
-					*(line + i) = *(buf + k);
-					i++;
+					q_a = 0;
+					quote_o = 0;
 				}
-				if ((j <= n && *(buf + j) == '\n' && quote_o == 0) || n == 0)
-					break;
 			}
+			if ((buf[j] == '\n') && (quote_o == 1))
+				write(STDOUT_FILENO, "> ", 2), fflush(stdout);
 		}
+		line = _realloc(line, sizeof(char) * size, sizeof(char) * (size + j));
+		if (line != NULL)
+		{
+			size += j;
+			for (k = 0; k < j; k++)
+			{
+				*(line + i) = *(buf + k);
+				i++;
+			}
+			if (((j <= n) && (*(buf + j) == '\n') && (quote_o == 0)) || (n == 0))
+				break;
+		}
+		mem_set(buf, incr, '\0');
 	}
-	if (n == 0 && !((quote_o == 0) && (*(buf + j) == '\n')))
+
+	if ((n == 0) && !((quote_o == 0) && (*(buf + j) == '\n')))
 	{
 		perror("Syntax error\n");
-		free(line), free(buf);
+		free(line);
 		return (NULL);
 	}
 	line = _realloc(line, sizeof(char) * size, sizeof(char) * (size + 1));
@@ -119,9 +116,9 @@ void print_prompt()
 	{
 		for (j = 0; j < n; j++)
 		{
-			if (str_cmp("$?", *(vars + j)) == 0)
+			if (str_eql("$?", *(vars + j)))
 				var_val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
-			else if (str_cmp("$$", *(vars + j)) == 0)
+			else if (str_eql("$$", *(vars + j)))
 				var_val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
 			else
 				var_val = str_copy(get_env_var(*(vars + j) + 1));
@@ -129,5 +126,6 @@ void print_prompt()
 		}
 		free(vars);
 	}
-	write(STDOUT_FILENO, ps1, str_len(ps1)), fflush(stdout);
+	write(STDOUT_FILENO, ps1, str_len(ps1));
+	free(ps1);
 }

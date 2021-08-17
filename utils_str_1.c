@@ -1,38 +1,31 @@
 #include "main.h"
 
 /**
- * str_cmp - Makes a comparison between two strings
+ * str_eql - Checks if the left string is equal to the right string
  * @left: The string on the left side
  * @right: The string on the right side
  *
- * Return: -1 if the left is < than right, 1 if left is > right and othrwise 0
+ * Return: TRUE if they're equal and not NULL, otherwise FALSE
 */
-int str_cmp(char *left, char *right)
+int str_eql(char *left, char *right)
 {
 	int i;
 
-	if (left == NULL && right != NULL)
-		return (-1);
-	if (left != NULL && right == NULL)
-		return (1);
-	if (left == NULL && right == NULL)
-	{
-		return (0);
-	}
+	if ((left == NULL) || (right == NULL))
+		return (FALSE);
 	else
 	{
-		for (i = 0; *(left + i) != '\0' || *(right + i) != '\0'; i++)
+		for (i = 0; *(left + i) != '\0'; i++)
 		{
-			if (*(left + i) == '\0' && *(right + i) != '\0')
-				return (-1);
-			if (*(left + i) != '\0' && *(right + i) == '\0')
-				return (1);
-			if (*(left + i) > *(right + i))
-				return (1);
-			if (*(left + i) < *(right + i))
-				return (-1);
+			if (*(right + i) == '\0')
+				return (FALSE);
+			if (*(left + i) != *(right + i))
+				break;
 		}
-		return (0);
+		if ((*(left + i) == '\0') && (*(right + i) == '\0'))
+			return (TRUE);
+		else
+			return (FALSE);
 	}
 }
 

@@ -5,6 +5,7 @@
 #include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -197,7 +198,7 @@ void print_prompt();
 
 cmd_t *parse_cmd_line(char *line);
 char *read_word(char *line, int *pos);
-void insert_word(char **str, char *word, cmd_t **node, int *pos);
+void insert_word(char **str, char **word, cmd_t **node, int *pos);
 void read_operator(char *line, int *pos, char prev_token,
 	cmd_t **head, cmd_t **node, char **error);
 char *read_variable(char *str, int pos);
@@ -215,9 +216,9 @@ void print_text(int fd, char *text[], int n);
 
 
 /* ******** Memory Helpers (mem_helpers.c) ******** */
+
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 void free_array(char **list, int length);
-
 /* ******** Executors (executor.c) ******** */
 
 int exec_built_in_cmd(cmd_t *node);
@@ -256,7 +257,7 @@ void mem_set(char *str, int n, char c);
 char *trim_start(char *str, char c, char can_free);
 char *trim_end(char *str, char c, char can_free);
 int str_len(char *str);
-int str_cmp(char *left, char *right);
+int str_eql(char *left, char *right);
 char *str_copy(char *str);
 char *str_cat(char *left, char *right, char can_free);
 char *copy_range(char *str, int a, int b);

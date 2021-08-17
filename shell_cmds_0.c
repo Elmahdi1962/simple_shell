@@ -77,7 +77,7 @@ int sc_cd(int ac, char *av[])
 	}
 	else
 	{
-		if (str_cmp("-", av[0]) == 0)
+		if (str_eql("-", av[0]))
 		{
 			/* Switch PWD and OLDPWD */
 			if (old_pwd != NULL)
@@ -180,7 +180,7 @@ int sc_help(int ac, char *av[])
 	{
 		for (i = 0; i < 9; i++)
 		{
-			if (str_cmp(cmds_help[i].cmd_name, av[0]) == 0)
+			if (str_eql(cmds_help[i].cmd_name, av[0]))
 			{
 				cmds_help[i].run();
 				return (0);

@@ -16,7 +16,7 @@ char is_alias(char *str)
 	{
 		for (i = 0; i < n; i++)
 		{
-			if (str_cmp(str, (*(aliases + i))->name) == 0)
+			if (str_eql(str, (*(aliases + i))->name))
 				return (TRUE);
 		}
 	}
@@ -65,7 +65,6 @@ char is_alias_assignment(char *str, char **name_out, char **value_out)
 	int i = 0, j, name_len = 0, value_len = 0;
 	char is_assignment = FALSE;
 
-	printf("-- checking name val pair\n");
 	for (; (str != NULL) && (*(str + i) != '='); i++)
 		name_len++;
 	is_assignment = ((str != NULL) && (*(str + i) == '=')) ? TRUE : FALSE;
@@ -92,7 +91,6 @@ char is_alias_assignment(char *str, char **name_out, char **value_out)
 			}
 		}
 	}
-	printf("(i_a_a) name: %s, val: %s\n", *name_out, *value_out);
 	return (is_assignment);
 }
 

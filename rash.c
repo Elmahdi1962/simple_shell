@@ -1,6 +1,3 @@
-#include <signal.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include "main.h"
 
 /**
@@ -52,14 +49,14 @@ int main(int ac, char *av[], char *envp[])
 	p1 = rep_range(p0, "1234", 2, 2);
 	printf("old_val: %s\nnew_val: %s\n", p0, p1);
 	free(p1);
-	printf("env == e: %d\n", str_cmp("env", "e")); */
+	printf("env == e: %d\n", str_eql("env", "e")); */
 
 	while (a < cmd_lines_count)
 	{
 		if (interactive && !continuation)
 			print_prompt();
 		if (interactive && continuation)
-			write(STDOUT_FILENO, "> ", 2), fflush(stdout);
+			write(STDOUT_FILENO, "> ", 2);
 		if (cmd_line == NULL)
 			cmd_line = file_lines == NULL ? get_cmd_line() : *(file_lines + a);
 		else
@@ -79,27 +76,28 @@ int main(int ac, char *av[], char *envp[])
 			while (cur != NULL)
 			{
 				dissolve_cmd_parts(cur);
-				if (file_lines != NULL && cur->next != NULL)
+				if ((file_lines != NULL) && (cur->next != NULL))
 				{
-					perror("There should be only one command per line\n");
+					write(STDOUT_FILENO, "There should be only one command per line\n", 42);
 					break;
 				}
-				printf(":: %s\n", cur->command);
-				if (is_built_in_cmd(cur))
+				printf(":: %s, %s\n", cur->command, cmd_line);
+				if (is_built_in_cmd(cur) == TRUE)
 				{
 					NODE_EXIT_CODE = exec_built_in_cmd(cur);
 				}
 				else
 				{
-					perror("not found");
+					write(STDOUT_FILENO, "not found\n", 10);
 					NODE_EXIT_CODE = 127;
 				}
 				/* print_node(cur); */
 				cur = cur->next;
 			}
 			free_list(cmds);
+			free(cmd_line);
+			cmd_line = NULL;
 		}
-		free(cmd_line);
 		a += (!interactive ? 1 : 0);
 	}
 	return (0);

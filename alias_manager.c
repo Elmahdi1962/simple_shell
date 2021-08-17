@@ -50,7 +50,7 @@ void add_alias(char *name, char *value)
 	{
 		for (i = 0; i < Alias_Count; i++)
 		{
-			if (str_cmp(name, (*(Alias_List + i))->name) == 0)
+			if (str_eql(name, (*(Alias_List + i))->name))
 			{
 				if ((*(Alias_List + i))->value != NULL)
 					free((*(Alias_List + i))->value);
@@ -85,7 +85,7 @@ char *get_alias_value(char *str)
 		return (NULL);
 	for (i = 0; i < Alias_Count; i++)
 	{
-		if (str_cmp(str, (*(Alias_List + i))->name) == 0)
+		if (str_eql(str, (*(Alias_List + i))->name))
 			return ((*(Alias_List + i))->name);
 	}
 	return (NULL);

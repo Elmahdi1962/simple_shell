@@ -8,24 +8,19 @@
  */
 char str_is_num(char *str)
 {
-	char *string = str;
-	int firstc = 1;
+	int i = 0;
 
-	while (*string != '\0')
+	if (str == NULL)
+		return (FALSE);
+	while (*(str + i) != '\0')
 	{
-		if (firstc)
-		{
-			if (*string == '-' || *string == '+')
-				string++;
-			firstc = 0;
-			continue;
-		}
-		if (*string >= '0' && *string <= '9')
-			string++;
+		if (((*(str + i) == '-') && (i == 0))
+			|| is_digit(*(str + i)))
+		i++;
 		else
-			return (FALSE);
+			break;
 	}
-	return (TRUE);
+	return (*(str + i) == '\0' ? TRUE : FALSE);
 }
 
 /**
@@ -51,9 +46,9 @@ char is_built_in_cmd(cmd_t *node)
 
 	for (i = 0; *(built_in_cmds + i) != NULL; i++)
 	{
-		if (str_cmp("env", node->command) == 0)
+		if (str_eql(node->command, "env"))
 			return (node->args_count == 0 ? TRUE : FALSE);
-		else if (str_cmp(*(built_in_cmds + i), node->command) == 0)
+		else if (str_eql(node->command, *(built_in_cmds + i)))
 			return (TRUE);
 	}
 	return (FALSE);

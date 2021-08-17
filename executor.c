@@ -18,12 +18,13 @@ int exec_built_in_cmd(cmd_t *node)
 		{"help", sc_help},
 		{"history", sc_history},
 		{"setenv", sc_setenv},
-		{"unsetenv", sc_unsetenv}
+		{"unsetenv", sc_unsetenv},
+		{NULL, NULL}
 	};
 
 	for (i = 0; i < 8; i++)
 	{
-		if (str_cmp(built_in_cmds[i].cmd_name, node->command) == 0)
+		if (str_eql(built_in_cmds[i].cmd_name, node->command))
 		{
 			return (built_in_cmds[i].run(node->args_count, node->args));
 		}

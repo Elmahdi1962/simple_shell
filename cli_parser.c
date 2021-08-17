@@ -28,7 +28,7 @@ cmd_t *parse_cmd_line(char *line)
 			else
 			{
 				word = read_word(line, &i);
-				insert_word(&line, word, &node, &i);
+				insert_word(&line, &word, &node, &i);
 				prev_token = TKN_WORD;
 			}
 		}
@@ -38,7 +38,7 @@ cmd_t *parse_cmd_line(char *line)
 	return (head);
 }
 
-void insert_word(char **str, char *word, cmd_t **node, int *pos)
+void insert_word(char **str, char **word, cmd_t **node, int *pos)
 {
 	char *tmp;
 
@@ -48,9 +48,9 @@ void insert_word(char **str, char *word, cmd_t **node, int *pos)
 		{
 			if (*node == NULL)
 			{
-				if (is_alias(word))
+				if (is_alias_name(*word) && is_alias(*word))
 				{
-					tmp = get_alias_value(word);
+					tmp = get_alias_value(*word);
 					(void)tmp;
 					(void)pos;
 					(void)str;
@@ -61,7 +61,7 @@ void insert_word(char **str, char *word, cmd_t **node, int *pos)
 					*node = new_cmd_node();
 					if (*node != NULL)
 					{
-						(*node)->command = word;
+						(*node)->command = *word;
 					}
 				}
 			}
@@ -71,7 +71,7 @@ void insert_word(char **str, char *word, cmd_t **node, int *pos)
 															sizeof(void *) * ((*node)->args_count + 1));
 				if ((*node)->args != NULL)
 				{
-					*((*node)->args + (*node)->args_count) = word;
+					*((*node)->args + (*node)->args_count) = *word;
 					(*node)->args_count++;
 				}
 			}
@@ -101,9 +101,9 @@ void read_operator(char *line, int *pos, char prev_token,
 		*(op_s + j) = '\0', op_len = str_len(op_s);
 	}
 	if ((op_s != NULL)
-		&& ((str_cmp(";", op_s) == 0)
-		|| (str_cmp("||", op_s) == 0)
-		|| (str_cmp("&&", op_s) == 0)))
+		&& ((str_eql(";", op_s))
+		|| (str_eql("||", op_s))
+		|| (str_eql("&&", op_s))))
 	{
 		if (node != NULL && *node != NULL)
 			(*node)->next_cond = ((*op_s == '|') ? OP_OR
@@ -252,9 +252,9 @@ char *dissolve_tokens(char *str, char can_free)
 			if (((quote == '"') && (quote_o == TRUE)) || (quote_o == FALSE))
 			{
 				var = read_variable(str, i + 1);
-				if (str_cmp("?", var) == 0)
+				if (str_eql("?", var))
 					val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
-				else if (str_cmp("$", var) == 0)
+				else if (str_eql("$", var))
 					val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
 				else if (var != NULL)
 					val = str_copy(get_env_var(var));
