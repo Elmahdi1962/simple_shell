@@ -9,6 +9,7 @@ void help_program(void)
 	{
 		""
 	};
+
 	print_text(STDOUT_FILENO, help_text, 1);
 }
 
@@ -34,6 +35,7 @@ void help_alias(void)
 		"which no alias has been\n",
 		"    defined.\n",
 	};
+
 	print_text(STDOUT_FILENO, help_text, 14);
 }
 
@@ -45,13 +47,14 @@ void help_cd(void)
 	char *help_text[] =
 	{
 		"cd: cd [-|DIR]\n",
-		"    Change the shell working directory.\n",
+		"    Change the shell working directory.\n\n",
 		"    Change the current directory to DIR.  The default DIR ",
 		"is the value of the\n",
-		"    HOME shell variable.\n",
+		"    HOME shell variable.\n\n",
 		"    Exit Status:\n",
 		"    Returns 0 if the directory is changed; non-zero otherwise.\n",
 	};
+
 	print_text(STDOUT_FILENO, help_text, 7);
 }
 
@@ -64,6 +67,7 @@ void help_env(void)
 	{
 		""
 	};
+
 	print_text(STDOUT_FILENO, help_text, 1);
 }
 
@@ -74,55 +78,12 @@ void help_exit(void)
 {
 	char *help_text[] =
 	{
-		""
+		"exit: exit [n]\n",
+		"    Exit the shell.\n\n",
+		"    Exits the shell with a status of N.  If N is omitted, ",
+		"the exit status\n",
+		"    is that of the last command executed.\n"
 	};
-	print_text(STDOUT_FILENO, help_text, 1);
-}
 
-/**
- * help_help - Prints the help text of the help built-in command
- */
-void help_help(void)
-{
-	char *help_text[] =
-	{
-		""
-	};
-	print_text(STDOUT_FILENO, help_text, 1);
-}
-
-/**
- * help_history - Prints the help text of the history built-in command
- */
-void help_history(void)
-{
-	char *help_text[] =
-	{
-		""
-	};
-	print_text(STDOUT_FILENO, help_text, 1);
-}
-
-/**
- * help_setenv - Prints the help text of the setenv built-in command
- */
-void help_setenv(void)
-{
-	char *help_text[] =
-	{
-		""
-	};
-	print_text(STDOUT_FILENO, help_text, 1);
-}
-
-/**
- * help_unsetenv - Prints the help text of the unsetenv built-in command
- */
-void help_unsetenv(void)
-{
-	char *help_text[] =
-	{
-		""
-	};
-	print_text(STDOUT_FILENO, help_text, 1);
+	print_text(STDOUT_FILENO, help_text, 5);
 }
