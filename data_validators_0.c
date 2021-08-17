@@ -10,43 +10,26 @@
  */
 char *check_path(char *str)
 {
-	char *pwd = get_env_var("PWD"), *full_path, *file_path = str;
+	char *file_path = str, *full_path;
 	int fd;
 
-	if (*str == '.')
+	if (*str == '.' || *str == '/')
 	{
-		full_path = str_cat(pwd, file_path+1, FALSE);
-		fd = open(full_path, O_RDONLY);
+		fd = open(file_path, O_RDONLY);
 		if (fd >= 0)
 		{
 			close(fd);
 
-			if (is_exec_file(full_path) && is_regular_file(full_path))
+			if (is_exec_file(file_path) && is_regular_file(file_path))
 			{
-				return(full_path);
+				return(file_path);
 			}
 
-			free(full_path);
-			return(NULL);
-		}
-		free(full_path);
-		return (NULL);
-	}
-	if (*str == '/')
-	{
-		full_path = file_path;
-		fd = open(full_path, O_RDONLY);
-		if (fd >= 0)
-		{
-			close(fd);
-			if (is_exec_file(full_path) && is_regular_file(full_path))
-			{
-				return(full_path);
-			}
 			return(NULL);
 		}
 		return (NULL);
 	}
+
 	/*the file path doesn't start with . or / */
 	/*Checking if it's one of the built out commands programs in one of the paths in PATH*/
 	full_path = search_path(file_path);
