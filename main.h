@@ -214,15 +214,18 @@ char **read_all_lines(int fd, int *lines);
 void print_text(int fd, char *text[], int n);
 /* ******** ---------------- ******** */
 
-
 /* ******** Memory Helpers (mem_helpers.c) ******** */
 
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 void free_array(char **list, int length);
+/* ******** ---------------- ******** */
+
 /* ******** Executors (executor.c) ******** */
 
 int exec_built_in_cmd(cmd_t *node);
 int exec_program(cmd_t *node, char *program_path);
+char **copy_environment(char **env, int env_count);
+char **copy_arguments(cmd_t *node);
 /* ******** ---------------- ******** */
 
 /* ******** Built-In Commands (shell_cmds_#.c) ******** */
