@@ -34,20 +34,24 @@
 #define SIG_SHELL_ERROR 1738
 
 /**
- * SHELL_PROP_IDS - Consists of the shell's property ids
+ * enum SHELL_PROP_IDS - Consists of the shell's property ids
  */
 enum SHELL_PROP_IDS
 {
-	/* The id for the shell's environment variables */
+	/* The prop id for the shell's environment variables */
 	ENVP_ID = 0,
+	/* The prop id for the shell's environment variables count */
 	ENVP_COUNT_ID = 1,
+	/* The prop id for the shell's given executale file name */
 	EXEC_NAME_ID = 6,
+	/* The prop id for the shell's process identifier */
 	SHELL_PID_ID = 7,
+	/* The prop id for the last executed command's exit code */
 	NODE_EXIT_CODE_ID = 8
 };
 
 /**
- * Operator_Types - The operator codes for this shell program.
+ * enum Operator_Types - The operator codes for this shell program.
  */
 enum Operator_Types
 {
@@ -61,16 +65,23 @@ enum Operator_Types
 	OP_SEP = 3
 };
 
+/**
+ * enum Token_Types - Types of tokens in a command line
+ */
 enum Token_Types
 {
+	/* The beginning of the command line */
 	TKN_BEG = 0,
+	/* A word in the command line */
 	TKN_WORD = 1,
+	/* An open (not enclosed in quotes) space in the command line */
 	TKN_SPACE = 2,
+	/* An open (not enclosed in quotes) operator in the command line */
 	TKN_OP = 3
 };
 
 /**
- * Operation codes for managing some resources
+ * enum Management_Operations - Operation codes for managing some resources
  */
 enum Management_Operations
 {
@@ -81,14 +92,44 @@ enum Management_Operations
 };
 
 /**
- * Exit codes for the built-in commands
+ * enum Exit_Codes - Exit codes for this shell program
  */
 enum Exit_Codes
 {
 	/* The command executed successfully */
 	EC_SUCCESS = 0,
-	/* The argument was invalid */
-	EC_INVALID_ARGS = 2
+	/**
+	 * Catchall for general errors \
+	 * (E.g.; Miscellaneous errors, such as "divide by zero" and other \
+	 * impermissible operations)
+	 */
+	EC_GENERAL_ERROR = 1,
+	/* Misuse of shell built-ins */
+	EC_INVALID_ARGS = 2,
+	/**
+	 * Command invoked cannot execute \
+	 * (Permission problem or command is not an executable)
+	 */
+	EC_CANNOT_EXECUTE = 126,
+	/**
+	 * Command not found \
+	 * (Possible problem with $PATH or a typo)
+	 */
+	EC_COMMOAND_NOT_FOUND = 127,
+	/* Invalid argument to exit */
+	EC_INVALID_EXIT_ARGS = 128,
+	/**
+	 * Fatal error signal "n" \
+	 * (Ranges from 128 to 255; 0 <= n <= 127)
+	 */
+	EC_FATAL_ERROR_SIGNAL = 128,
+	/* Script terminated by Control-C */
+	EC_CONTROL_C_TERMINATION = 130,
+	/**
+	 * Exit status out of range \
+	 * (exit takes only integer args in the range 0 - 255)
+	 */
+	EC_EXIT_STATUS_OUT_OF_RANGE = 255
 };
 
 /**
@@ -139,6 +180,11 @@ struct alias_s
 	char *value;
 };
 
+/**
+ * struct cmd_help - Represents this shell's help pages
+ * @cmd_name: The name of the built-in command
+ * @run: The handler for the built-in command's help
+ */
 struct cmd_help
 {
 	/* The name of the built-in command */
@@ -189,7 +235,7 @@ void remove_env_var(char *var);
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 char *get_cmd_line();
-int get_var_length(char *str, int pos);
+cmd_t *get_next_command(cmd_t *cur, int exit_code);
 char **get_variables(char *str, int *vars_count);
 void print_prompt();
 /* ******** ---------------- ******** */
@@ -208,7 +254,6 @@ void dissolve_cmd_parts(cmd_t *node);
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
 
-/* char get_char(int fd, char action); */
 /* char *read_line(int fd, char action); */
 char **read_all_lines(int fd, int *lines);
 void print_text(int fd, char *text[], int n);
@@ -264,7 +309,7 @@ int str_eql(char *left, char *right);
 char *str_copy(char *str);
 char *str_cat(char *left, char *right, char can_free);
 char *copy_range(char *str, int a, int b);
-char **str_split(char *str, char c, int *len, char can_free);
+char **str_split(char *str, char c, int *len_out, char can_free);
 char *str_replace(char *str, char *sub_str, char *rep_str, char can_free);
 char *long_to_str(long num);
 char *rep_range(char *str, char *val, int a, int b);

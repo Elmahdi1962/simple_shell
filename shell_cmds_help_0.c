@@ -7,10 +7,17 @@ void help_program(void)
 {
 	char *help_text[] =
 	{
-		""
+		"ALX rash, version 1.0(1)-release (x86_64-pc-linux-gnu)\n",
+		"These shell commands are defined internally.  Type `help' to see this list.\n",
+		"Type `help name' to find out more about the command `name'.\n",
+		"Use `man -k' or `info' to find out more about commands not in this list.\n\n",
+		" alias [name[='value'] ...]              cd [DIRECTORY]\n",
+		" env                                     exit [status]\n",
+		" help [BUILTIN]                          history\n",
+		" setenv VARIABLE VALUE                   unsetenv VARIABLE\n"
 	};
 
-	print_text(STDOUT_FILENO, help_text, 1);
+	print_text(STDOUT_FILENO, help_text, 8);
 }
 
 /**
@@ -46,7 +53,7 @@ void help_cd(void)
 {
 	char *help_text[] =
 	{
-		"cd: cd [-|DIR]\n",
+		"cd: cd [DIRECTORY]\n",
 		"    Change the shell working directory.\n\n",
 		"    Change the current directory to DIR.  The default DIR ",
 		"is the value of the\n",

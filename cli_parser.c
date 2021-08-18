@@ -214,7 +214,8 @@ char *dissolve_tokens(char *str, char can_free)
 {
 	size_t size = 0;
 	const char incr = 0x40;
-	size_t i = 0, j = 0, k, var_len = 0, val_len = 0;
+	size_t i = 0, j = 0, k, var_len = 0, val_len = 0, tmp_len;
+	char *tmp;
 	char *res = NULL, *var = NULL, *val = NULL, quote = FALSE, quote_o = FALSE;
 
 	for (i = 0; *(str + i) != '\0';)
@@ -224,7 +225,30 @@ char *dissolve_tokens(char *str, char can_free)
 			res = _realloc(res, sizeof(char) * size, sizeof(char) * (size + incr));
 			size += incr;
 		}
-		if (is_quote(*(str + i)))
+		if (((*(str + i) == '~') && (i == 0)) && ((*(str + 1) == '/') || (*(str + 1) == ':')))
+		{
+			tmp = str_copy(get_env_var("HOME"));
+			tmp_len = str_len(tmp);
+			if (tmp != NULL)
+			{
+				if ((j + tmp_len) > size)
+				{
+					/* allocate space for extra data */
+					res = _realloc(res, sizeof(char) * size,
+						sizeof(char) * (size + (j + tmp_len - size)));
+					size += (j + tmp_len - size);
+				}
+				for (k = 0; k < tmp_len; k++)
+				{
+					*(res + j) = *(tmp + k);
+					j++;
+				}
+				i += 2;
+				free(tmp);
+				tmp = NULL;
+			}
+		}
+		else if (is_quote(*(str + i)))
 		{
 			if (quote == FALSE)
 			{
@@ -266,6 +290,7 @@ char *dissolve_tokens(char *str, char can_free)
 				}
 				else
 				{
+					printf("(d_t): %s\n", val);
 					/* insert variable */
 					var_len = str_len(var) + 1;
 					val_len = str_len(val);

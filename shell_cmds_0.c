@@ -63,6 +63,7 @@ int sc_alias(int ac, char *av[])
 	return (EC_SUCCESS);
 }
 
+/* TODO: Fix this algorithm and handle errors */
 int sc_cd(int ac, char *av[])
 {
 	int i;
@@ -71,20 +72,16 @@ int sc_cd(int ac, char *av[])
 
 	if (ac <= 0)
 	{
-		set_env_var("OLDPWD", pwd);
-		set_env_var("PWD", get_env_var("HOME"));
+		set_env_var("OLDPWD", pwd), set_env_var("PWD", get_env_var("HOME"));
 		chdir(get_env_var("HOME"));
 	}
 	else
 	{
 		if (str_eql("-", av[0]))
 		{
-			/* Switch PWD and OLDPWD */
 			if (old_pwd != NULL)
 			{
-				set_env_var("OLDPWD", pwd);
-				set_env_var("PWD", old_pwd);
-				chdir(old_pwd);
+				set_env_var("OLDPWD", pwd), set_env_var("PWD", old_pwd), chdir(old_pwd);
 			}
 			else
 			{
@@ -111,8 +108,16 @@ int sc_cd(int ac, char *av[])
 	return (EC_SUCCESS);
 }
 
+/**
+ * sc_exit - Exits the shell with an optional status code
+ * @ac: The number of arguments
+ * @av: The arguments
+ *
+ * Return: 0 if successful
+ */
 int sc_exit(int ac, char *av[])
 {
+	char *buf0, *buf1;
 	int status = *((int *)get_shell_prop(NODE_EXIT_CODE_ID));
 
 	if (ac > 0)
@@ -123,10 +128,16 @@ int sc_exit(int ac, char *av[])
 		}
 		else
 		{
-			/* TODO: Raise error and add an enum for the exit code */
-			write(STDERR_FILENO, "exit: ", 6);
+			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
+			buf1 = long_to_str(get_line_num());
+			write(STDERR_FILENO, buf0, str_len(buf0));
+			write(STDERR_FILENO, ": ", 2);
+			write(STDERR_FILENO, buf1, str_len(buf1));
+			write(STDERR_FILENO, ": exit: ", 8);
 			write(STDERR_FILENO, "Illegal number: ", 16);
 			write(STDERR_FILENO, av[0], str_len(av[0]));
+			write(STDERR_FILENO, "\n", 1);
+			free(buf1);
 			return (2);
 		}
 	}

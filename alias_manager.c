@@ -23,12 +23,14 @@ void manage_aliases(char op)
 		{
 			for (i = 0; i < Alias_Count; i++)
 			{
-				if ((*(Alias_List + i))->name != NULL)
-					free((*(Alias_List + i))->name);
-				if ((*(Alias_List + i))->value != NULL)
-					free((*(Alias_List + i))->value);
 				if (*(Alias_List + i) != NULL)
+				{
+					if ((*(Alias_List + i))->name != NULL)
+						free((*(Alias_List + i))->name);
+					if ((*(Alias_List + i))->value != NULL)
+						free((*(Alias_List + i))->value);
 					free(*(Alias_List + i));
+				}
 			}
 			if (Alias_List != NULL)
 				free(Alias_List);

@@ -32,13 +32,13 @@ char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
 				if (j == sub_len)
 				{
 					/* make replacement */
-					res_len = res_len + (rep_len == sub_len ? 0 :  rep_len - sub_len);
+					res_len = res_len + (rep_len == sub_len ? 0 : rep_len - sub_len);
 					tmp = malloc(sizeof(char) * (res_len + 1));
 					if (tmp != NULL)
 					{
 						for (a = 0, b = 0, c = 0; a < res_len; a++)
 						{
-							c =  (a == i) ? i + sub_len : c;
+							c = (a == i) ? i + sub_len : c;
 							if (a >= i && a < (i + rep_len))
 							{
 								*(tmp + a) = *(rep_str + b);
@@ -54,7 +54,7 @@ char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
 					}
 					free(res);
 					res = tmp;
-					i += (rep_len == sub_len ? rep_len :  rep_len - sub_len);
+					i += (rep_len == sub_len ? rep_len : rep_len - sub_len);
 				}
 			}
 			i++;
@@ -121,11 +121,11 @@ char *rep_range(char *str, char *val, int a, int b)
 	char *res = NULL;
 	int out_len = end - start + 1;
 
-	size = len + (in_len == out_len ? 0 :  in_len - out_len);
+	size = len + (in_len == out_len ? 0 : in_len - out_len);
 	res = malloc(sizeof(char) * (size + 1));
 	if (res != NULL)
 	{
-		for (i = 0; i < size; )
+		for (i = 0; i < size;)
 		{
 			if (i == start)
 			{

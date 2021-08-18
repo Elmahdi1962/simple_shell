@@ -55,7 +55,8 @@ void manage_history(int op)
 				if (*(Cmd_History + i) != NULL)
 					free(*(Cmd_History + i));
 			}
-			free(Cmd_History);
+			if (Cmd_History != NULL)
+				free(Cmd_History);
 		}
 	}
 }

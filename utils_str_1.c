@@ -12,7 +12,9 @@ int str_eql(char *left, char *right)
 	int i;
 
 	if ((left == NULL) || (right == NULL))
+	{
 		return (FALSE);
+	}
 	else
 	{
 		for (i = 0; *(left + i) != '\0'; i++)
@@ -41,6 +43,8 @@ char *str_copy(char *str)
 	int i;
 	int len = str_len(str);
 
+	if (str == NULL)
+		return (NULL);
 	new_str = malloc(sizeof(char) * (len + 1));
 	if (new_str)
 	{
@@ -86,7 +90,7 @@ char *str_cat(char *left, char *right, char can_free)
 /**
  * copy_range - Copies a range of chracters from a to b inclusive
  * @str: The string to copy from
- * @s: The start index
+ * @a: The start index
  * @b: The end index
  *
  * Return: A newly created string, otherwise NULL

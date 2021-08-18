@@ -64,12 +64,41 @@ char *get_cmd_line()
 }
 
 /**
+ * get_next_command - Gets the next command that can be executed by the shell
+ * @cur: The current command node
+ * @exit_code: The exit code of the last command
+ *
+ * Return: A pointer to the next executable command node
+ */
+cmd_t *get_next_command(cmd_t *cur, int exit_code)
+{
+	cmd_t *node;
+
+	if (((cur->next_cond == OP_OR) && (exit_code != 0))
+		|| ((cur->next_cond == OP_AND) && (exit_code == 0)))
+	{
+		return (cur->next);
+	}
+	else
+	{
+		node = cur;
+		while (node->next != NULL)
+		{
+			if (node->next_cond == OP_SEP)
+				return (node->next);
+			node = node->next;
+		}
+		return (NULL);
+	}
+}
+
+/**
  * get_variables - Retrieves an array of variables from a string
  * @str: The source string
  * @vars_count
  *
  * Return: The list of variables, otherwise NULL
-*/
+ */
 char **get_variables(char *str, int *vars_count)
 {
 	int i = 0, p = 0;
@@ -107,10 +136,14 @@ char **get_variables(char *str, int *vars_count)
  */
 void print_prompt()
 {
-	char *ps1 = str_copy(get_env_var("PS1"));
+	char *ps1 = get_env_var("PS1");
 	int j, n;
 	char **vars = NULL, *var_val = NULL;
 
+	if (ps1 == NULL)
+		ps1 = str_copy("$ ");
+	else
+		ps1 = str_copy(ps1);
 	vars = get_variables(ps1, &n);
 	if (vars != NULL)
 	{

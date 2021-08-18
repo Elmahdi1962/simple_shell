@@ -20,7 +20,6 @@ static char *EXEC_NAME;
  * The process ID of the current instance of this shell program
  */
 static char *SHELL_PID;
-static char *ERROR_MSG;
 /**
  * The exit code of the last executed process in this shell program
  */
@@ -71,6 +70,7 @@ int main(int ac, char *av[], char *envp[])
 					write(STDOUT_FILENO, "There should be only one command per line\n", 42);
 					break;
 				}
+				/* print_node(cur); */
 				/* printf(":: %s, %s\n", cur->command, cmd_line); */
 				if (is_built_in_cmd(cur) == TRUE)
 				{
@@ -84,16 +84,18 @@ int main(int ac, char *av[], char *envp[])
 				}
 				else
 				{
-					write(STDOUT_FILENO, "not found\n", 10);
-					NODE_EXIT_CODE = 127;
+					tmp = long_to_str(get_line_num());
+					write(STDERR_FILENO, EXEC_NAME, str_len(EXEC_NAME));
+					write(STDERR_FILENO, ": ", 2);
+					write(STDERR_FILENO, tmp, str_len(tmp));
+					write(STDERR_FILENO, ": ", 2);
+					write(STDERR_FILENO, cur->command, str_len(cur->command));
+					write(STDERR_FILENO, ": not found\n", 12);
+					free(tmp);
+					NODE_EXIT_CODE = EC_COMMOAND_NOT_FOUND;
 				}
 				/* print_node(cur); */
-				if (((cur->next_cond == OP_OR) && (NODE_EXIT_CODE != 0))
-					|| ((cur->next_cond == OP_AND) && (NODE_EXIT_CODE == 0))
-					|| (cur->next_cond == OP_SEP))
-					cur = cur->next;
-				else
-					cur = NULL;
+				cur = get_next_command(cur, NODE_EXIT_CODE);
 			}
 			free_list(cmds);
 			free(cmd_line);
@@ -101,7 +103,7 @@ int main(int ac, char *av[], char *envp[])
 		}
 		a += (!interactive ? 1 : 0);
 	}
-	return (0);
+	return (NODE_EXIT_CODE);
 }
 
 /* TODO: Remove when program is stable */
@@ -151,10 +153,11 @@ void init_shell(int ac, char *av[], char *envp[],
 		;
 	EXEC_NAME = av[0];
 	SHELL_PID = long_to_str(getpid());
-	*interactive = !isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE;
+	*interactive = (!isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE);
 	signal(SIGINT, handle_signal);
-	signal(SIG_SHELL_ERROR, handle_signal);
+	/* signal(SIG_SHELL_ERROR, handle_signal); */
 	add_env_var("SHELL", av[0]);
+	NODE_EXIT_CODE = 0;
 	manage_aliases(MO_INIT);
 	manage_history(MO_INIT);
 }
@@ -165,28 +168,10 @@ void init_shell(int ac, char *av[], char *envp[],
  */
 void handle_signal(int sig_num)
 {
-	char *buf;
-
-	if (sig_num == SIG_SHELL_ERROR)
+	if (sig_num == SIGINT)
 	{
-		buf = long_to_str(get_line_num());
-		write(STDERR_FILENO, EXEC_NAME, str_len(EXEC_NAME));
-		write(STDERR_FILENO, ": ", 2);
-		if (buf != NULL)
-			write(STDERR_FILENO, buf, str_len(buf));
-		write(STDERR_FILENO, ": ", 2);
-		if (ERROR_MSG != NULL)
-			write(STDERR_FILENO, ERROR_MSG, str_len(ERROR_MSG));
-		write(STDERR_FILENO, "\n", 1);
-		/* error_set = TRUE; */
-		if (buf != NULL)
-			free(buf);
-		if (ERROR_MSG != NULL)
-			free(ERROR_MSG);
-		ERROR_MSG = NULL;
-	}
-	else if (sig_num == SIGINT)
-	{
+		NODE_EXIT_CODE = EC_CONTROL_C_TERMINATION;
+		fflush(stdin);
 	}
 }
 
@@ -224,6 +209,4 @@ void clean_up_shell(void)
 	/* save_history(); */
 	manage_aliases(MO_FREE);
 	manage_history(MO_FREE);
-	if (ERROR_MSG != NULL)
-		free(ERROR_MSG);
 }
