@@ -95,7 +95,7 @@ cmd_t *get_next_command(cmd_t *cur, int exit_code)
 /**
  * get_variables - Retrieves an array of variables from a string
  * @str: The source string
- * @vars_count
+ * @vars_count: count of vars
  *
  * Return: The list of variables, otherwise NULL
  */
@@ -134,7 +134,7 @@ char **get_variables(char *str, int *vars_count)
 /**
  * print_prompt - Prints the prompt for this shell program
  */
-void print_prompt()
+void print_prompt(void)
 {
 	char *ps1 = get_env_var("PS1");
 	int j, n;

@@ -21,7 +21,7 @@ char *get_env_var(char *var)
 		{
 			for (j = 0; (*(var + j) != '\0') && (*(*(envp + i) + j) != '\0'); j++)
 			{
-				if ((*(*(envp + i) + j) != *(var+ j)) || (*(*(envp + i) + j) == '='))
+				if ((*(*(envp + i) + j) != *(var + j)) || (*(*(envp + i) + j) == '='))
 					break;
 			}
 			if (*(*(envp + i) + j) == '=' && *(var + j) == '\0')
@@ -36,7 +36,7 @@ char *get_env_var(char *var)
  * @var: The name of the environment variable
  * @val: The value of the environment variable
  */
-void set_env_var(char *var, char*val)
+void set_env_var(char *var, char *val)
 {
 	char **envp = *((char ***)get_shell_prop(ENVP_ID));
 	int n = *((int *)get_shell_prop(ENVP_COUNT_ID));
@@ -48,7 +48,7 @@ void set_env_var(char *var, char*val)
 		{
 			for (j = 0; (*(var + j) != '\0') && (*(*(envp + i) + j) != '\0'); j++)
 			{
-				if ((*(*(envp + i) + j) != *(var+ j)) || (*(*(envp + i) + j) == '='))
+				if ((*(*(envp + i) + j) != *(var + j)) || (*(*(envp + i) + j) == '='))
 					break;
 			}
 			if (*(*(envp + i) + j) == '=' && *(var + j) == '\0')
@@ -68,7 +68,7 @@ void set_env_var(char *var, char*val)
  * @var: The name of the environment variable
  * @val: The value of the environment variable
  */
-void add_env_var(char *var, char*val)
+void add_env_var(char *var, char *val)
 {
 	char **envp = *((char ***)get_shell_prop(ENVP_ID));
 	int *n = (int *)get_shell_prop(ENVP_COUNT_ID);
@@ -106,7 +106,7 @@ void remove_env_var(char *var)
 			{
 				for (j = 0; (*(var + j) != '\0') && (*(*(envp + i) + j) != '\0'); j++)
 				{
-					if ((*(*(envp + i) + j) != *(var+ j)) || (*(*(envp + i) + j) == '='))
+					if ((*(*(envp + i) + j) != *(var + j)) || (*(*(envp + i) + j) == '='))
 						break;
 				}
 				if (!(*(*(envp + i) + j) == '=' && *(var + j) == '\0'))

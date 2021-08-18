@@ -18,9 +18,11 @@ int sc_alias(int ac, char *av[])
 	{
 		for (i = 0; i < n; i++)
 		{
-			write(STDOUT_FILENO, (*(aliases + i))->name, str_len((*(aliases + i))->name));
+			write(STDOUT_FILENO, (*(aliases + i))->name,
+			str_len((*(aliases + i))->name));
 			write(STDOUT_FILENO, "='", 2);
-			write(STDOUT_FILENO, (*(aliases + i))->value, str_len((*(aliases + i))->value));
+			write(STDOUT_FILENO, (*(aliases + i))->value,
+			str_len((*(aliases + i))->value));
 			write(STDOUT_FILENO, "'\n", 2);
 		}
 	}

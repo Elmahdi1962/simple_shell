@@ -42,7 +42,7 @@ void manage_aliases(char op)
  * add_alias - Adds an alias to the list of aliases \
  * or replaces the value if it exists
  * @name: The name of the alias
- * @vvalue: The value of the alias
+ * @value: The value of the alias
  */
 void add_alias(char *name, char *value)
 {

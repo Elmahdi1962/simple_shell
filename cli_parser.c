@@ -179,7 +179,7 @@ char *read_variable(char *str, int pos)
 
 	while (*(str + i) != '\0')
 	{
-		if ( ((*(str + i) == '$') && (i == pos))
+		if (((*(str + i) == '$') && (i == pos))
 			|| ((*(str + i) == '?') && (i == pos)))
 		{
 			i++;
