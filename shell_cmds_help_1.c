@@ -46,10 +46,18 @@ void help_setenv(void)
 {
 	char *help_text[] =
 	{
-		""
+		"setenv: Defines an environment variable and assigns a value to it\n\n",
+		"Syntax:\n",
+		"\t setenv <variable-name> <variable-value>\n\n",
+		"Required Argument:\n",
+   		"\tvariable-name:\n",
+		"\tspecifies a UNIX environment variable that you can set.\n\n",
+		"Optional Argument:\n",
+   		"\tvariable-value:\n",
+		"\tspecifies the value of a UNIX environment variable.\n"
 	};
 	
-	print_text(STDOUT_FILENO, help_text, 1);
+	print_text(STDOUT_FILENO, help_text, 9);
 }
 
 /**
@@ -59,8 +67,14 @@ void help_unsetenv(void)
 {
 	char *help_text[] =
 	{
-		""
+		"unsetenv : removes an environment variable. The memory for the\n",
+		"entry and the environment variable is released\n\n",
+		"Syntax:\n",
+		"\tunsetenv <variable-name>\n\n",
+		"Required Argument:\n",
+   		"\tvariable-name:\n",
+        "\tspecifies a UNIX environment variable that you want to unset.\n"
 	};
 
-	print_text(STDOUT_FILENO, help_text, 1);
+	print_text(STDOUT_FILENO, help_text, 7);
 }
