@@ -184,7 +184,9 @@ int sc_help(int ac, char *av[])
 		{"cd", help_cd},
 		{"exit", help_exit},
 		{"help", help_help},
-		{"history", help_history}
+		{"history", help_history},
+		{"setenv", help_setenv},
+		{"unsetenv", help_unsetenv}
 	};
 
 	if (ac > 0)

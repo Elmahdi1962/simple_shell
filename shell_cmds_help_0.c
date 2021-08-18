@@ -72,7 +72,10 @@ void help_env(void)
 {
 	char *help_text[] =
 	{
-		""
+		"env: env \n",
+		"    Display a list of the current environment variables.\n",
+		"    Exit Status:\n",
+		"    Returns success unless an invalid option is given or an error occurs.\n"
 	};
 
 	print_text(STDOUT_FILENO, help_text, 1);
