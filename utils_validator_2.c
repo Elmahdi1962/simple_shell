@@ -35,13 +35,10 @@ char is_alias_name(char *str)
 
 	while ((str != NULL) && (*(str + i) != '\0'))
 	{
-		if (is_digit(*(str + i))
-			|| is_letter(*(str + i))
-			|| (*(str + i) == '_')
-			|| (*(str + i) == '!')
-			|| (*(str + i) == '%')
-			|| (*(str + i) == ',')
-			|| (*(str + i) == '@'))
+		if (is_digit(*(str + i)) || is_letter(*(str + i))
+		|| (*(str + i) == '_') || (*(str + i) == '!')
+		|| (*(str + i) == '%') || (*(str + i) == ',')
+		|| (*(str + i) == '@'))
 			i++;
 		else
 			break;
