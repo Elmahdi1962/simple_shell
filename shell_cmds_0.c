@@ -65,46 +65,46 @@ int sc_alias(int ac, char *av[])
 	return (EC_SUCCESS);
 }
 
-/* TODO: Fix this algorithm and handle errors */
+/**
+ * sc_cd - function that do what cd does XD
+ * @ac: arguments count
+ * @av: array of arguments
+ * Return: EC_SUCCESS on success 
+ */
 int sc_cd(int ac, char *av[])
 {
-	int i;
-	char *pwd = get_env_var("PWD");
-	char *old_pwd = get_env_var("OLDPWD");
+	size_t bufsize = 1024;
+	char pwd[1024];
+	char *home = get_env_var("HOME");
+	char *oldpwd = get_env_var("OLDPWD");
 
+	getcwd(pwd, bufsize);
 	if (ac <= 0)
 	{
-		set_env_var("OLDPWD", pwd), set_env_var("PWD", get_env_var("HOME"));
-		chdir(get_env_var("HOME"));
+		set_env_var("OLDPWD", pwd);
+		chdir(home);
+		set_env_var("PWD", home);
 	}
 	else
 	{
-		if (str_eql("-", av[0]))
+		if (str_eql(av[0], "~"))
 		{
-			if (old_pwd != NULL)
-			{
-				set_env_var("OLDPWD", pwd), set_env_var("PWD", old_pwd), chdir(old_pwd);
-			}
-			else
-			{
-				printf("OLDPWD not set");
-				return (EC_INVALID_ARGS);
-			}
-		}
-		else
+			set_env_var("OLDPWD", pwd);
+			chdir(home);
+			set_env_var("PWD", home);
+		} else if (str_eql(av[0], "-"))
 		{
-			i = chdir(av[0]);
-			printf(">> %d, %d\n", i, errno);
-			if (i >= 0)
+			set_env_var("OLDPWD", pwd);
+			chdir(oldpwd);
+			set_env_var("PWD", oldpwd);
+		} else
+		{
+			set_env_var("OLDPWD", pwd);
+			if (chdir(av[0]) == 0)
 			{
-				set_env_var("OLDPWD", pwd);
 				set_env_var("PWD", av[0]);
-			}
-			else
-			{
-				printf("can't cd to ");
-				return (EC_INVALID_ARGS);
-			}
+			} else
+				print_error("cd", av[0], "can't cd to ");			
 		}
 	}
 	return (EC_SUCCESS);

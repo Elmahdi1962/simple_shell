@@ -147,3 +147,86 @@ char *rep_range(char *str, char *val, int a, int b)
 	}
 	return (res);
 }
+
+
+/**
+ * print_error - prints custom error messages
+ * @command_name: command name that will print the error
+ * @userinput: the input of the user that made the command print this error
+ * @error_message: the error message
+ * Return: void
+ */
+
+void print_error(char *command_name, char *userinput, char *error_message)
+{
+	char *shell_name = "simple_shell: ";
+	char line_number[5];
+	int number_len;
+
+	_itoa(get_line_num(), line_number, 10);
+	number_len = str_len(line_number);
+
+	write(STDOUT_FILENO, shell_name, 14);
+	write(STDOUT_FILENO, line_number, number_len);
+	write(STDOUT_FILENO, ": ", 2);
+	write(STDOUT_FILENO, command_name, str_len(command_name));
+	write(STDOUT_FILENO, ": ", 2);
+	write(STDOUT_FILENO, error_message, str_len(error_message));
+	write(STDOUT_FILENO, userinput, str_len(userinput));
+	write(STDOUT_FILENO, "\n", 1);
+
+}
+
+
+/**
+ * _itoa - convert int to string
+ * @value: number to convert int
+ * @buffer: pointer to a buffer where to store the result
+ * @base: base to convert the integer into
+ * Return: pointer to the string holding the result
+ */
+
+char *_itoa(int value, char* buffer, int base)
+{
+	int n, i;
+
+    /* invalid input*/
+    if (base < 2 || base > 32) {
+        return buffer;
+    }
+ 
+    /* consider the absolute value of the number*/
+    n = value;
+ 
+    i = 0;
+    while (n)
+    {
+        int r = n % base;
+ 
+        if (r >= 10) {
+            buffer[i++] = 65 + (r - 10);
+        }
+        else {
+            buffer[i++] = 48 + r;
+        }
+ 
+        n = n / base;
+    }
+ 
+    /* if the number is 0*/
+    if (i == 0) {
+        buffer[i++] = '0';
+    }
+ 
+    /* If the base is 10 and the value is negative, the resulting string*/
+    /* is preceded with a minus sign (-)*/
+    /* With any other base, value is always considered unsigned*/
+    if (value < 0 && base == 10) {
+        buffer[i++] = '-';
+    }
+ 
+    buffer[i] = '\0'; /* null terminate string*/
+ 
+    /* reverse the string and return it*/
+    return reverse(buffer, 0, i - 1);
+}

@@ -384,6 +384,10 @@ char **str_split(char *str, char c, int *len_out, char can_free);
 char *str_replace(char *str, char *sub_str, char *rep_str, char can_free);
 char *long_to_str(long num);
 char *rep_range(char *str, char *val, int a, int b);
+void print_error(char *command_name, char *userinput, char *error_message);
+void swap(char *x, char *y);
+char *reverse(char *buffer, int i, int j);
+char *_itoa(int value, char* buffer, int base);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */
