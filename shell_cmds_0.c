@@ -65,6 +65,54 @@ int sc_alias(int ac, char *av[])
 	return (EC_SUCCESS);
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * sc_cd - function that do what cd does XD
+ * @ac: arguments count
+ * @av: array of arguments
+ * Return: EC_SUCCESS on success 
+ */
+int sc_cd(int ac, char *av[])
+{
+	size_t bufsize = 1024;
+	char pwd[1024];
+	char *home = get_env_var("HOME");
+	char *oldpwd = get_env_var("OLDPWD");
+
+	getcwd(pwd, bufsize);
+	if (ac <= 0)
+	{
+		set_env_var("OLDPWD", pwd);
+		chdir(home);
+		set_env_var("PWD", home);
+	}
+	else
+	{
+		if (str_eql(av[0], "~"))
+		{
+			set_env_var("OLDPWD", pwd);
+			chdir(home);
+			set_env_var("PWD", home);
+		} else if (str_eql(av[0], "-"))
+		{
+			set_env_var("OLDPWD", pwd);
+			chdir(oldpwd);
+			set_env_var("PWD", oldpwd);
+		} else
+		{
+			set_env_var("OLDPWD", pwd);
+			if (chdir(av[0]) == 0)
+			{
+				set_env_var("PWD", av[0]);
+			} else
+				print_error("cd", av[0], "can't cd to ");			
+		}
+	}
+	return (EC_SUCCESS);
+}
+
+>>>>>>> 7d906593e76c8a9c59235cc8f7b62d7b183f24d8
 /**
  * sc_exit - Exits the shell with an optional status code
  * @ac: The number of arguments
