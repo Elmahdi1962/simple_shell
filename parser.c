@@ -9,57 +9,52 @@
 cmd_t *parse_cmd_line(char *line)
 {
 	proc_tbl_t *proc_tbl;
-	token_t *tokens = NULL;
+	token_t *tokens = tokenize_command_string(line);
 	char **alias_expansions = NULL;
 	int n = 0;
 	cmd_t *cmd_list = NULL;
 
-	tokens = tokenize_command_string(line);
 	if (tokens == NULL)
 		return (NULL);
 	if (*((char *)get_shell_prop(IS_INTERACTIVE_ID)) == TRUE)
 		process_alias_expansion(&tokens, alias_expansions, &n, ' ');
 	if ((proc_tbl = malloc(sizeof(proc_tbl_t))) && (proc_tbl == NULL))
 		return (NULL);
-	proc_tbl->error = FALSE;
-	proc_tbl->tokens_list = &tokens;
-	proc_tbl->cmds_list_head = &cmd_list;
-	proc_tbl->cur_cmd_node = NULL;
-	proc_tbl->pos = 0;
-	proc_tbl->cur_token = tokens;
-	write(STDOUT_FILENO, "Parsing starting\n", 17), fflush(stdout);
+	init_processing_table(&proc_tbl, &tokens, &cmd_list);
 	while ((proc_tbl->cur_token != NULL) && (proc_tbl->error == FALSE))
 	{
-		write(STDOUT_FILENO, proc_tbl->cur_token->value, str_len(proc_tbl->cur_token->value));
-		write(STDOUT_FILENO, ",\n", 2);
 		if ((proc_tbl->cur_token)->type == TKN_SEP_OP)
-		{
 			process_commands_separator(proc_tbl);
-		}
 		else if ((proc_tbl->cur_token)->type == TKN_OP)
-		{
 			process_operator(proc_tbl);
-		}
 		else if ((proc_tbl->cur_token)->type == TKN_WORD)
-		{
 			process_word(proc_tbl);
-		}
-		else
-		{
-			/* TODO: Remove this else block */
-			printf("Invalid tokenization on line %d, value: %s\n", __LINE__, (proc_tbl->cur_token)->value);
-		}
 		proc_tbl->pos++;
 		proc_tbl->cur_token = (proc_tbl->cur_token)->next;
 	}
-	write(STDOUT_FILENO, "Parsing complete\n", 17);
 	free_token_t(tokens);
 	if (proc_tbl->error == TRUE)
 		free_cmd_t(cmd_list), cmd_list = NULL;
-	if (proc_tbl != NULL)
-		free(proc_tbl);
+	free(proc_tbl);
 	free_array(alias_expansions, n);
 	return (cmd_list);
+}
+
+/**
+ * init_processing_table - Initializes the processing table
+ * @proc_tbl: The pointer to the processing table
+ * @tokens: The pointer to the tokens to be processed
+ * @cmd_list: The pointer to the command list's head
+ */
+void init_processing_table(proc_tbl_t **proc_tbl,
+	token_t **tokens, cmd_t **cmd_list)
+{
+	(*proc_tbl)->error = FALSE;
+	(*proc_tbl)->tokens_list = tokens;
+	(*proc_tbl)->cmds_list_head = cmd_list;
+	(*proc_tbl)->cur_cmd_node = NULL;
+	(*proc_tbl)->pos = 0;
+	(*proc_tbl)->cur_token = *tokens;
 }
 
 /**

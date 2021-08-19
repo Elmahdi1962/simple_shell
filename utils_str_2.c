@@ -147,3 +147,44 @@ char *rep_range(char *str, char *val, int a, int b)
 	}
 	return (res);
 }
+
+/**
+ * strs_join - Joins an array of strings into a string
+ * @arr: The array of strings
+ * @c: The character to join the strings with
+ * @can_free: Specifies if the given array can be freed
+ *
+ * Return: The concatenated strings, otherwise NULL
+ */
+char *strs_join(char **arr, int n, char c, char can_free)
+{
+	int size = 0;
+	int i, j, k;
+	char *res = NULL;
+
+	for (i = 0; i < n; i++)
+		size += str_len(*(arr + i));
+	size += (c == 0 ? 0 : n - 1);
+	res = malloc(sizeof(char) * (size + 1));
+	if (res != NULL)
+	{
+		i = 0;
+		for (k = 0; k < n; k++)
+		{
+			for (j = 0; *(*(arr + k) + j) != '\0'; j++)
+			{
+				*(res + i) = *(*(arr + k) + j);
+				i++;
+			}
+			if ((c != 0) && (k < n - 1))
+			{
+				*(res + i) = c;
+				i++;
+			}
+		}
+		*(res + i) = '\0';
+	}
+	if (can_free == TRUE)
+		free_array(arr, n);
+	return (res);
+}

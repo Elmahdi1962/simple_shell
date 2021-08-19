@@ -1,9 +1,4 @@
-#include <stdio_ext.h>
 #include "main.h"
-
-/**
- * TODO: Processing an executable file
- */
 
 /**
  * The modifiable environment variable for this shell program
@@ -25,7 +20,18 @@ static char *SHELL_PID;
  * The exit code of the last executed process in this shell program
  */
 static int NODE_EXIT_CODE;
+/**
+ * Specifies the interactiveness of this shell program
+ */
 static char IS_INTERACTIVE;
+/**
+ * The lines of the file passed to this shell program
+ */
+char **FILE_LINES;
+/**
+ * The number of lines in the file passed to this shell program
+ */
+int CMD_LINES_COUNT;
 
 /**
  * main - Entry point to the simple shell program
@@ -36,17 +42,16 @@ static char IS_INTERACTIVE;
  */
 int main(int ac, char *av[], char *envp[])
 {
-	int a = 0, cmd_lines_count = 1;
-	char **file_lines = NULL;
+	int a = 0;
 	char *cmd_line = NULL;
 	cmd_t *cmd_list = NULL;
 
-	init_shell(ac, av, envp, &cmd_lines_count, &file_lines);
-	write(STDIN_FILENO, "\0", 1);
-	while (a < cmd_lines_count)
+	init_shell(ac, av, envp);
+	write(STDIN_FILENO, "\0", 1);/* Clear any previous input */
+	while (a < CMD_LINES_COUNT)
 	{
 		print_prompt();
-		cmd_line = file_lines == NULL ? get_cmd_line() : *(file_lines + a);
+		cmd_line = FILE_LINES == NULL ? get_cmd_line() : FILE_LINES[a];
 		if (str_len(cmd_line) > 0)
 		{
 			add_to_history(cmd_line);
@@ -61,19 +66,6 @@ int main(int ac, char *av[], char *envp[])
 	return (NODE_EXIT_CODE);
 }
 
-/* TODO: Remove when program is stable */
-void print_node(cmd_t *node)
-{
-	int i;
-
-	printf("cmd: %s, built-in: %d, ac: %d\n", node->command,
-					is_built_in_cmd(node), node->args_count);
-	for (i = 0; i < node->args_count; i++)
-	{
-		printf("    arg[%d]: %s \n", i, *(node->args + i));
-	}
-}
-
 /**
  * init_shell - Entry point to the simple shell program
  * @ac: The number of arguments passed
@@ -82,10 +74,9 @@ void print_node(cmd_t *node)
  * @file_lines: The lines of command strings in a passed file
  * @interactive: The pointer to the interactive variable
  */
-void init_shell(int ac, char *av[], char *envp[],
-	int *cmd_lines_count, char ***file_lines)
+void init_shell(int ac, char *av[], char *envp[])
 {
-	int fd;
+	int fd, i;
 
 	if (ac > 2)
 	{
@@ -99,18 +90,23 @@ void init_shell(int ac, char *av[], char *envp[],
 	{
 		/* TODO: Load first arg as a file */
 		fd = open(av[1], O_RDONLY);
-		*file_lines = read_all_lines(fd, cmd_lines_count);
-		close(fd);
-		exit(127);
+		FILE_LINES = read_all_lines(fd, &CMD_LINES_COUNT);
 	}
-	ENVP = envp;
-	for (ENVP_COUNT = 0; ENVP[ENVP_COUNT] != NULL; ENVP_COUNT++)
-		;
-	EXEC_NAME = av[0];
+	else
+	{
+		CMD_LINES_COUNT = 1;
+		FILE_LINES = NULL;
+	}
+	for (i = 0; (envp != NULL) && (envp[i] != NULL); i++)
+	{
+		ENVP = _realloc(ENVP, sizeof(void *) * i, sizeof(void *) * (i + 1));
+		*(ENVP + i) = str_copy(envp[i]);
+		ENVP_COUNT++;
+	}
+	EXEC_NAME = str_copy(av[0]);
 	SHELL_PID = long_to_str(getpid());
 	IS_INTERACTIVE = (!isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE);
 	signal(SIGINT, handle_signal);
-	/* signal(SIG_SHELL_ERROR, handle_signal); */
 	add_env_var("SHELL", av[0]);
 	NODE_EXIT_CODE = 0;
 	manage_aliases(MO_INIT);
@@ -153,4 +149,12 @@ void clean_up_shell(void)
 	save_history();
 	manage_aliases(MO_FREE);
 	manage_history(MO_FREE);
+	if (FILE_LINES != NULL)
+		free_array(FILE_LINES, CMD_LINES_COUNT);
+	if (ENVP != NULL)
+		free_array(ENVP, ENVP_COUNT);
+	if (EXEC_NAME != NULL)
+		free(EXEC_NAME);
+	if (SHELL_PID != NULL)
+		free(SHELL_PID);
 }

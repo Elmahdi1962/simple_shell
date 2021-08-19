@@ -32,16 +32,13 @@ void manage_history(int op)
 	{
 		/* Load history file */
 		file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
-		fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT, 0777);
+		fd = open(file_path, O_RDWR | O_CREAT, 0777);
 		file_lines = read_all_lines(fd, &n);
 		if (file_lines != NULL)
 		{
 			for (i = 0; i < MIN(n, HISTORY_SIZE); i++)
-			{
 				add_to_history(*(file_lines + i));
-				free(*(file_lines + i));
-			}
-			free(file_lines);
+			free_array(file_lines, n);
 			Line_Num = (n % HISTORY_SIZE);
 		}
 		if (fd >= 0)

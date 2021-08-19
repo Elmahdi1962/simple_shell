@@ -38,9 +38,23 @@ int sc_history(int ac, char *av[])
 
 int sc_setenv(int ac, char *av[])
 {
-	(void)ac;
-	(void)av;
-	return (0);
+	if (ac == 2)
+	{
+		if (is_variable(av[0]))
+		{
+			add_env_var(av[0], av[1]);
+			return (EC_SUCCESS);
+		}
+		else
+		{
+			return (EC_GENERAL_ERROR);
+		}
+	}
+	else
+	{
+		write(STDOUT_FILENO, "Inavlid format\n", 15);
+		return (EC_INVALID_ARGS);
+	}
 }
 
 int sc_unsetenv(int ac, char *av[])
@@ -52,7 +66,7 @@ int sc_unsetenv(int ac, char *av[])
 	}
 	else
 	{
-		printf("Inavlid format");
+		write(STDOUT_FILENO, "Inavlid format\n", 15);
 		return (EC_INVALID_ARGS);
 	}
 }

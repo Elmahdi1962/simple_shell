@@ -7,7 +7,7 @@
  *
  * Return: TRUE if they're equal and not NULL, otherwise FALSE
  */
-int str_eql(char *left, char *right)
+char str_eql(char *left, char *right)
 {
 	int i;
 

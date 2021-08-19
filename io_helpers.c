@@ -34,7 +34,6 @@ char **read_all_lines(int fd, int *lines)
 		}
 		if (buf != NULL)
 			free(buf);
-		close(fd);
 	}
 	return (str_split(str, '\n', lines, TRUE));
 }

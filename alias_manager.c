@@ -1,6 +1,8 @@
 #include "main.h"
 
+/* The array of aliases in this shell program */
 static alias_t **Alias_List;
+/* The number of aliases in this shell program */
 static int Alias_Count;
 
 /**
@@ -88,7 +90,7 @@ char *get_alias_value(char *str)
 	for (i = 0; i < Alias_Count; i++)
 	{
 		if (str_eql(str, (*(Alias_List + i))->name))
-			return ((*(Alias_List + i))->name);
+			return ((*(Alias_List + i))->value);
 	}
 	return (NULL);
 }

@@ -55,6 +55,8 @@ void set_env_var(char *var, char *val)
 			{
 				if (val != NULL)
 				{
+					free(*(envp + i));
+					*(envp + i) = NULL;
 					*(envp + i) = str_cat(str_cat(var, "=", FALSE), str_copy(val), TRUE);
 					break;
 				}

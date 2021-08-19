@@ -65,51 +65,6 @@ int sc_alias(int ac, char *av[])
 	return (EC_SUCCESS);
 }
 
-/* TODO: Fix this algorithm and handle errors */
-int sc_cd(int ac, char *av[])
-{
-	int i;
-	char *pwd = get_env_var("PWD");
-	char *old_pwd = get_env_var("OLDPWD");
-
-	if (ac <= 0)
-	{
-		set_env_var("OLDPWD", pwd), set_env_var("PWD", get_env_var("HOME"));
-		chdir(get_env_var("HOME"));
-	}
-	else
-	{
-		if (str_eql("-", av[0]))
-		{
-			if (old_pwd != NULL)
-			{
-				set_env_var("OLDPWD", pwd), set_env_var("PWD", old_pwd), chdir(old_pwd);
-			}
-			else
-			{
-				printf("OLDPWD not set");
-				return (EC_INVALID_ARGS);
-			}
-		}
-		else
-		{
-			i = chdir(av[0]);
-			printf(">> %d, %d\n", i, errno);
-			if (i >= 0)
-			{
-				set_env_var("OLDPWD", pwd);
-				set_env_var("PWD", av[0]);
-			}
-			else
-			{
-				printf("can't cd to ");
-				return (EC_INVALID_ARGS);
-			}
-		}
-	}
-	return (EC_SUCCESS);
-}
-
 /**
  * sc_exit - Exits the shell with an optional status code
  * @ac: The number of arguments

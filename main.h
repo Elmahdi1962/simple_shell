@@ -233,8 +233,7 @@ typedef struct processing_table proc_tbl_t;
 
 /* ******** Program (rash.c) ******** */
 
-void init_shell(int ac, char *av[], char *envp[],
-	int *cmd_lines_count, char ***file_lines);
+void init_shell(int ac, char *av[], char *envp[]);
 void print_node(cmd_t *node);
 void handle_signal(int sig_num);
 void *get_shell_prop(char prop_id);
@@ -282,6 +281,8 @@ char **get_variables(char *str, int *vars_count);
 /* ******** CLI Parser (cli_parser.c) ******** */
 
 cmd_t *parse_cmd_line(char *line);
+void init_processing_table(proc_tbl_t **proc_tbl,
+	token_t **tokens, cmd_t **cmd_list);
 void process_commands_separator(proc_tbl_t *proc_tbl);
 void process_operator(proc_tbl_t *proc_tbl);
 void process_word(proc_tbl_t *proc_tbl);
@@ -296,6 +297,9 @@ char *read_word(char *str, int o, int *len_out);
 
 char *dissolve_tokens(char *str, char can_free);
 void dissolve_cmd_parts(cmd_t *node);
+void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size);
+void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size);
+
 char is_valid_prev_char(char c);
 token_t *get_token_tail(token_t **head);
 void process_alias_expansion(token_t **tokens, char **expansions, int *n, char prev_char);
@@ -344,10 +348,14 @@ char **copy_environment(char **env, int env_count);
 char **copy_arguments(cmd_t *node);
 /* ******** ---------------- ******** */
 
+char *resolve_path(char *cwd, char *path, char *error);
+
 /* ******** Built-In Commands (shell_cmds_#.c) ******** */
 
 int sc_alias(int ac, char *av[]);
 int sc_cd(int ac, char *av[]);
+void print_failed_dir_nav_error(char *path, char error);
+void change_to_old_pwd(char *pwd, char *old_pwd, char *error);
 int sc_env(int ac, char *av[]);
 int sc_exit(int ac, char *av[]);
 int sc_help(int ac, char *av[]);
@@ -376,7 +384,7 @@ void mem_set(char *str, int n, char c);
 char *trim_start(char *str, char c, char can_free);
 char *trim_end(char *str, char c, char can_free);
 int str_len(char *str);
-int str_eql(char *left, char *right);
+char str_eql(char *left, char *right);
 char *str_copy(char *str);
 char *str_cat(char *left, char *right, char can_free);
 char *copy_range(char *str, int a, int b);
@@ -384,6 +392,7 @@ char **str_split(char *str, char c, int *len_out, char can_free);
 char *str_replace(char *str, char *sub_str, char *rep_str, char can_free);
 char *long_to_str(long num);
 char *rep_range(char *str, char *val, int a, int b);
+char *strs_join(char **arr, int n, char c, char can_free);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */

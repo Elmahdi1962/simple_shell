@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "main.h"
 
 /**
@@ -43,22 +42,20 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 }
 
 /**
- * free_array - frees a 2d list
- * @list: pointer to the list to free
- * Return: void
+ * free_array - Frees a 2d array
+ * @list: The pointer to the array to free
+ * @length: The length of the given array
  */
-
-void free_array(char **list, int length)
+void free_array(char **arr, int length)
 {
 	int i;
 
-	if (list != NULL)
+	if (arr != NULL)
 	{
-		for (i = 0; (i < length) && (list[i] != NULL); i++)
+		for (i = 0; (i < length) && (arr[i] != NULL); i++)
 		{
-			free(list[i]);
+			free(arr[i]);
 		}
-		free(list);
+		free(arr);
 	}
-	free(list);
 }
