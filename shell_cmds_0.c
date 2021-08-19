@@ -65,13 +65,12 @@ int sc_alias(int ac, char *av[])
 	return (EC_SUCCESS);
 }
 
-<<<<<<< HEAD
-=======
 /**
- * sc_cd - function that do what cd does XD
+ * sc_cd - Changes the current working directory
  * @ac: arguments count
  * @av: array of arguments
- * Return: EC_SUCCESS on success 
+ *
+ * Return: The function's exit code
  */
 int sc_cd(int ac, char *av[])
 {
@@ -106,13 +105,12 @@ int sc_cd(int ac, char *av[])
 			{
 				set_env_var("PWD", av[0]);
 			} else
-				print_error("cd", av[0], "can't cd to ");			
+				print_error("cd", av[0], "can't cd to ");
 		}
 	}
 	return (EC_SUCCESS);
 }
 
->>>>>>> 7d906593e76c8a9c59235cc8f7b62d7b183f24d8
 /**
  * sc_exit - Exits the shell with an optional status code
  * @ac: The number of arguments

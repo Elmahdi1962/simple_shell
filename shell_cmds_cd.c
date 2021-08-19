@@ -1,7 +1,7 @@
 #include "main.h"
 
 /* TODO: Fix this algorithm and handle errors */
-int sc_cd(int ac, char *av[])
+/* int sc_cd(int ac, char *av[])
 {
 	int i;
 	char *pwd = get_env_var("PWD"), *new_path = NULL, error = EC_SUCCESS;
@@ -22,7 +22,6 @@ int sc_cd(int ac, char *av[])
 		{
 			new_path = resolve_path(pwd, av[0], &error);
 			i = chdir(new_path);
-			/* printf(">> %d, %d, -> %s\n", i, errno, new_path); */
 			if ((error == FALSE) && (i >= 0))
 			{
 				set_env_var("OLDPWD", pwd);
@@ -38,6 +37,7 @@ int sc_cd(int ac, char *av[])
 	}
 	return (error);
 }
+ */
 
 void change_to_old_pwd(char *pwd, char *old_pwd, char *error)
 {

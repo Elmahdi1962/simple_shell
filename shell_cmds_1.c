@@ -36,6 +36,13 @@ int sc_history(int ac, char *av[])
 	return (EC_SUCCESS);
 }
 
+/**
+ * sc_setenv - Adds or replaces an environment variable in this shell
+ * @ac: The number of arguments passed
+ * @av: The arguments passed
+ *
+ * Return: The function's exit code
+ */
 int sc_setenv(int ac, char *av[])
 {
 	if (ac == 2)
@@ -52,11 +59,18 @@ int sc_setenv(int ac, char *av[])
 	}
 	else
 	{
-		write(STDOUT_FILENO, "Inavlid format\n", 15);
+		write(STDOUT_FILENO, "Invalid format\n", 15);
 		return (EC_INVALID_ARGS);
 	}
 }
 
+/**
+ * sc_unsetenv - Removes an environment variable from this shell
+ * @ac: The number of arguments passed
+ * @av: The arguments passed
+ *
+ * Return: The function's exit code
+ */
 int sc_unsetenv(int ac, char *av[])
 {
 	if (ac == 1)
@@ -66,7 +80,7 @@ int sc_unsetenv(int ac, char *av[])
 	}
 	else
 	{
-		write(STDOUT_FILENO, "Inavlid format\n", 15);
+		write(STDOUT_FILENO, "Invalid format\n", 15);
 		return (EC_INVALID_ARGS);
 	}
 }

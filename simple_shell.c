@@ -15,7 +15,7 @@ static char *EXEC_NAME;
 /**
  * The process ID of the current instance of this shell program
  */
-static char *SHELL_PID;
+static int SHELL_PID;
 /**
  * The exit code of the last executed process in this shell program
  */
@@ -48,6 +48,7 @@ int main(int ac, char *av[], char *envp[])
 
 	init_shell(ac, av, envp);
 	write(STDIN_FILENO, "\0", 1);/* Clear any previous input */
+	printf(">> pid: %d\n", getpid());
 	while (a < CMD_LINES_COUNT)
 	{
 		print_prompt();
@@ -104,7 +105,7 @@ void init_shell(int ac, char *av[], char *envp[])
 		ENVP_COUNT++;
 	}
 	EXEC_NAME = str_copy(av[0]);
-	SHELL_PID = long_to_str(getpid());
+	SHELL_PID = getpid();
 	IS_INTERACTIVE = (!isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE);
 	signal(SIGINT, handle_signal);
 	add_env_var("SHELL", av[0]);
@@ -155,6 +156,4 @@ void clean_up_shell(void)
 		free_array(ENVP, ENVP_COUNT);
 	if (EXEC_NAME != NULL)
 		free(EXEC_NAME);
-	if (SHELL_PID != NULL)
-		free(SHELL_PID);
 }
