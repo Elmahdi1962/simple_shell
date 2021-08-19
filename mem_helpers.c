@@ -60,4 +60,5 @@ void free_array(char **list, int length)
 		}
 		free(list);
 	}
+	free(list);
 }

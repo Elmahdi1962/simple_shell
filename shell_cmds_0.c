@@ -18,9 +18,11 @@ int sc_alias(int ac, char *av[])
 	{
 		for (i = 0; i < n; i++)
 		{
-			write(STDOUT_FILENO, (*(aliases + i))->name, str_len((*(aliases + i))->name));
+			write(STDOUT_FILENO, (*(aliases + i))->name,
+			str_len((*(aliases + i))->name));
 			write(STDOUT_FILENO, "='", 2);
-			write(STDOUT_FILENO, (*(aliases + i))->value, str_len((*(aliases + i))->value));
+			write(STDOUT_FILENO, (*(aliases + i))->value,
+			str_len((*(aliases + i))->value));
 			write(STDOUT_FILENO, "'\n", 2);
 		}
 	}
@@ -184,7 +186,9 @@ int sc_help(int ac, char *av[])
 		{"cd", help_cd},
 		{"exit", help_exit},
 		{"help", help_help},
-		{"history", help_history}
+		{"history", help_history},
+		{"setenv", help_setenv},
+		{"unsetenv", help_unsetenv}
 	};
 
 	if (ac > 0)

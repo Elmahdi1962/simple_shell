@@ -32,7 +32,7 @@ cmd_t *get_next_command(cmd_t *cur, int exit_code)
 /**
  * get_variables - Retrieves an array of variables from a string
  * @str: The source string
- * @vars_count
+ * @vars_count: count of vars
  *
  * Return: The list of variables, otherwise NULL
  */

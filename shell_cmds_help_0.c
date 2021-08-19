@@ -5,8 +5,7 @@
  */
 void help_program(void)
 {
-	char *help_text[] =
-	{
+	char *help_text[] = {
 		"ALX rash, version 1.0(1)-release (x86_64-pc-linux-gnu)\n",
 		"These shell commands are defined internally.  Type `help' to see this list.\n",
 		"Type `help name' to find out more about the command `name'.\n",
@@ -25,8 +24,7 @@ void help_program(void)
  */
 void help_alias(void)
 {
-	char *help_text[] =
-	{
+	char *help_text[] = {
 		"alias: alias [name[=value] ... ]\n",
 		"    Define or display aliases.\n\n",
 		"    Without arguments, `alias' prints the list of ",
@@ -51,8 +49,7 @@ void help_alias(void)
  */
 void help_cd(void)
 {
-	char *help_text[] =
-	{
+	char *help_text[] = {
 		"cd: cd [DIRECTORY]\n",
 		"    Change the shell working directory.\n\n",
 		"    Change the current directory to DIR.  The default DIR ",
@@ -70,9 +67,11 @@ void help_cd(void)
  */
 void help_env(void)
 {
-	char *help_text[] =
-	{
-		""
+	char *help_text[] = {
+		"env: env \n",
+		"    Display a list of the current environment variables.\n",
+		"    Exit Status:\n",
+		"    Returns success unless an invalid option is given or an error occurs.\n"
 	};
 
 	print_text(STDOUT_FILENO, help_text, 1);
@@ -83,8 +82,7 @@ void help_env(void)
  */
 void help_exit(void)
 {
-	char *help_text[] =
-	{
+	char *help_text[] = {
 		"exit: exit [n]\n",
 		"    Exit the shell.\n\n",
 		"    Exits the shell with a status of N.  If N is omitted, ",

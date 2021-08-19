@@ -5,7 +5,8 @@
  * @str: file name it could enclude ./ like "./program"
  *
  * Return: full path or NULL
- * NOTE : IF THIS FUNCTION RETURNED A PATH (NOT NULL) THEN YOU NEED TO FREE THAT VARIABLE
+ * NOTE : IF THIS FUNCTION RETURNED A PATH (NOT NULL)
+ * THEN YOU NEED TO FREE THAT VARIABLE
  * AFTER FINISHING USING IT
  */
 char *check_path(char *str)
@@ -22,16 +23,17 @@ char *check_path(char *str)
 
 			if (is_exec_file(file_path) && is_regular_file(file_path))
 			{
-				return(file_path);
+				return (file_path);
 			}
 
-			return(NULL);
+			return (NULL);
 		}
 		return (NULL);
 	}
 
 	/*the file path doesn't start with . or / */
-	/*Checking if it's one of the built out commands programs in one of the paths in PATH*/
+	/*Checking if it's one of the built out commands programs in
+	one of the paths in PATH*/
 	full_path = search_path(file_path);
 
 	return (full_path);
@@ -53,7 +55,7 @@ char *search_path(char *command)
 		return (NULL);
 	}
 	length = len;
-	for (;len > 0; len--)
+	for (; len > 0; len--)
 	{
 		full_path = str_cat(paths[len - 1], "/", FALSE);
 		tmp_path = full_path;
@@ -61,7 +63,7 @@ char *search_path(char *command)
 		free(tmp_path);
 
 		fd = open(full_path, O_RDONLY);
-		if (fd >0)
+		if (fd > 0)
 		{
 			free_array(paths, length);
 			close(fd);
