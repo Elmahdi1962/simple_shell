@@ -3,7 +3,7 @@
 /**
  * new_cmd_node - Creates a new node
  *
- * Return: The pointer to the newly created noe
+ * Return: The pointer to the newly created node
  */
 cmd_t *new_cmd_node()
 {
@@ -22,15 +22,15 @@ cmd_t *new_cmd_node()
 }
 
 /**
- * free_list - Frees a cmd_t list
+ * free_cmd_t - Frees a cmd_t list
  * @head: The node at the beginning of the list
  */
-void free_list(cmd_t *head)
+void free_cmd_t(cmd_t *head)
 {
 	if (head)
 	{
 		if (head->next)
-			free_list(head->next);
+			free_cmd_t(head->next);
 		if (head->command)
 			free(head->command);
 		if (head->args)
@@ -47,43 +47,33 @@ void free_list(cmd_t *head)
  */
 void add_node_to_end(cmd_t **head, cmd_t **node)
 {
-	cmd_t *tail = NULL, *new_node = NULL;
+	cmd_t *tail = NULL;
 
-	tail = head ? *head : NULL;
+	tail = head != NULL ? *head : NULL;
 	while (tail != NULL && tail->next != NULL)
 		tail = tail->next;
-	new_node =  malloc(sizeof(cmd_t));
-	if (new_node != NULL)
+	if (node != NULL)
 	{
-		if (*node != NULL)
-		{
-			new_node->command = (*node)->command;
-			new_node->args_count = (*node)->args_count;
-			new_node->args  = (*node)->args;
-			new_node->next_cond = (*node)->next_cond;
-			free(*node);
-			*node = NULL;
-		}
 		if (head == NULL)
-			head = &new_node;
-		else if (head != NULL && *head == NULL)
-			*head = new_node;
+			head = node;
+		else if ((head != NULL) && (*head == NULL))
+			*head = *node;
 		else if (tail != NULL)
-			tail->next = new_node;
+			tail->next = *node;
 	}
 }
 
 /**
- * list_tail - Gets the tail of a linked list
- * @head: The head of the linked list
+ * get_cmd_t_tail - Gets the tail of a cmd_t list
+ * @head: The head of the cmd_t list
  *
  * Return: The tail, otherwise NULL
  */
-cmd_t *list_tail(cmd_t *head)
+cmd_t *get_cmd_t_tail(cmd_t *head)
 {
 	cmd_t *tail = head;
 
-	while (tail != NULL && tail->next != NULL)
+	while ((tail != NULL) && (tail->next != NULL))
 		tail = tail->next;
 	return (tail);
 }

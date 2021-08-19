@@ -1,169 +1,6 @@
 #include "main.h"
 
-/**
- * parse_cmd_line - Processes a line of command into a list of command nodes
- * @line: The line of commands
- *
- * Return: The list of command nodes
- */
-cmd_t *parse_cmd_line(char *line)
-{
-	int i = 0;
-	cmd_t *head = NULL, *node = NULL;
-	char prev_token = TKN_BEG, *word, *error = NULL;
-
-	if (line != NULL && *line != '\0')
-	{
-		for (i = 0; *(line + i) != '#' && *(line + i) != '\0' && error == NULL;)
-		{
-			if (is_whitespace(*(line + i)))
-			{
-				prev_token = TKN_SPACE, i++;
-			}
-			else if (is_operator(*(line + i)))
-			{
-				read_operator(line, &i, prev_token, &node, &head, &error);
-				prev_token = TKN_OP;
-			}
-			else
-			{
-				word = read_word(line, &i);
-				insert_word(&line, &word, &node, &i);
-				prev_token = TKN_WORD;
-			}
-		}
-		if (node != NULL)
-			add_node_to_end(&head, &node);
-	}
-	return (head);
-}
-
-void insert_word(char **str, char **word, cmd_t **node, int *pos)
-{
-	char *tmp;
-
-	if (node != NULL)
-	{
-		if (word != NULL)
-		{
-			if (*node == NULL)
-			{
-				if (is_alias_name(*word) && is_alias(*word))
-				{
-					tmp = get_alias_value(*word);
-					(void)tmp;
-					(void)pos;
-					(void)str;
-					/* rep_range(*str, str_len(word), *i - str_len(word), *i); */
-				}
-				else
-				{
-					*node = new_cmd_node();
-					if (*node != NULL)
-					{
-						(*node)->command = *word;
-					}
-				}
-			}
-			else
-			{
-				(*node)->args = _realloc((*node)->args, (*node)->args_count * (sizeof(void *)),
-															sizeof(void *) * ((*node)->args_count + 1));
-				if ((*node)->args != NULL)
-				{
-					*((*node)->args + (*node)->args_count) = *word;
-					(*node)->args_count++;
-				}
-			}
-		}
-	}
-}
-
-void read_operator(char *line, int *pos, char prev_token,
-	cmd_t **head, cmd_t **node, char **error)
-{
-	int i = *pos, j, op_len = 0;
-	char *op_s, op = 0;
-
-	for (j = 0; *(line + i) != '\0' && is_operator(*(line + i)); i++)
-	{
-		op = op == 0 ? *(line + i) : op;
-		if (op != 0 && (*(line + i) != op))
-			break;
-		j++;
-	}
-	op_s = j > 0 ? malloc(sizeof(char) * (j + 1)) : NULL;
-	i -= j;
-	if (op_s != NULL)
-	{
-		for (j = 0; *(line + i) != '\0' && is_operator(*(line + i)); i++)
-			*(op_s + j) = *(line + i), j++;
-		*(op_s + j) = '\0', op_len = str_len(op_s);
-	}
-	if ((op_s != NULL)
-		&& ((str_eql(";", op_s))
-		|| (str_eql("||", op_s))
-		|| (str_eql("&&", op_s))))
-	{
-		if (node != NULL && *node != NULL)
-			(*node)->next_cond = ((*op_s == '|') ? OP_OR
-													: ((*op_s == '&') ? OP_AND : OP_SEP));
-		if (node != NULL && *node != NULL)
-			add_node_to_end(head, node);
-	}
-	else
-	{
-		if (((prev_token == TKN_WORD) || (prev_token == TKN_SPACE)))
-		{
-			*error = str_copy("syntax error near unexpected token '");
-		}
-		else
-		{
-			*error = str_copy("syntax error near unexpected token '");
-		}
-	}
-	(void)op_len;
-	*pos = i;
-}
-
-/**
- * read_word - Reads a word from the given line
- * @line: The line to read from
- * @pos: The position in the line to start from
- *
- * Return: The word, otherwise NULL
- */
-char *read_word(char *line, int *pos)
-{
-	int i = *pos, j = *pos, k = 0, quote_o = 0, len = 0;
-	char quote = 0, *word;
-
-	while (*(line + i) != '\0')
-	{
-		if (is_quote(*(line + i)))
-		{
-			if (quote == 0)
-				quote = *(line + i), quote_o = 1;
-			else if ((*(line + i) == quote))
-				quote = 0, quote_o = 0;
-		}
-		else if (quote_o == 0)
-		{
-			if (is_operator(*(line + i)) || (is_whitespace(*(line + i))))
-				break;
-		}
-		i++, len++;
-	}
-	word = malloc(sizeof(char) * (len + 1));
-	if (word != NULL)
-	{
-		for (k = 0; k < len; k++)
-			*(word + k) = *(line + j), j++;
-		*(word + k) = '\0';
-	}
-	*pos = i;
-	return (word);
-}
+/* static char *previous_aliases; */
 
 /**
  * read_variable - Reads a variable from the given string
@@ -346,4 +183,87 @@ void dissolve_cmd_parts(cmd_t *node)
 	{
 		*(node->args + i) = dissolve_tokens(*(node->args + i), TRUE);
 	}
+}
+
+char is_valid_prev_char(char c)
+{
+	if (is_whitespace(c)
+		|| (c == ';')
+		|| (c == '|')
+		|| (c == '&')
+		)
+		return (TRUE);
+	else
+		return (FALSE);
+}
+
+char str_in_list(char **arr, int n, char *str)
+{
+	int i;
+
+	for (i = 0; (arr != NULL) && (i < n); i++)
+	{
+		if (str_eql(*(arr + i), str))
+			return (TRUE);
+	}
+	return (FALSE);
+}
+
+void process_alias_expansion(token_t **tokens, char **expansions, int *n, char prev_char)
+{
+	token_t *cur_token = NULL, *sub_tokens = NULL, *prev_token = NULL;
+	char *alias_val = NULL;
+
+	return;
+	if (tokens != NULL)
+	{
+		write(STDOUT_FILENO, "Processing alias\n", 17);
+		cur_token = *tokens;
+
+		while (cur_token != NULL)
+		{
+			if (
+				((cur_token->type = TKN_WORD) && is_valid_prev_char(prev_char))
+				&& (str_in_list(expansions, *n, cur_token->value) == FALSE)
+				&& (is_alias_name(cur_token->value) && is_alias(cur_token->value))
+				)
+			{
+				alias_val = get_alias_value(cur_token->value);
+				if ((alias_val != NULL))
+				{
+					sub_tokens = tokenize_command_string(alias_val);
+					write(STDOUT_FILENO, "alias_val: ", 11);
+					write(STDOUT_FILENO, alias_val, str_len(alias_val));
+					write(STDOUT_FILENO, "\n", 1);
+				}
+
+				expansions = _realloc(expansions,
+					sizeof(void *) * (*n), sizeof(void *) * (*n + 1));
+				*(expansions + *n) = str_copy(cur_token->value);
+				(*n)++;
+				process_alias_expansion(&sub_tokens, expansions, n, *(alias_val + str_len(alias_val) - 1));
+				/* insert sub tokens */
+				get_token_tail(&sub_tokens)->next = cur_token->next;
+				if (prev_token != NULL)
+					prev_token->next = sub_tokens;
+				else
+					cur_token = sub_tokens;
+			}
+			prev_token = cur_token;
+			cur_token = cur_token->next;
+		}
+	}
+}
+
+token_t *get_token_tail(token_t **head)
+{
+	token_t *tail = NULL;
+
+	if (head != NULL)
+	{
+		tail = *head;
+		while ((tail != NULL) && (tail->next != NULL))
+			tail = tail->next;
+	}
+	return (tail);
 }

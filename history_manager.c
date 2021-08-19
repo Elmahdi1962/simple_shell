@@ -32,7 +32,7 @@ void manage_history(int op)
 	{
 		/* Load history file */
 		file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
-		fd = open(file_path, O_RDONLY | O_TRUNC | O_CREAT);
+		fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT, 0777);
 		file_lines = read_all_lines(fd, &n);
 		if (file_lines != NULL)
 		{
@@ -44,7 +44,8 @@ void manage_history(int op)
 			free(file_lines);
 			Line_Num = (n % HISTORY_SIZE);
 		}
-		close(fd);
+		if (fd >= 0)
+			close(fd);
 	}
 	else if (op == MO_FREE)
 	{
@@ -67,28 +68,15 @@ void manage_history(int op)
  */
 void add_to_history(char *str)
 {
-	char new_lines = 0;
-	int i;
 	int size = Is_Full ? HISTORY_SIZE : Line_Num;
 
-	for (i = 0; *(str + i) != '\0'; i++)
-	{
-		if (*(str + i) == '\n')
-		{
-			new_lines++;
-			break;
-		}
-	}
-	if (new_lines == 0)
-	{
-		Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
-			sizeof(void *) * (size + 1));
-		if (Is_Full)
-			free(*(Cmd_History + Line_Num));
-		*(Cmd_History + Line_Num) = str_copy(str);
-		Is_Full = Is_Full ? Is_Full : (Line_Num + 1 == HISTORY_SIZE ? TRUE : FALSE);
-		Line_Num = ((Line_Num + 1) % HISTORY_SIZE);
-	}
+	Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
+		sizeof(void *) * (size + 1));
+	if (Is_Full)
+		free(*(Cmd_History + Line_Num));
+	*(Cmd_History + Line_Num) = str_copy(str);
+	Is_Full = Is_Full ? Is_Full : (Line_Num + 1 == HISTORY_SIZE ? TRUE : FALSE);
+	Line_Num = ((Line_Num + 1) % HISTORY_SIZE);
 }
 
 /**
@@ -100,11 +88,12 @@ void save_history()
 	char *file_path;
 
 	file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
-	fd = open(file_path, O_WRONLY | O_TRUNC | O_CREAT,
-		S_IRWXU | S_IRWXG | S_IRWXO);
+	printf("hist_file...: %s\n", file_path);
+	fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT,
+		0777);
 	if (fd >= 0)
 	{
-		printf("hist_file: %s\n", file_path);
+		printf("hist_file (opened): %s\n", file_path);
 		for (i = 0; i < (Is_Full ? HISTORY_SIZE : Line_Num); i++)
 		{
 			write(fd, *(Cmd_History + i), str_len(*(Cmd_History + i)));

@@ -19,18 +19,13 @@ char is_digit(char c)
  */
 char is_whitespace(char c)
 {
-	return ((c == ' ' || c == '\t' || c == '\r') ? TRUE : FALSE);
-}
+	int i;
+	char set[] = {' ', '\t', '\r', '\n'};
 
-/**
- * is_operator - Checks if the given character is an operator character
- * @c: The character to check
- *
- * Return: 1 or 0
- */
-char is_operator(char c)
-{
-	return ((c == ';' || c == '|' || c == '&') ? TRUE : FALSE);
+	for (i = 0; i < 4; i++)
+		if (c == set[i])
+			return (TRUE);
+	return (FALSE);
 }
 
 /**

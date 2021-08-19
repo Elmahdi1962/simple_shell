@@ -52,9 +52,12 @@ void free_array(char **list, int length)
 {
 	int i;
 
-	for (i = 0; i < length; i++)
+	if (list != NULL)
 	{
-		free(list[i]);
+		for (i = 0; (i < length) && (list[i] != NULL); i++)
+		{
+			free(list[i]);
+		}
+		free(list);
 	}
-	free(list);
 }

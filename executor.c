@@ -2,6 +2,47 @@
 #include <sys/wait.h>
 
 /**
+ * execute_cmds_list - Executes a list of commands
+ * @cmds_list: The pointer to the list of commands to execute
+ * @exit_code: The pointer to the exit code
+ */
+void execute_cmds_list(cmd_t **cmds_list, int *exit_code)
+{
+	char *buf0, *buf1, *buf2;
+	cmd_t *cur = *cmds_list;
+
+	while (cur != NULL)
+	{
+		dissolve_cmd_parts(cur);
+		if (is_built_in_cmd(cur) == TRUE)
+		{
+			*exit_code = exec_built_in_cmd(cur);
+		}
+		else if (is_normal_program(cur, &buf2))
+		{
+			*exit_code = exec_program(cur, buf2);
+			if (buf2 != NULL)
+				free(buf2);
+		}
+		else
+		{
+			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
+			buf1 = long_to_str(get_line_num());
+			write(STDERR_FILENO, buf0, str_len(buf0));
+			write(STDERR_FILENO, ": ", 2);
+			write(STDERR_FILENO, buf1, str_len(buf1));
+			write(STDERR_FILENO, ": ", 2);
+			write(STDERR_FILENO, cur->command, str_len(cur->command));
+			write(STDERR_FILENO, ": not found\n", 12);
+			if (buf1 != NULL)
+				free(buf1);
+			*exit_code = EC_COMMAND_NOT_FOUND;
+		}
+		cur = get_next_command(cur, *exit_code);
+	}
+}
+
+/**
  * exec_built_in_cmd - Executes a built-in command
  * @node: The built-in command's node
  *
@@ -110,7 +151,10 @@ char **copy_arguments(cmd_t *node)
 	{
 		*arg_list_c = str_copy(node->command);
 		for (i = 0; i < node->args_count; i++)
+		{
 			*(arg_list_c + i + 1) = str_copy(*(node->args + i));
+			/* printf("arg[%d]: %s\n", i + 1, *(node->args + i)); */
+		}
 		*(arg_list_c + i + 1) = NULL;
 	}
 	return (arg_list_c);

@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef _ALX_MAIN_H
+#define _ALX_MAIN_H
 
 #include <dirent.h>
 #include <elf.h>
@@ -27,6 +27,8 @@
 #ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
+/* The maximum value of an exit code */
+#define MAX_EXIT_CODE 256
 /* The file name used to store this shell's history */
 #define HISTORY_FILE "/.simple_shell_history"
 /* The string representation of INT32_MAX */
@@ -47,7 +49,9 @@ enum SHELL_PROP_IDS
 	/* The prop id for the shell's process identifier */
 	SHELL_PID_ID = 7,
 	/* The prop id for the last executed command's exit code */
-	NODE_EXIT_CODE_ID = 8
+	NODE_EXIT_CODE_ID = 8,
+	/* The prop id for the interactive status of the shell */
+	IS_INTERACTIVE_ID
 };
 
 /**
@@ -77,7 +81,9 @@ enum Token_Types
 	/* An open (not enclosed in quotes) space in the command line */
 	TKN_SPACE = 2,
 	/* An open (not enclosed in quotes) operator in the command line */
-	TKN_OP = 3
+	TKN_OP = 3,
+	/* An open (not enclosed in quotes) separator in the command line */
+	TKN_SEP_OP = 4
 };
 
 /**
@@ -115,7 +121,7 @@ enum Exit_Codes
 	 * Command not found \
 	 * (Possible problem with $PATH or a typo)
 	 */
-	EC_COMMOAND_NOT_FOUND = 127,
+	EC_COMMAND_NOT_FOUND = 127,
 	/* Invalid argument to exit */
 	EC_INVALID_EXIT_ARGS = 128,
 	/**
@@ -130,6 +136,13 @@ enum Exit_Codes
 	 * (exit takes only integer args in the range 0 - 255)
 	 */
 	EC_EXIT_STATUS_OUT_OF_RANGE = 255
+};
+
+struct token
+{
+	char *value;
+	char type;
+	struct token *next;
 };
 
 /**
@@ -155,6 +168,25 @@ struct command_node
 };
 
 /**
+ * struct commands_list - Represents a list of commands
+ */
+struct commands_list
+{
+	struct command_node *cmds;
+	struct commands_list *next;
+};
+
+struct processing_table
+{
+	struct token **tokens_list;
+	struct token *cur_token;
+	struct command_node *cur_cmd_node;
+	struct command_node **cmds_list_head;
+	char error;
+	int pos;
+};
+
+/**
  * struct built_in_cmd_s - Represents a built-in command node
  * @cmd_name: The name of the built-in command
  * @run: The handler for the built-in command
@@ -168,11 +200,11 @@ struct built_in_cmd_s
 };
 
 /**
- * struct alias_s - Represents an alias command
+ * struct alias - Represents an alias command
  * @name: The name of the alias
  * @value: The value of the alias
  */
-struct alias_s
+struct alias
 {
 	/* The name of the alias */
 	char *name;
@@ -193,13 +225,16 @@ struct cmd_help
 	void (*run)(void);
 };
 
+typedef struct token token_t;
 typedef struct command_node cmd_t;
-typedef struct alias_s alias_t;
+typedef struct alias alias_t;
+typedef struct commands_list cmd_list_t;
+typedef struct processing_table proc_tbl_t;
 
 /* ******** Program (rash.c) ******** */
 
 void init_shell(int ac, char *av[], char *envp[],
-	int *cmd_lines_count, char ***file_lines, char *interactive);
+	int *cmd_lines_count, char ***file_lines);
 void print_node(cmd_t *node);
 void handle_signal(int sig_num);
 void *get_shell_prop(char prop_id);
@@ -234,22 +269,57 @@ void remove_env_var(char *var);
 
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
+/* void init_line_reader(); */
 char *get_cmd_line();
+void check_chars(char *quote, char *quote_o, char current_char);
+void set_error(char *error, char quote_o, int n, char *str, int pos);
+void print_prompt();
+
 cmd_t *get_next_command(cmd_t *cur, int exit_code);
 char **get_variables(char *str, int *vars_count);
-void print_prompt();
 /* ******** ---------------- ******** */
 
 /* ******** CLI Parser (cli_parser.c) ******** */
 
 cmd_t *parse_cmd_line(char *line);
-char *read_word(char *line, int *pos);
+void process_commands_separator(proc_tbl_t *proc_tbl);
+void process_operator(proc_tbl_t *proc_tbl);
+void process_word(proc_tbl_t *proc_tbl);
 void insert_word(char **str, char **word, cmd_t **node, int *pos);
-void read_operator(char *line, int *pos, char prev_token,
-	cmd_t **head, cmd_t **node, char **error);
+
 char *read_variable(char *str, int pos);
+
+token_t *tokenize_command_string(char *str);
+void skip_comment(char *str, int o, int *len_out);
+char *read_operator(char *str, int o, int *len_out, char *error);
+char *read_word(char *str, int o, int *len_out);
+
 char *dissolve_tokens(char *str, char can_free);
 void dissolve_cmd_parts(cmd_t *node);
+char is_valid_prev_char(char c);
+token_t *get_token_tail(token_t **head);
+void process_alias_expansion(token_t **tokens, char **expansions, int *n, char prev_char);
+/* TODO: Move declaration below to right position */
+char str_in_list(char **arr, int n, char *str);
+/* ******** ---------------- ******** */
+
+/* ******** Cmd_t Helpers (cmd_t_helpers.c) ******** */
+
+cmd_t *new_cmd_node();
+void free_cmd_t(cmd_t *head);
+void add_node_to_end(cmd_t **head, cmd_t **node);
+cmd_t *get_cmd_t_tail(cmd_t *head);
+
+void add_cmd_list_to_end(cmd_list_t **head, cmd_list_t *cmd_lst);
+void add_cmd_t_to_cmd_list_t_end(cmd_list_t *head, cmd_t *node);
+void free_cmd_list_t(cmd_list_t *head);
+cmd_list_t *get_cmd_list_t_tail(cmd_list_t *head);
+cmd_t *get_tail_cmd(cmd_list_t *head);
+
+void add_token_to_end(token_t **head, token_t *tkn);
+token_t *create_token(char *value, char type);
+void free_token_t(token_t *head);
+token_t *get_token_at_index(int idx, token_t **head);
 /* ******** ---------------- ******** */
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
@@ -267,6 +337,7 @@ void free_array(char **list, int length);
 
 /* ******** Executors (executor.c) ******** */
 
+void execute_cmds_list(cmd_t **cmds_list, int *exit_code);
 int exec_built_in_cmd(cmd_t *node);
 int exec_program(cmd_t *node, char *program_path);
 char **copy_environment(char **env, int env_count);
@@ -320,7 +391,6 @@ char *rep_range(char *str, char *val, int a, int b);
 char is_digit(char c);
 char is_whitespace(char c);
 char is_letter(char c);
-char is_operator(char c);
 char is_quote(char c);
 char is_built_in_cmd(cmd_t *cmd);
 char str_is_num(char *str);
@@ -333,14 +403,6 @@ char is_alias_assignment(char *str, char **name_out, char **value_out);
 int is_regular_file(const char *path);
 char is_binary_file(char *fn);
 char is_normal_program(cmd_t *node, char **path_out);
-/* ******** ---------------- ******** */
-
-/* ******** Cmd_t Helpers (cmd_t_helpers.c) ******** */
-
-cmd_t *new_cmd_node();
-void free_list(cmd_t *head);
-void add_node_to_end(cmd_t **head, cmd_t **node);
-cmd_t *list_tail(cmd_t *head);
 /* ******** ---------------- ******** */
 
 /* ******** DATA Validator (data_validators_#.c) ******** */

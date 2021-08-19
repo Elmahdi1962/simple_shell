@@ -11,7 +11,7 @@ export PS1="${PWD##*/}\n$ "
 #endregion
 
 #region Helper Functions
-SHELL_NAME="rash"
+SHELL_NAME="simple_shell"
 
 build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g -ggdb3 *.c -o $SHELL_NAME; }
 run () { ./$SHELL_NAME; }
