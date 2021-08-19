@@ -48,7 +48,6 @@ int main(int ac, char *av[], char *envp[])
 
 	init_shell(ac, av, envp);
 	write(STDIN_FILENO, "\0", 1);/* Clear any previous input */
-	printf(">> pid: %d\n", getpid());
 	while (a < CMD_LINES_COUNT)
 	{
 		print_prompt();

@@ -90,6 +90,14 @@ char *dissolve_tokens(char *str, char can_free)
 	return (res);
 }
 
+/**
+ * expand_tilde - Expands a tilde at the beginning of a word
+ * @str: The string containing the variable
+ * @i: The pointer to the current position in the string
+ * @res: The pointer to the expandion buffer
+ * @j: The pointer to the new buffer's index
+ * @size: The pointer to the new buffer's size
+ */
 void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size)
 {
 	char *tmp;
@@ -118,6 +126,14 @@ void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size)
 	}
 }
 
+/**
+ * expand_variable - Expands a variable
+ * @str: The string containing the variable
+ * @i: The pointer to the current position in the string
+ * @res: The pointer to the expandion buffer
+ * @j: The pointer to the new buffer's index
+ * @size: The pointer to the new buffer's size
+ */
 void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size)
 {
 	char *var = NULL, *val = NULL;
@@ -130,33 +146,25 @@ void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size)
 		val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
 	else if (var != NULL)
 		val = str_copy(get_env_var(var));
-	if (val == NULL)
+	printf("(d_t): %s\n", val);
+	/* insert variable */
+	var_len = str_len(var) + 1;
+	val_len = str_len(val);
+	if ((*j + val_len) > *size)
 	{
-		*(*res + (*j)) = '$';
+		/* allocate space for extra data */
+		*res = _realloc(*res, sizeof(char) * *size,
+			sizeof(char) * (*size + (*j + val_len - *size)));
+	}
+	for (k = 0; k < val_len; k++)
+	{
+		*(*res + (*j)) = *(val + k);
 		(*j)++;
-		(*i)++;
 	}
-	else
-	{
-		printf("(d_t): %s\n", val);
-		/* insert variable */
-		var_len = str_len(var) + 1;
-		val_len = str_len(val);
-		if ((*j + val_len) > *size)
-		{
-			/* allocate space for extra data */
-			*res = _realloc(*res, sizeof(char) * *size,
-				sizeof(char) * (*size + (*j + val_len - *size)));
-		}
-		for (k = 0; k < val_len; k++)
-		{
-			*(*res + (*j)) = *(val + k);
-			(*j)++;
-		}
-		(*i) += var_len;
+	(*i) += var_len;
+	if (val != NULL)
 		free(val);
-		val = NULL;
-	}
+	val = NULL;
 	if (var != NULL)
 		free(var);
 }
