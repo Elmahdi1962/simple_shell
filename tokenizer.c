@@ -1,5 +1,11 @@
 #include "main.h"
 
+/**
+ * tokenize_command_string - Converts a line of text into a list of tokens
+ * @str: The line of text
+ *
+ * Return: The list of tokens
+ */
 token_t *tokenize_command_string(char *str)
 {
 	int i = 0, len = 0;
@@ -38,10 +44,15 @@ token_t *tokenize_command_string(char *str)
 		free_token_t(tokens);
 		return (NULL);
 	}
-	write(STDOUT_FILENO, "Tokenization complete\n", 22), fflush(stdout);
 	return (tokens);
 }
 
+/**
+ * skip_comment - Skips a line of text containing a comments
+ * @str: The source text
+ * @o: The offset in the source text
+ * @len_out: A pointer to the length of the positions to be skipped
+ */
 void skip_comment(char *str, int o, int *len_out)
 {
 	int i = 0;
@@ -58,12 +69,17 @@ void skip_comment(char *str, int o, int *len_out)
 /* TODOD:
 echo foo|&
 sh: 1: Syntax error: "&" unexpected
-
-Test:
-ls /var && ls /var
-
 */
 
+/**
+ * read_operator - Reads an operator from a given text
+ * @str: The source text
+ * @o: The offset in the source text
+ * @len_out: A pointer to the length of the positions to be skipped
+ * @error: A pointer to the error flag
+ *
+ * Return: The operator that was read, otherwise NULL
+ */
 char *read_operator(char *str, int o, int *len_out, char *error)
 {
 	int i = 0, j;
@@ -109,6 +125,14 @@ char *read_operator(char *str, int o, int *len_out, char *error)
 	return (op);
 }
 
+/**
+ * read_word - Reads an operator from a given text
+ * @str: The source text
+ * @o: The offset in the source text
+ * @len_out: A pointer to the length of the positions to be skipped
+ *
+ * Return: The word that was read, otherwise NULL
+ */
 char *read_word(char *str, int o, int *len_out)
 {
 	int i = 0, k, quote_o = 0;
