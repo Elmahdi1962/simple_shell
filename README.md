@@ -2,7 +2,10 @@
 
 ![Repo size](https://img.shields.io/github/repo-size/Elmahdi1962/simple_shell)
 
-This is a simple Unix shell implemented in __C__.
+## Description
+--------------
+
+This program is a simple Unix shell implemented in __C__.
 
 ## How To Use
 
@@ -12,7 +15,7 @@ Run the command below to build the shell.
 gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o simple_shell
 ```
 
-Then run `./simple_shell` to startup the shell in interactive mode. To start the shell in non-interactive mode, run `./simple_shell file`, where `file` is a text-encoded file containing a list of commands to be executed. You can also pipe a string of commands to the program like `echo 'echo $PWD' | ./simple_shell` to be run in a non-interactive mode.
+After compiling the program, run `./simple_shell` to startup the shell in interactive mode. To start the shell in non-interactive mode, run `./simple_shell file`, where `file` is a text-encoded file containing lines of commands to be executed. You can also pipe a string of commands to the program like `echo 'echo $PWD' | ./simple_shell` to be run in a non-interactive mode.
 
 ## Supported Control Operators
 
@@ -27,7 +30,11 @@ Then run `./simple_shell` to startup the shell in interactive mode. To start the
 1. **Command:** *alias*<br/>**Usage:** `alias [name[='value'] ...]`<br/>**Description:** Prints a list of aliases when no arguments are provided. If a name is provided in the arguments, it prints the alias' value in the form `name='value'`. If a name-value pair is provided, it creates or assigns an alias (*name*) with the value *value*. This only happens in the *interactive* mode.
 2. **Command:** *cd*<br/>**Usage:** `cd [DIRECTORY]`<br/>**Description:** Changes the shell's current working directory to *DIRECTORY* if it is provided. If *DIRECTORY* is *-*, it switches the current working directory (*PWD*) with the previous working directory (*OLDPWD*). If *DIRECTORY* is not provided, the current working directory is changed to the home directory.
 3. **Command:** *env*<br/>**Usage:** `env`<br/>**Description:** Prints the list of environment variables.
-4. **Command:** *history*<br/>**Usage:** `history`<br/>**Description:** Prints the list of commands that have been stored by the shell.
+4. **Command:** *exit*<br/>**Usage:** `exit status`<br/>**Description:** Exits the shell with status code *status* (ranges from 0 to 255 inclusive) or the status code of the last command that was executed.
+5. **Command:** *help*<br/>**Usage:** `help`<br/>**Description:** Prints the help page of a built-in command or the program.
+6. **Command:** *history*<br/>**Usage:** `history`<br/>**Description:** Prints the list of commands that have been stored by the shell.
+7. **Command:** *setenv*<br/>**Usage:** `setenv VARIABLE VALUE`<br/>**Description:** Sets the value of an environment variable named *VARIABLE* to *VALUE*.
+8. **Command:** *unsetenv*<br/>**Usage:** `unsetenv VARIABLE`<br/>**Description:** Removes an environment variable named *VARIABLE*.
 
 ## Getting Started (for contributors)
 
