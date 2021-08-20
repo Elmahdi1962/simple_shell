@@ -67,3 +67,15 @@ char **get_variables(char *str, int *vars_count)
 	*vars_count = p;
 	return (vars);
 }
+
+/**
+ * handle_ctrl_d - Handles Control+D key press
+ * @len: The number of characters on the command line
+ */
+void handle_ctrl_d(int len)
+{
+	char *buf[] = {"0"};
+
+	if (len == 0)
+		sc_exit(1, buf);
+}

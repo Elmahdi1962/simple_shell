@@ -276,6 +276,7 @@ void print_prompt();
 
 cmd_t *get_next_command(cmd_t *cur, int exit_code);
 char **get_variables(char *str, int *vars_count);
+void handle_ctrl_d(int len);
 /* ******** ---------------- ******** */
 
 /* ******** CLI Parser (cli_parser.c) ******** */
@@ -286,7 +287,6 @@ void init_processing_table(proc_tbl_t **proc_tbl,
 void process_commands_separator(proc_tbl_t *proc_tbl);
 void process_operator(proc_tbl_t *proc_tbl);
 void process_word(proc_tbl_t *proc_tbl);
-void insert_word(char **str, char **word, cmd_t **node, int *pos);
 
 char *read_variable(char *str, int pos);
 

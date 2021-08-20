@@ -55,7 +55,7 @@ char *get_cmd_line()
 		}
 		stop = (n == 0 ? TRUE : stop);
 	}
-	set_error(&error, quote_o, n, line, j);
+	set_error(&error, quote_o, n, line, j), handle_ctrl_d(len);
 	line = _realloc(line, sizeof(char) * len, sizeof(char) * (len + 1));
 	if (line != NULL)
 	{
