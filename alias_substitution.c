@@ -39,7 +39,7 @@ char is_valid_prev_char(char c)
 token_t *process_alias_expansion(token_t **tokens)
 {
 	token_t *expanded_tokens = NULL;
-	char prev_char = ' ';
+	char prev_char = '\0';
 
 	if (tokens == NULL)
 		return (NULL);

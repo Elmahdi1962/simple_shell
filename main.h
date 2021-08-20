@@ -355,6 +355,7 @@ char *resolve_path(char *cwd, char *path, char *error);
 /* ******** Built-In Commands (shell_cmds_#.c) ******** */
 
 int sc_alias(int ac, char *av[]);
+void print_alias(char *name, char *value);
 int sc_cd(int ac, char *av[]);
 void print_failed_dir_nav_error(char *path, char error);
 void change_to_old_pwd(char *pwd, char *old_pwd, char *error);
