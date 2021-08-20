@@ -39,14 +39,14 @@ char str_eql(char *left, char *right)
  */
 char *str_copy(char *str)
 {
-	char *new_str;
+	char *new_str = NULL;
 	int i;
 	int len = str_len(str);
 
 	if (str == NULL)
 		return (NULL);
 	new_str = malloc(sizeof(char) * (len + 1));
-	if (new_str)
+	if (new_str != NULL)
 	{
 		for (i = 0; i < len; i++)
 			*(new_str + i) = *(str + i);

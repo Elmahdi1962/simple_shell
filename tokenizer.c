@@ -66,11 +66,6 @@ void skip_comment(char *str, int o, int *len_out)
 	}
 }
 
-/* TODOD:
-echo foo|&
-sh: 1: Syntax error: "&" unexpected
-*/
-
 /**
  * read_operator - Reads an operator from a given text
  * @str: The source text

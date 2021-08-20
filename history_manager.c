@@ -85,12 +85,9 @@ void save_history()
 	char *file_path;
 
 	file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
-	printf("hist_file...: %s\n", file_path);
-	fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT,
-		0777);
+	fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT, 0777);
 	if (fd >= 0)
 	{
-		printf("hist_file (opened): %s\n", file_path);
 		for (i = 0; i < (Is_Full ? HISTORY_SIZE : Line_Num); i++)
 		{
 			write(fd, *(Cmd_History + i), str_len(*(Cmd_History + i)));

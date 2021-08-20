@@ -72,7 +72,7 @@ void set_env_var(char *var, char *val)
  */
 void add_env_var(char *var, char *val)
 {
-	char **envp = *((char ***)get_shell_prop(ENVP_ID));
+	char ***envp = (char ***)get_shell_prop(ENVP_ID);
 	int *n = (int *)get_shell_prop(ENVP_COUNT_ID);
 
 	if (envp != NULL)
@@ -83,7 +83,8 @@ void add_env_var(char *var, char *val)
 		}
 		else
 		{
-			*(envp + *n) = str_cat(str_cat(var, "=", FALSE), str_copy(val), TRUE);
+			*envp = _realloc(*envp, sizeof(void *) * (*n), sizeof(void *) * (*n + 1));
+			*(*envp + *n) = str_cat(str_cat(str_copy(var), str_copy("="), TRUE), str_copy(val), TRUE);
 			(*n)++;
 		}
 	}
@@ -96,7 +97,7 @@ void add_env_var(char *var, char *val)
 void remove_env_var(char *var)
 {
 	char **envp_n = NULL;
-	char **envp = *((char ***)get_shell_prop(ENVP_ID));
+	char ***envp = (char ***)get_shell_prop(ENVP_ID);
 	int *n = (int *)get_shell_prop(ENVP_COUNT_ID);
 	int i, j, k = 0;
 
@@ -106,26 +107,24 @@ void remove_env_var(char *var)
 		{
 			for (i = 0; i < *n; i++)
 			{
-				for (j = 0; (*(var + j) != '\0') && (*(*(envp + i) + j) != '\0'); j++)
+				for (j = 0; (*(var + j) != '\0') && (*(*(*envp + i) + j) != '\0'); j++)
 				{
-					if ((*(*(envp + i) + j) != *(var + j)) || (*(*(envp + i) + j) == '='))
+					if ((*(*(*envp + i) + j) != *(var + j)) || (*(*(*envp + i) + j) == '='))
 						break;
 				}
-				if (!(*(*(envp + i) + j) == '=' && *(var + j) == '\0'))
+				if (!(*(*(*envp + i) + j) == '=' && *(var + j) == '\0'))
 				{
 					envp_n = _realloc(envp_n, sizeof(void *) * k, sizeof(void *) * (k + 1));
-					*(envp_n + k) = str_copy(*(envp + i));
-					free(*(envp + i));
-					k++;
-				}
-				else
-				{
-					free(*(envp + i));
-					(*n)--;
+					if (envp_n != NULL)
+					{
+						*(envp_n + k) = str_copy(*(*envp + i));
+						k++;
+					}
 				}
 			}
-			free(envp);
-			envp = envp_n;
+			free_array(*envp, *n);
+			*envp = envp_n;
+			*n = k;
 		}
 	}
 }

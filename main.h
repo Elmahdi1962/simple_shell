@@ -295,6 +295,7 @@ void skip_comment(char *str, int o, int *len_out);
 char *read_operator(char *str, int o, int *len_out, char *error);
 char *read_word(char *str, int o, int *len_out);
 
+void adjust_block(char **blk, size_t new_sz, size_t *old_sz, char incr);
 char *dissolve_tokens(char *str, char can_free);
 void dissolve_cmd_parts(cmd_t *node);
 void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size);

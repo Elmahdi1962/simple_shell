@@ -47,7 +47,6 @@ int main(int ac, char *av[], char *envp[])
 	cmd_t *cmd_list = NULL;
 
 	init_shell(ac, av, envp);
-	write(STDIN_FILENO, "\0", 1);/* Clear any previous input */
 	while (a < CMD_LINES_COUNT)
 	{
 		print_prompt();
@@ -107,7 +106,6 @@ void init_shell(int ac, char *av[], char *envp[])
 	SHELL_PID = getpid();
 	IS_INTERACTIVE = (!isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE);
 	signal(SIGINT, handle_signal);
-	add_env_var("SHELL", av[0]);
 	NODE_EXIT_CODE = 0;
 	manage_aliases(MO_INIT);
 	manage_history(MO_INIT);

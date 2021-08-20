@@ -49,19 +49,14 @@ int sc_setenv(int ac, char *av[])
 	{
 		if (is_variable(av[0]))
 		{
-			if (get_env_var(av[0]) != NULL)
-			{
-				add_env_var(av[0], av[1]);
-				return (EC_SUCCESS);
-			}
-			else
-			{
-				/* write(STDERR_FILENO, "setenv: usage: setenv VARIA\n", 37); */
-				return (EC_GENERAL_ERROR);
-			}
+			add_env_var(av[0], av[1]);
+			return (EC_SUCCESS);
 		}
 		else
 		{
+			write(STDERR_FILENO, "setenv: ", 8);
+			write(STDERR_FILENO, av[0], str_len(av[0]));
+			write(STDERR_FILENO, ": not a variable\n", 17);
 			return (EC_GENERAL_ERROR);
 		}
 	}

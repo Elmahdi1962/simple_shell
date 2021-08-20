@@ -1,41 +1,22 @@
 #include "main.h"
 
 /**
- * read_variable - Reads a variable from the given string
- * @str: The string to read from
- * @pos: The position in the string to start from
- *
- * Return: The variable, otherwise NULL
+ * adjust_block - Adjusts a block of memory to allow additional bytes
+ * @blk: The pointer to the memory block
+ * @new_sz: The new size of the block
+ * @old_sz: The pointer to the block's old size
+ * @incr: The amount of bytes to increase the block by
  */
-char *read_variable(char *str, int pos)
+void adjust_block(char **blk, size_t new_sz, size_t *old_sz, char incr)
 {
-	int i = pos, j, len;
-	char *var = NULL;
-
-	while (*(str + i) != '\0')
+	if (blk != NULL)
 	{
-		if (((*(str + i) == '$') && (i == pos))
-			|| ((*(str + i) == '?') && (i == pos)))
+		if (new_sz >= *old_sz)
 		{
-			i++;
-			break;
+			*blk = _realloc(*blk, sizeof(char) * (*old_sz), sizeof(char) * (*old_sz + incr));
+			(*old_sz) += incr;
 		}
-		else if ((is_digit(*(str + i)) && (i > pos))
-			|| (is_letter(*(str + i)))
-			|| (*(str + i) == '_'))
-			i++;
-		else
-			break;
 	}
-	len = i - pos;
-	var = len > 0 ? malloc(sizeof(char) * (len + 1)) : NULL;
-	if (var != NULL)
-	{
-		for (j = 0, i = pos; j < len; j++, i++)
-			*(var + j) = *(str + i);
-		*(var + j) = '\0';
-	}
-	return (var);
 }
 
 /**
@@ -52,12 +33,8 @@ char *dissolve_tokens(char *str, char can_free)
 
 	for (i = 0; *(str + i) != '\0';)
 	{
-		if (j >= size)
-		{
-			res = _realloc(res, sizeof(char) * size, sizeof(char) * (size + incr));
-			size += incr;
-		}
-		if (((*(str + i) == '~') && (i == 0)) && (is_tilde_expansion_char(*(str + 1))))
+		adjust_block(&res, j, &size, incr);
+		if ((str[i] == '~') && (i == 0))
 		{
 			expand_tilde(str, &i, &res, &j, &size);
 		}
@@ -103,12 +80,14 @@ void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size)
 	char *tmp = NULL;
 	int tmp_len = 0, k = 0;
 
-	tmp = str_copy(get_env_var(
-		*(str + *i + 1) == '-' ? "OLDPWD"
-			: (*(str + *i + 1) == '+' ? "PWD" : "HOME")));
-	tmp_len = str_len(tmp);
+	if ((*(str + *i + 1) == '/') || (*(str + *i + 1) == '\0'))
+	{
+		tmp = str_copy(get_env_var("HOME"));
+		tmp_len = str_len(tmp);
+	}
 	if (tmp != NULL)
 	{
+		tmp_len += (*(str + *i + 1) == '/' ? 1 : 0);
 		if (((*j) + tmp_len) > *size)
 		{
 			/* allocate space for extra data */
@@ -118,11 +97,20 @@ void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size)
 		}
 		for (k = 0; k < tmp_len; k++)
 		{
-			*(*res + (*j)) = *(tmp + k);
+			if ((k == tmp_len - 1) && (*(str + *i + 1) == '/'))
+				*(*res + (*j)) = '/';
+			else
+				*(*res + (*j)) = *(tmp + k);
 			(*j)++;
 		}
-		(*i) += 2;
+		(*i) += (*(str + *i + 1) == '/' ? 2 : 1);
 		free(tmp);
+	}
+	else
+	{
+		*(*res + (*j)) = '~';
+		(*j)++;
+		(*i)++;
 	}
 }
 
@@ -146,7 +134,6 @@ void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size)
 		val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
 	else if (var != NULL)
 		val = str_copy(get_env_var(var));
-	printf("(d_t): %s\n", val);
 	/* insert variable */
 	var_len = str_len(var) + 1;
 	val_len = str_len(val);
@@ -166,7 +153,7 @@ void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size)
 		free(val);
 	val = NULL;
 	if (var != NULL)
-		free(var);
+		free(var), var = NULL;
 }
 
 /**
