@@ -105,7 +105,10 @@ int sc_cd(int ac, char *av[])
 			{
 				set_env_var("PWD", av[0]);
 			} else
+			{
 				print_error("cd", av[0], "can't cd to ");
+				return (errno);
+			}
 		}
 	}
 	return (EC_SUCCESS);
