@@ -1,6 +1,7 @@
 .vscode/
 *test*/
 *test*
+*simple_shell
 *~
 *#
 *.exe
@@ -9,6 +10,5 @@
 *.gch
 *.log
 hsh
-simple_shell
 0x16_Tests
 *.gz
