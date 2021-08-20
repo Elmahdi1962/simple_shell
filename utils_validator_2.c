@@ -51,9 +51,7 @@ char is_alias_name(char *str)
 		else
 			i++;
 	}
-	if (((str != NULL) && (*(str + i) == '\0'))
-		&& ((str_eql(str, "alias") == FALSE)
-			&& (str_eql(str, "unalias") == FALSE)))
+	if ((str != NULL) && (*(str + i) == '\0'))
 		return (TRUE);
 	else
 		return (FALSE);
