@@ -37,6 +37,7 @@ void free_cmd_t(cmd_t *head)
 			free(head->args);
 		if (head)
 			free(head);
+		head = NULL;
 	}
 }
 

@@ -302,9 +302,10 @@ void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size);
 
 char is_valid_prev_char(char c);
 token_t *get_token_tail(token_t **head);
-void process_alias_expansion(token_t **tokens, char **expansions, int *n, char prev_char);
+token_t *process_alias_expansion(token_t **tokens);
+void process_tokens(token_t **tokens, char prev_char);
 /* TODO: Move declaration below to right position */
-char str_in_list(char **arr, int n, char *str);
+
 /* ******** ---------------- ******** */
 
 /* ******** Cmd_t Helpers (cmd_t_helpers.c) ******** */
@@ -397,6 +398,7 @@ void print_error(char *command_name, char *userinput, char *error_message);
 void swap(char *x, char *y);
 char *reverse(char *buffer, int i, int j);
 char *_itoa(int value, char* buffer, int base);
+char str_in_arr(char **arr, int n, char *str);
 /* ******** ---------------- ******** */
 
 /* ******** Validator Utilities (utils_validator_#.c) ******** */
@@ -405,6 +407,7 @@ char is_digit(char c);
 char is_whitespace(char c);
 char is_letter(char c);
 char is_quote(char c);
+char is_tilde_expansion_char(char c);
 char is_built_in_cmd(cmd_t *cmd);
 char str_is_num(char *str);
 char is_binary_file(char *fn);

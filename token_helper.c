@@ -60,6 +60,7 @@ void free_token_t(token_t *head)
 			free(head->value);
 		if (head != NULL)
 			free(head);
+		head = NULL;
 	}
 }
 

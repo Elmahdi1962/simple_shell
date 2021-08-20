@@ -49,3 +49,23 @@ char is_quote(char c)
 {
 	return ((c == '\'' || c == '"') ? TRUE : FALSE);
 }
+
+/**
+ * is_tilde_expansion_char - Checks if the given character is a \
+ * tilde expansion character
+ * @c: The character to check
+ *
+ * Return: 1 or 0
+ */
+char is_tilde_expansion_char(char c)
+{
+	if ((c == '/')
+		|| (c == '\0')
+		|| (c == ':')
+		|| (c == '-')
+		|| (c == '+')
+		)
+		return (TRUE);
+	else
+		return (FALSE);
+}

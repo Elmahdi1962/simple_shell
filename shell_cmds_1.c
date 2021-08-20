@@ -49,8 +49,16 @@ int sc_setenv(int ac, char *av[])
 	{
 		if (is_variable(av[0]))
 		{
-			add_env_var(av[0], av[1]);
-			return (EC_SUCCESS);
+			if (get_env_var(av[0]) != NULL)
+			{
+				add_env_var(av[0], av[1]);
+				return (EC_SUCCESS);
+			}
+			else
+			{
+				/* write(STDERR_FILENO, "setenv: usage: setenv VARIA\n", 37); */
+				return (EC_GENERAL_ERROR);
+			}
 		}
 		else
 		{
@@ -59,7 +67,7 @@ int sc_setenv(int ac, char *av[])
 	}
 	else
 	{
-		write(STDOUT_FILENO, "Invalid format\n", 15);
+		write(STDERR_FILENO, "setenv: usage: setenv VARIABLE VALUE\n", 37);
 		return (EC_INVALID_ARGS);
 	}
 }
@@ -75,12 +83,22 @@ int sc_unsetenv(int ac, char *av[])
 {
 	if (ac == 1)
 	{
-		remove_env_var(av[0]);
-		return (EC_SUCCESS);
+		if (get_env_var(av[0]) != NULL)
+		{
+			remove_env_var(av[0]);
+			return (EC_SUCCESS);
+		}
+		else
+		{
+			write(STDERR_FILENO, "unsetenv: ", 10);
+			write(STDERR_FILENO, av[0], str_len(av[0]));
+			write(STDERR_FILENO, " not found\n", 11);
+			return (EC_GENERAL_ERROR);
+		}
 	}
 	else
 	{
-		write(STDOUT_FILENO, "Invalid format\n", 15);
+		write(STDERR_FILENO, "unsetenv: usage: unsetenv VARIABLE\n", 35);
 		return (EC_INVALID_ARGS);
 	}
 }

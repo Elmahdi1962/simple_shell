@@ -36,6 +36,10 @@ char is_alias_name(char *str)
 	while ((str != NULL) && (*(str + i) != '\0'))
 	{
 		if (is_whitespace(*(str + i))
+			|| (*(str + i) == '\'')
+			|| (*(str + i) == '"')
+			|| (*(str + i) == '$')
+			|| (*(str + i) == '=')
 			|| (*(str + i) == '|')
 			|| (*(str + i) == '&')
 			|| (*(str + i) == ';')
@@ -47,7 +51,9 @@ char is_alias_name(char *str)
 		else
 			i++;
 	}
-	if ((str != NULL) && (*(str + i) == '\0'))
+	if (((str != NULL) && (*(str + i) == '\0'))
+		&& ((str_eql(str, "alias") == FALSE)
+			&& (str_eql(str, "unalias") == FALSE)))
 		return (TRUE);
 	else
 		return (FALSE);

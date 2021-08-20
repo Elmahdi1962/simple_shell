@@ -57,7 +57,7 @@ char *dissolve_tokens(char *str, char can_free)
 			res = _realloc(res, sizeof(char) * size, sizeof(char) * (size + incr));
 			size += incr;
 		}
-		if (((*(str + i) == '~') && (i == 0)) && ((*(str + 1) == '/') || (*(str + 1) == ':')))
+		if (((*(str + i) == '~') && (i == 0)) && (is_tilde_expansion_char(*(str + 1))))
 		{
 			expand_tilde(str, &i, &res, &j, &size);
 		}
@@ -100,11 +100,12 @@ char *dissolve_tokens(char *str, char can_free)
  */
 void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size)
 {
-	char *tmp;
+	char *tmp = NULL;
 	int tmp_len = 0, k = 0;
 
-	(void)str;
-	tmp = str_copy(get_env_var("HOME"));
+	tmp = str_copy(get_env_var(
+		*(str + *i + 1) == '-' ? "OLDPWD"
+			: (*(str + *i + 1) == '+' ? "PWD" : "HOME")));
 	tmp_len = str_len(tmp);
 	if (tmp != NULL)
 	{
@@ -122,7 +123,6 @@ void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size)
 		}
 		(*i) += 2;
 		free(tmp);
-		tmp = NULL;
 	}
 }
 
