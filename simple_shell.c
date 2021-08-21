@@ -49,6 +49,7 @@ int main(int ac, char *av[], char *envp[])
 		}
 		a += (!Is_Interactive ? 1 : 0);
 	}
+	clean_up_shell();
 	return (Node_Exit_Code);
 }
 

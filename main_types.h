@@ -1,7 +1,7 @@
 #ifndef _ALX_MAIN_TYPES_H
 #define _ALX_MAIN_TYPES_H
 /**
- * enum SHELL_PROP_IDS - Consists of the shell's property ids
+ * enum Shell_Prop_Ids - Consists of the shell's property ids
  * @ENVP_ID: The prop id for the shell's environment variables
  * @ENVP_COUNT_ID: The prop id for the shell's environment variables count
  * @EXEC_NAME_ID: The prop id for the shell's given executale file name
@@ -9,7 +9,7 @@
  * @NODE_EXIT_CODE_ID: The prop id for the last executed command's exit code
  * @IS_INTERACTIVE_ID: The prop id for the interactive status of the shell
  */
-enum SHELL_PROP_IDS
+enum Shell_Prop_Ids
 {
 	/* The prop id for the shell's environment variables */
 	ENVP_ID = 0,

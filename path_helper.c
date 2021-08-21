@@ -8,7 +8,7 @@
  */
 char *check_path(char *str)
 {
-	char *file_path = str, *full_path;
+	char *file_path = str_copy(str), *full_path = NULL;
 	int fd;
 
 	if (*str == '.' || *str == '/')
@@ -22,7 +22,7 @@ char *check_path(char *str)
 			{
 				return (file_path);
 			}
-
+			free(file_path);
 			return (NULL);
 		}
 		return (NULL);
@@ -34,7 +34,7 @@ char *check_path(char *str)
 	 * one of the paths in PATH
 	 */
 	full_path = search_path(file_path);
-
+	free(file_path);
 	return (full_path);
 }
 
