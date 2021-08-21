@@ -11,34 +11,34 @@ int sc_cd(int ac, char *av[])
 {
 	size_t bufsize = 1024;
 	char pwd[1024];
-	char *home = get_env_var("HOME");
-	char *oldpwd = get_env_var("OLDPWD");
+	char *home = get_env_var("HOME"), *home_copy;
+	char *oldpwd = get_env_var("OLDPWD"), *oldpwd_copy;
 
 	getcwd(pwd, bufsize);
-	if (ac <= 0)
+	if (ac <= 0 || str_eql(av[0], "~"))
 	{
+		home_copy = str_copy(home);
 		set_env_var("OLDPWD", pwd);
-		chdir(home);
-		set_env_var("PWD", home);
+		chdir(home_copy);
+		set_env_var("PWD", home_copy);
+		free(home_copy);
 	}
 	else
 	{
-		if (str_eql(av[0], "~"))
+		if (str_eql(av[0], "-"))
 		{
+			oldpwd_copy = str_copy(oldpwd);
 			set_env_var("OLDPWD", pwd);
-			chdir(home);
-			set_env_var("PWD", home);
-		} else if (str_eql(av[0], "-"))
-		{
-			set_env_var("OLDPWD", pwd);
-			chdir(oldpwd);
-			set_env_var("PWD", oldpwd);
+			chdir(oldpwd_copy);
+			set_env_var("PWD", oldpwd_copy);
+			free(oldpwd_copy);
 		} else
 		{
 			set_env_var("OLDPWD", pwd);
 			if (chdir(av[0]) == 0)
 			{
-				set_env_var("PWD", av[0]);
+				getcwd(pwd, bufsize);
+				set_env_var("PWD", pwd);
 			} else
 			{
 				print_error("cd", av[0], "can't cd to ");
