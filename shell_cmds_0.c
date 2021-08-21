@@ -15,29 +15,21 @@ int sc_cd(int ac, char *av[])
 	char *oldpwd = get_env_var("OLDPWD"), *oldpwd_copy;
 
 	getcwd(pwd, bufsize);
-
 	if (ac <= 0 || str_eql(av[0], "~"))
 	{
 		home_copy = str_copy(home);
-
 		set_env_var("OLDPWD", pwd);
-
 		chdir(home_copy);
-
 		set_env_var("PWD", home_copy);
-
 		free(home_copy);
 	}
 	else
-	{	
+	{
 		if (str_eql(av[0], "-"))
 		{
 			oldpwd_copy = str_copy(oldpwd);
-
 			set_env_var("OLDPWD", pwd);
-
 			chdir(oldpwd_copy);
-
 			set_env_var("PWD", oldpwd_copy);
 			free(oldpwd_copy);
 		} else
