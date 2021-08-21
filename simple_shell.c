@@ -16,7 +16,9 @@ static char Is_Interactive;
 static char **File_Lines;
 /* The number of lines in the file passed to this shell program */
 static int Cmd_Lines_Count;
+/* The current line of command to be executed */
 static char *Cmd_Line;
+/* The current list of command nodes to be executed */
 static cmd_t *Cmd_List;
 
 /**

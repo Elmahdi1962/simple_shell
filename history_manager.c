@@ -18,7 +18,7 @@ static int Line_Num;
 void manage_history(int op)
 {
 	int i, n = 0, fd;
-	char **file_lines = NULL, *file_path;
+	char **file_lines = NULL, *file_path = NULL;
 
 	if (op == MO_INIT)
 	{
@@ -33,6 +33,8 @@ void manage_history(int op)
 			free_array(file_lines, n);
 			Line_Num = (n % HISTORY_SIZE);
 		}
+		if (file_path != NULL)
+			free(file_path);
 		if (fd >= 0)
 			close(fd);
 	}

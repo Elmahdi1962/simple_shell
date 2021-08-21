@@ -63,14 +63,14 @@ int exec_built_in_cmd(cmd_t *node)
 		{NULL, NULL}
 	};
 
-	for (i = 0; i < 8; i++)
+	for (i = 0; built_in_cmds[i].cmd_name != NULL; i++)
 	{
 		if (str_eql(built_in_cmds[i].cmd_name, node->command))
 		{
 			return (built_in_cmds[i].run(node->args_count, node->args));
 		}
 	}
-	return (0);
+	return (EC_COMMAND_NOT_FOUND);
 }
 
 /**
@@ -101,16 +101,14 @@ int exec_program(cmd_t *node, char *program_path)
 	else
 	{
 		wait(&exit_stat);
+		free_array(arg_list_c, node->args_count + 1);
+		free_array(env_c, env_count);
 		if (WIFEXITED(exit_stat))
 			return (WEXITSTATUS(exit_stat));
 		else
-			return (0);
-		if ((arg_list_c != NULL) && !(WIFEXITED(exit_stat)))
-			free_array(arg_list_c, node->args_count);
-		if ((env_c != NULL) && !(WIFEXITED(exit_stat)))
-			free_array(env_c, env_count);
+			return (EC_SUCCESS);
 	}
-	return (0);
+	return (EC_SUCCESS);
 }
 
 /**
@@ -153,7 +151,6 @@ char **copy_arguments(cmd_t *node)
 		for (i = 0; i < node->args_count; i++)
 		{
 			*(arg_list_c + i + 1) = str_copy(*(node->args + i));
-			/* printf("arg[%d]: %s\n", i + 1, *(node->args + i)); */
 		}
 		*(arg_list_c + i + 1) = NULL;
 	}

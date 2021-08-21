@@ -27,15 +27,15 @@ cmd_t *new_cmd_node()
  */
 void free_cmd_t(cmd_t *head)
 {
-	if (head)
+	if (head != NULL)
 	{
-		if (head->next)
+		if (head->next != NULL)
 			free_cmd_t(head->next);
-		if (head->command)
+		if (head->command != NULL)
 			free(head->command);
-		if (head->args)
-			free(head->args);
-		if (head)
+		if (head->args != NULL)
+			free_array(head->args, head->args_count);
+		if (head != NULL)
 			free(head);
 		head = NULL;
 	}

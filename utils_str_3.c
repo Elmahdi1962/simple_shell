@@ -66,7 +66,6 @@ char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
 	int rep_len = str_len(rep_str), sub_len = str_len(sub_str);
 	int i = 0, j = 0, a = 0;
 
-	(void)res_len;
 	if ((res != NULL) && (sub_str != NULL) && (rep_str != NULL))
 	{
 		while ((res != NULL) && (*(res + i) != '\0'))
