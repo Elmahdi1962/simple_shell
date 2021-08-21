@@ -39,11 +39,10 @@ char is_valid_prev_char(char c)
 token_t *process_alias_expansion(token_t **tokens)
 {
 	token_t *expanded_tokens = NULL;
-	char prev_char = '\0';
 
 	if (tokens == NULL)
 		return (NULL);
-	process_tokens(tokens, prev_char);
+	process_tokens(tokens);
 	expansion = _realloc(expansion, sizeof(char) * exp_sz, sizeof(char) * (exp_sz + 1));
 	if (expansion != NULL)
 	{
@@ -66,11 +65,11 @@ token_t *process_alias_expansion(token_t **tokens)
  * @tokens: The list of tokens
  * @prev_char
  */
-void process_tokens(token_t **tokens, char prev_char)
+void process_tokens(token_t **tokens)
 {
 	int i = 0;
 	token_t *cur_token = NULL, *sub_tokens = NULL, *prev_token = NULL;
-	char *alias_val = NULL;
+	char *alias_val = NULL, prev_char = 0;
 
 	if (tokens == NULL)
 		return;
@@ -90,7 +89,8 @@ void process_tokens(token_t **tokens, char prev_char)
 					sizeof(void *) * (n), sizeof(void *) * (n + 1));
 				*(expanded_aliases + n) = str_copy(cur_token->value), n++;
 				sub_tokens = tokenize_command_string(alias_val);
-				process_tokens(&sub_tokens, *(alias_val + str_len(alias_val) - 1));
+				prev_char = *(alias_val + str_len(alias_val) - 1);
+				process_tokens(&sub_tokens);
 				free_token_t(sub_tokens);
 			}
 		}

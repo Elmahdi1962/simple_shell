@@ -27,211 +27,24 @@
 #ifndef MAX
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
+#ifdef MAX_EXIT_CODE
+#undef MAX_EXIT_CODE
+#endif
 /* The maximum value of an exit code */
 #define MAX_EXIT_CODE 256
+#ifdef HISTORY_FILE
+#undef HISTORY_FILE
+#endif
 /* The file name used to store this shell's history */
 #define HISTORY_FILE "/.simple_shell_history"
 /* The string representation of INT32_MAX */
+#ifndef MAX_INT_STR
 #define MAX_INT_STR "2147483647"
-#define SIG_SHELL_ERROR 1738
+#endif
 
-/**
- * enum SHELL_PROP_IDS - Consists of the shell's property ids
- */
-enum SHELL_PROP_IDS
-{
-	/* The prop id for the shell's environment variables */
-	ENVP_ID = 0,
-	/* The prop id for the shell's environment variables count */
-	ENVP_COUNT_ID = 1,
-	/* The prop id for the shell's given executale file name */
-	EXEC_NAME_ID = 6,
-	/* The prop id for the shell's process identifier */
-	SHELL_PID_ID = 7,
-	/* The prop id for the last executed command's exit code */
-	NODE_EXIT_CODE_ID = 8,
-	/* The prop id for the interactive status of the shell */
-	IS_INTERACTIVE_ID
-};
+#include "main_types.h"
 
-/**
- * enum Operator_Types - The operator codes for this shell program.
- */
-enum Operator_Types
-{
-	/* The operator code for no operator */
-	OP_NONE = 0,
-	/* The operator code for a logical AND character (&&) */
-	OP_AND = 1,
-	/* The operator code for a logical OR character (||) */
-	OP_OR = 2,
-	/* The operator code for a command separator character (;) */
-	OP_SEP = 3
-};
-
-/**
- * enum Token_Types - Types of tokens in a command line
- */
-enum Token_Types
-{
-	/* The beginning of the command line */
-	TKN_BEG = 0,
-	/* A word in the command line */
-	TKN_WORD = 1,
-	/* An open (not enclosed in quotes) space in the command line */
-	TKN_SPACE = 2,
-	/* An open (not enclosed in quotes) operator in the command line */
-	TKN_OP = 3,
-	/* An open (not enclosed in quotes) separator in the command line */
-	TKN_SEP_OP = 4
-};
-
-/**
- * enum Management_Operations - Operation codes for managing some resources
- */
-enum Management_Operations
-{
-	/* Initialize the resources */
-	MO_INIT = 0,
-	/* Free the resources */
-	MO_FREE = 1
-};
-
-/**
- * enum Exit_Codes - Exit codes for this shell program
- */
-enum Exit_Codes
-{
-	/* The command executed successfully */
-	EC_SUCCESS = 0,
-	/**
-	 * Catchall for general errors \
-	 * (E.g.; Miscellaneous errors, such as "divide by zero" and other \
-	 * impermissible operations)
-	 */
-	EC_GENERAL_ERROR = 1,
-	/* Misuse of shell built-ins */
-	EC_INVALID_ARGS = 2,
-	/**
-	 * Command invoked cannot execute \
-	 * (Permission problem or command is not an executable)
-	 */
-	EC_CANNOT_EXECUTE = 126,
-	/**
-	 * Command not found \
-	 * (Possible problem with $PATH or a typo)
-	 */
-	EC_COMMAND_NOT_FOUND = 127,
-	/* Invalid argument to exit */
-	EC_INVALID_EXIT_ARGS = 128,
-	/**
-	 * Fatal error signal "n" \
-	 * (Ranges from 128 to 255; 0 <= n <= 127)
-	 */
-	EC_FATAL_ERROR_SIGNAL = 128,
-	/* Script terminated by Control-C */
-	EC_CONTROL_C_TERMINATION = 130,
-	/**
-	 * Exit status out of range \
-	 * (exit takes only integer args in the range 0 - 255)
-	 */
-	EC_EXIT_STATUS_OUT_OF_RANGE = 255
-};
-
-struct token
-{
-	char *value;
-	char type;
-	struct token *next;
-};
-
-/**
- * command_node - Represent a command and its arguments.
- * @command: The name of the command
- * @args_count: The number of arguments provided
- * @args: The arguments provided
- * @next_cond: The condition for executing the next command
- * @next: The next command that can be executed
- */
-struct command_node
-{
-	/* The name of the command */
-	char *command;
-	/* The number of arguments provided */
-	int args_count;
-	/* The arguments provided */
-	char **args;
-	/* The condition for executing the next command */
-	char next_cond;
-	/* The next command that can be executed */
-	struct command_node *next;
-};
-
-/**
- * struct commands_list - Represents a list of commands
- */
-struct commands_list
-{
-	struct command_node *cmds;
-	struct commands_list *next;
-};
-
-struct processing_table
-{
-	struct token **tokens_list;
-	struct token *cur_token;
-	struct command_node *cur_cmd_node;
-	struct command_node **cmds_list_head;
-	char error;
-	int pos;
-};
-
-/**
- * struct built_in_cmd_s - Represents a built-in command node
- * @cmd_name: The name of the built-in command
- * @run: The handler for the built-in command
- */
-struct built_in_cmd_s
-{
-	/* The name of the built-in command */
-	char *cmd_name;
-	/* The handler for the built-in command */
-	int (*run)(int, char**);
-};
-
-/**
- * struct alias - Represents an alias command
- * @name: The name of the alias
- * @value: The value of the alias
- */
-struct alias
-{
-	/* The name of the alias */
-	char *name;
-	/* The value of the alias */
-	char *value;
-};
-
-/**
- * struct cmd_help - Represents this shell's help pages
- * @cmd_name: The name of the built-in command
- * @run: The handler for the built-in command's help
- */
-struct cmd_help
-{
-	/* The name of the built-in command */
-	char *cmd_name;
-	/* The handler for the built-in command's help */
-	void (*run)(void);
-};
-
-typedef struct token token_t;
-typedef struct command_node cmd_t;
-typedef struct alias alias_t;
-typedef struct commands_list cmd_list_t;
-typedef struct processing_table proc_tbl_t;
-
-/* ******** Program (rash.c) ******** */
+/* ******** Program (simple_shell.c) ******** */
 
 void init_shell(int ac, char *av[], char *envp[]);
 void print_node(cmd_t *node);
@@ -253,26 +66,25 @@ void remove_alias(char *str);
 
 void manage_history(int op);
 void add_to_history(char *str);
-void save_history();
+void save_history(void);
 char **get_history(int *size);
-int get_line_num();
+int get_line_num(void);
 /* ******** ---------------- ******** */
 
 /* ******** Environment Variable Helpers (env_var_helpers.c) ******** */
 
 char *get_env_var(char *str);
-void set_env_var(char *var, char*val);
-void add_env_var(char *var, char*val);
+void set_env_var(char *var, char *val);
+void add_env_var(char *var, char *val);
 void remove_env_var(char *var);
 /* ******** ---------------- ******** */
 
 /* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
-/* void init_line_reader(); */
-char *get_cmd_line();
+char *get_cmd_line(void);
 void check_chars(char *quote, char *quote_o, char current_char);
 void set_error(char *error, char quote_o, int n, char *str, int pos);
-void print_prompt();
+void print_prompt(void);
 
 cmd_t *get_next_command(cmd_t *cur, int exit_code);
 char **get_variables(char *str, int *vars_count);
@@ -299,28 +111,21 @@ void adjust_block(char **blk, size_t new_sz, size_t *old_sz, char incr);
 char *dissolve_tokens(char *str, char can_free);
 void dissolve_cmd_parts(cmd_t *node);
 void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size);
-void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size);
+void expand_variable(char *str, size_t *i,
+	char **res, size_t *j, size_t *size);
 
 char is_valid_prev_char(char c);
 token_t *get_token_tail(token_t **head);
 token_t *process_alias_expansion(token_t **tokens);
-void process_tokens(token_t **tokens, char prev_char);
-/* TODO: Move declaration below to right position */
-
+void process_tokens(token_t **tokens);
 /* ******** ---------------- ******** */
 
 /* ******** Cmd_t Helpers (cmd_t_helpers.c) ******** */
 
-cmd_t *new_cmd_node();
+cmd_t *new_cmd_node(void);
 void free_cmd_t(cmd_t *head);
 void add_node_to_end(cmd_t **head, cmd_t **node);
 cmd_t *get_cmd_t_tail(cmd_t *head);
-
-void add_cmd_list_to_end(cmd_list_t **head, cmd_list_t *cmd_lst);
-void add_cmd_t_to_cmd_list_t_end(cmd_list_t *head, cmd_t *node);
-void free_cmd_list_t(cmd_list_t *head);
-cmd_list_t *get_cmd_list_t_tail(cmd_list_t *head);
-cmd_t *get_tail_cmd(cmd_list_t *head);
 
 void add_token_to_end(token_t **head, token_t *tkn);
 token_t *create_token(char *value, char type);
@@ -330,7 +135,6 @@ token_t *get_token_at_index(int idx, token_t **head);
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
 
-/* char *read_line(int fd, char action); */
 char **read_all_lines(int fd, int *lines);
 void print_text(int fd, char *text[], int n);
 /* ******** ---------------- ******** */
@@ -399,7 +203,7 @@ char *strs_join(char **arr, int n, char c, char can_free);
 void print_error(char *command_name, char *userinput, char *error_message);
 void swap(char *x, char *y);
 char *reverse(char *buffer, int i, int j);
-char *_itoa(int value, char* buffer, int base);
+char *_itoa(int value, char *buffer, int base);
 char str_in_arr(char **arr, int n, char *str);
 /* ******** ---------------- ******** */
 
