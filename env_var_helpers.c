@@ -84,7 +84,8 @@ void add_env_var(char *var, char *val)
 		else
 		{
 			*envp = _realloc(*envp, sizeof(void *) * (*n), sizeof(void *) * (*n + 1));
-			*(*envp + *n) = str_cat(str_cat(str_copy(var), str_copy("="), TRUE), str_copy(val), TRUE);
+			*(*envp + *n) = str_cat(str_cat(str_copy(var),
+				str_copy("="), TRUE), str_copy(val), TRUE);
 			(*n)++;
 		}
 	}

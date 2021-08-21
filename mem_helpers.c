@@ -43,7 +43,7 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 
 /**
  * free_array - Frees a 2d array
- * @list: The pointer to the array to free
+ * @arr: The pointer to the array to free
  * @length: The length of the given array
  */
 void free_array(char **arr, int length)

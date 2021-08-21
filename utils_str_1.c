@@ -37,7 +37,7 @@ char str_eql(char *left, char *right)
  *
  * Return: The copied string, otherwise NULL
  */
-char *str_copy(char *str)
+char *str_copy(const char *str)
 {
 	char *new_str = NULL;
 	int i;

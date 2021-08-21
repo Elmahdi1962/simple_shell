@@ -1,21 +1,13 @@
 #include "main.h"
 
-/**
- * The maximum size of the history buffer
- */
-const short HISTORY_SIZE = 1 << 12;
-/**
- * The previous commands run by the shell program
- */
+/* The maximum size of the history buffer */
+static const short HISTORY_SIZE = 1 << 12;
+/* The previous commands run by the shell program */
 static char **Cmd_History;
-/**
- * Specifies if the history buffer is full. If TRUE, command_strings \
- * in the buffer would be replaced by newer commands
- */
+/* Specifies if the history buffer is full. If TRUE, command_strings */
+/* in the buffer would be replaced by newer commands */
 static char Is_Full;
-/**
- * The current line number of the shell program
- */
+/* The current line number of the shell program */
 static int Line_Num;
 
 /**
@@ -79,7 +71,7 @@ void add_to_history(char *str)
 /**
  * save_history - Saves this shell's history to the history's file path
  */
-void save_history()
+void save_history(void)
 {
 	int fd, i;
 	char *file_path;
@@ -116,7 +108,7 @@ char **get_history(int *size)
  *
  * Return: The current line number of the shell
  */
-int get_line_num()
+int get_line_num(void)
 {
 	return (Line_Num);
 }

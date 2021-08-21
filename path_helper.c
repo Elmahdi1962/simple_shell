@@ -1,13 +1,10 @@
 #include "main.h"
 
 /**
- * check_path - checks if the file exists
- * @str: file name it could enclude ./ like "./program"
+ * check_path - Checks if a given file command exists
+ * @str: File name, which could include ./ like "./program"
  *
- * Return: full path or NULL
- * NOTE : IF THIS FUNCTION RETURNED A PATH (NOT NULL)
- * THEN YOU NEED TO FREE THAT VARIABLE
- * AFTER FINISHING USING IT
+ * Return: The full path of a non-built-in command or NULL
  */
 char *check_path(char *str)
 {
@@ -31,18 +28,21 @@ char *check_path(char *str)
 		return (NULL);
 	}
 
-	/*the file path doesn't start with . or / */
-	/*Checking if it's one of the built out commands programs in
-	one of the paths in PATH*/
+	/**
+	 * the file path doesn't start with . or /
+	 * Checking if it's one of the built out commands programs in
+	 * one of the paths in PATH
+	 */
 	full_path = search_path(file_path);
 
 	return (full_path);
 }
 
 /**
- * search_path - search in PATH paths for the program of the command passed
- * @command: command name
- * Return: full path or NULL
+ * search_path - Searches in PATH paths for the program of the command passed
+ * @command: The name of the command
+ *
+ * Return: The full path of the command or NULL
  */
 char *search_path(char *command)
 {

@@ -13,7 +13,8 @@ void adjust_block(char **blk, size_t new_sz, size_t *old_sz, char incr)
 	{
 		if (new_sz >= *old_sz)
 		{
-			*blk = _realloc(*blk, sizeof(char) * (*old_sz), sizeof(char) * (*old_sz + incr));
+			*blk = _realloc(*blk, sizeof(char) * (*old_sz),
+				sizeof(char) * (*old_sz + incr));
 			(*old_sz) += incr;
 		}
 	}

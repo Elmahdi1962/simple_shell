@@ -43,13 +43,21 @@ char is_alias_name(char *str)
 			|| (*(str + i) == '|')
 			|| (*(str + i) == '&')
 			|| (*(str + i) == ';')
+			|| (*(str + i) == '[')
+			|| (*(str + i) == ']')
+			|| (*(str + i) == '{')
+			|| (*(str + i) == '}')
 			|| (*(str + i) == '(')
 			|| (*(str + i) == ')')
 			|| (*(str + i) == '<')
 			|| (*(str + i) == '>'))
+		{
 			break;
+		}
 		else
+		{
 			i++;
+		}
 	}
 	if ((str != NULL) && (*(str + i) == '\0'))
 		return (TRUE);

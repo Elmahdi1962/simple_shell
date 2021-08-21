@@ -6,7 +6,7 @@
  *
  * Return: The converted number
  */
-int str_to_int(char *num)
+int str_to_int(const char *num)
 {
 	int i = 1, len, exp = 1;
 	int res = 0;
@@ -37,7 +37,7 @@ int str_to_int(char *num)
  *
  * Return: The length of the string.
  */
-int str_len(char *str)
+int str_len(const char *str)
 {
 	int len = 0;
 

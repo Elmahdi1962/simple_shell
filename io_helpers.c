@@ -3,11 +3,11 @@
 /**
  * read_all_lines - Reads all the lines in a text file
  * @fd: The file's handle
- * @lines: A pointer to the lines in the file
+ * @lines_out: A pointer to the lines in the file
  *
- * return: A 2D array of the files contents, otherwise NULL
+ * Return: A 2D array of the file's contents, otherwise NULL
  */
-char **read_all_lines(int fd, int *lines)
+char **read_all_lines(int fd, int *lines_out)
 {
 	int j, n, buf_size = 1 << 7;
 	char *buf = NULL;
@@ -35,7 +35,7 @@ char **read_all_lines(int fd, int *lines)
 		if (buf != NULL)
 			free(buf);
 	}
-	return (str_split(str, '\n', lines, TRUE));
+	return (str_split(str, '\n', lines_out, TRUE));
 }
 
 /**

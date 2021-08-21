@@ -1,8 +1,7 @@
 #include "main.h"
 
-const short MAX_BUF_SIZE = 1024;
-static char BUF[1024];
-char DEFAULT_PS1[] = "$ ";
+static const short MAX_BUF_SIZE = 1024;
+static const char Default_PS1[] = "($) ";
 static int i;
 
 /**
@@ -25,32 +24,33 @@ void handle_signal(int sig_num)
  *
  * Return: A pointer to the string
  */
-char *get_cmd_line()
+char *get_cmd_line(void)
 {
+	static char Buf[1024];
 	int n = 0, j, k, len = 0;
 	char *line = NULL, stop = FALSE, error = FALSE, quote = 0, quote_o = FALSE;
 
 	i = 0;
 	while (!stop)
 	{
-		n = read(STDIN_FILENO, (void *)BUF, MAX_BUF_SIZE);
+		n = read(STDIN_FILENO, (void *)Buf, MAX_BUF_SIZE);
 		if (n < 0)
 		{
 			if (line != NULL)
 				free(line);
 			return (NULL);
 		}
-		for (j = 0; (BUF[i + j] != '\n') && (j < n) && (i + j < MAX_BUF_SIZE); j++)
+		for (j = 0; (Buf[i + j] != '\n') && (j < n) && (i + j < MAX_BUF_SIZE); j++)
 			;
 		line = _realloc(line, sizeof(char) * len, sizeof(char) * (len + j));
 		if (line != NULL)
 		{
-			for (k = 0; (BUF[i] != '\n') && (k < j) && (i < MAX_BUF_SIZE); k++)
+			for (k = 0; (Buf[i] != '\n') && (k < j) && (i < MAX_BUF_SIZE); k++)
 			{
-				check_chars(&quote, &quote_o, BUF[i]);
-				*(line + len) = BUF[i], len++, i++;
+				check_chars(&quote, &quote_o, Buf[i]);
+				*(line + len) = Buf[i], len++, i++;
 			}
-			stop = (BUF[i] == '\n' ? TRUE : stop);
+			stop = (Buf[i] == '\n' ? TRUE : stop);
 			i = (i >= MAX_BUF_SIZE ? 0 : i);
 		}
 		stop = (n == 0 ? TRUE : stop);
@@ -128,7 +128,7 @@ void set_error(char *error, char quote_o, int n, char *str, int pos)
 /**
  * print_prompt - Prints the prompt for this shell program
  */
-void print_prompt()
+void print_prompt(void)
 {
 	char *ps1;
 	int j, n;
@@ -138,7 +138,7 @@ void print_prompt()
 	{
 		ps1 = get_env_var("PS1");
 		if (ps1 == NULL)
-			ps1 = str_copy(DEFAULT_PS1);
+			ps1 = str_copy(Default_PS1);
 		else
 			ps1 = str_copy(ps1);
 		vars = get_variables(ps1, &n);

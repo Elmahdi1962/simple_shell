@@ -64,7 +64,8 @@ void add_alias(char *name, char *value)
 	}
 	else
 	{
-		Alias_List = _realloc(Alias_List, sizeof(alias_t) * Alias_Count, sizeof(alias_t) * (Alias_Count + 1));
+		Alias_List = _realloc(Alias_List, sizeof(alias_t) * Alias_Count,
+			sizeof(alias_t) * (Alias_Count + 1));
 		*(Alias_List + Alias_Count) = malloc(sizeof(alias_t));
 		if (*(Alias_List + Alias_Count) != NULL)
 		{

@@ -79,7 +79,7 @@ int sc_exit(int ac, char *av[])
 			write(STDERR_FILENO, av[0], str_len(av[0]));
 			write(STDERR_FILENO, "\n", 1);
 			free(buf1);
-			return (2);
+			return (EC_INVALID_ARGS);
 		}
 	}
 	clean_up_shell();
@@ -107,7 +107,7 @@ int sc_env(int ac, char *av[])
 		write(STDOUT_FILENO, *(envp + i), str_len(*(envp + i)));
 		write(STDOUT_FILENO, "\n", 1);
 	}
-	return (0);
+	return (EC_SUCCESS);
 }
 
 /**
@@ -120,7 +120,7 @@ int sc_env(int ac, char *av[])
 int sc_help(int ac, char *av[])
 {
 	int i;
-	struct cmd_help cmds_help[] = {
+	cmd_help_t cmds_help[] = {
 		{"alias", help_alias},
 		{"cd", help_cd},
 		{"exit", help_exit},
@@ -137,7 +137,7 @@ int sc_help(int ac, char *av[])
 			if (str_eql(cmds_help[i].cmd_name, av[0]))
 			{
 				cmds_help[i].run();
-				return (0);
+				return (EC_SUCCESS);
 			}
 		}
 	}
@@ -145,5 +145,5 @@ int sc_help(int ac, char *av[])
 	{
 		help_program();
 	}
-	return (0);
+	return (EC_SUCCESS);
 }

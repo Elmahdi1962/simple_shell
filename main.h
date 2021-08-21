@@ -135,7 +135,7 @@ token_t *get_token_at_index(int idx, token_t **head);
 
 /* ******** IO Helpers (io_helpers_#.c) ******** */
 
-char **read_all_lines(int fd, int *lines);
+char **read_all_lines(int fd, int *lines_out);
 void print_text(int fd, char *text[], int n);
 /* ******** ---------------- ******** */
 
@@ -186,13 +186,13 @@ void help_unsetenv(void);
 
 /* ******** String Utilities (utils_str_#.c) ******** */
 
-int str_to_int(char *num);
+int str_to_int(const char *num);
 void mem_set(char *str, int n, char c);
 char *trim_start(char *str, char c, char can_free);
 char *trim_end(char *str, char c, char can_free);
-int str_len(char *str);
+int str_len(const char *str);
 char str_eql(char *left, char *right);
-char *str_copy(char *str);
+char *str_copy(const char *str);
 char *str_cat(char *left, char *right, char can_free);
 char *copy_range(char *str, int a, int b);
 char **str_split(char *str, char c, int *len_out, char can_free);

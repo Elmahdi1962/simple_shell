@@ -1,77 +1,60 @@
 #include "main.h"
 
-/**
- * The modifiable environment variable for this shell program
- */
-static char **ENVP;
-/**
- * The number of environment variable in this shell program
- */
-static int ENVP_COUNT;
-/**
- * The name of the current instance of this shell program
- */
-static char *EXEC_NAME;
-/**
- * The process ID of the current instance of this shell program
- */
-static int SHELL_PID;
-/**
- * The exit code of the last executed process in this shell program
- */
-static int NODE_EXIT_CODE;
-/**
- * Specifies the interactiveness of this shell program
- */
-static char IS_INTERACTIVE;
-/**
- * The lines of the file passed to this shell program
- */
-char **FILE_LINES;
-/**
- * The number of lines in the file passed to this shell program
- */
-int CMD_LINES_COUNT;
+/* The modifiable environment variable for this shell program */
+static char **Envp;
+/* The number of environment variable in this shell program */
+static int Envp_Count;
+/* The name of the current instance of this shell program */
+static char *Exec_Name;
+/* The process ID of the current instance of this shell program */
+static int Shell_PID;
+/* The exit code of the last executed process in this shell program */
+static int Node_Exit_Code;
+/* Specifies the interactiveness of this shell program */
+static char Is_Interactive;
+/* The lines of the file passed to this shell program */
+static char **File_Lines;
+/* The number of lines in the file passed to this shell program */
+static int Cmd_Lines_Count;
+static char *Cmd_Line;
+static cmd_t *Cmd_List;
 
 /**
  * main - Entry point to the simple shell program
  * @ac: The number of arguments passed
  * @av: The arguments passed
+ * @envp: The environment variables that were passed
  *
  * Return: The exit code of the last command executed
  */
 int main(int ac, char *av[], char *envp[])
 {
 	int a = 0;
-	char *cmd_line = NULL;
-	cmd_t *cmd_list = NULL;
 
 	init_shell(ac, av, envp);
-	while (a < CMD_LINES_COUNT)
+	while (a < Cmd_Lines_Count)
 	{
 		print_prompt();
-		cmd_line = FILE_LINES == NULL ? get_cmd_line() : FILE_LINES[a];
-		if (str_len(cmd_line) > 0)
+		Cmd_Line = (File_Lines == NULL ? get_cmd_line() : File_Lines[a]);
+		if (str_len(Cmd_Line) > 0)
 		{
-			add_to_history(cmd_line);
-			cmd_list = parse_cmd_line(cmd_line);
-			execute_cmds_list(&cmd_list, &NODE_EXIT_CODE);
-			free_cmd_t(cmd_list);
-			if (cmd_line != NULL)
-				free(cmd_line);
+			add_to_history(Cmd_Line);
+			Cmd_List = parse_cmd_line(Cmd_Line);
+			execute_cmds_list(&Cmd_List, &Node_Exit_Code);
+			free_cmd_t(Cmd_List);
+			if (Cmd_Line != NULL)
+				free(Cmd_Line);
 		}
-		a += (!IS_INTERACTIVE ? 1 : 0);
+		a += (!Is_Interactive ? 1 : 0);
 	}
-	return (NODE_EXIT_CODE);
+	return (Node_Exit_Code);
 }
 
 /**
- * init_shell - Entry point to the simple shell program
+ * init_shell - Initializes the simple shell program
  * @ac: The number of arguments passed
  * @av: The arguments passed
- * @cmd_lines_count: The number of lines of commands strings in a passed file
- * @file_lines: The lines of command strings in a passed file
- * @interactive: The pointer to the interactive variable
+ * @envp: The environment variables that were passed
  */
 void init_shell(int ac, char *av[], char *envp[])
 {
@@ -89,24 +72,24 @@ void init_shell(int ac, char *av[], char *envp[])
 	{
 		/* TODO: Load first arg as a file */
 		fd = open(av[1], O_RDONLY);
-		FILE_LINES = read_all_lines(fd, &CMD_LINES_COUNT);
+		File_Lines = read_all_lines(fd, &Cmd_Lines_Count);
 	}
 	else
 	{
-		CMD_LINES_COUNT = 1;
-		FILE_LINES = NULL;
+		Cmd_Lines_Count = 1;
+		File_Lines = NULL;
 	}
 	for (i = 0; (envp != NULL) && (envp[i] != NULL); i++)
 	{
-		ENVP = _realloc(ENVP, sizeof(void *) * i, sizeof(void *) * (i + 1));
-		*(ENVP + i) = str_copy(envp[i]);
-		ENVP_COUNT++;
+		Envp = _realloc(Envp, sizeof(void *) * i, sizeof(void *) * (i + 1));
+		*(Envp + i) = str_copy(envp[i]);
+		Envp_Count++;
 	}
-	EXEC_NAME = str_copy(av[0]);
-	SHELL_PID = getpid();
-	IS_INTERACTIVE = (!isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE);
+	Exec_Name = str_copy(av[0]);
+	Shell_PID = getpid();
+	Is_Interactive = (!isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE);
 	signal(SIGINT, handle_signal);
-	NODE_EXIT_CODE = 0;
+	Node_Exit_Code = 0;
 	manage_aliases(MO_INIT);
 	manage_history(MO_INIT);
 }
@@ -122,17 +105,17 @@ void *get_shell_prop(char prop_id)
 	switch (prop_id)
 	{
 	case ENVP_ID:
-		return (&ENVP);
+		return (&Envp);
 	case ENVP_COUNT_ID:
-		return (&ENVP_COUNT);
+		return (&Envp_Count);
 	case EXEC_NAME_ID:
-		return (&EXEC_NAME);
+		return (&Exec_Name);
 	case SHELL_PID_ID:
-		return (&SHELL_PID);
+		return (&Shell_PID);
 	case NODE_EXIT_CODE_ID:
-		return (&NODE_EXIT_CODE);
+		return (&Node_Exit_Code);
 	case IS_INTERACTIVE_ID:
-		return (&IS_INTERACTIVE);
+		return (&Is_Interactive);
 	default:
 		break;
 	}
@@ -147,10 +130,13 @@ void clean_up_shell(void)
 	save_history();
 	manage_aliases(MO_FREE);
 	manage_history(MO_FREE);
-	if (FILE_LINES != NULL)
-		free_array(FILE_LINES, CMD_LINES_COUNT);
-	if (ENVP != NULL)
-		free_array(ENVP, ENVP_COUNT);
-	if (EXEC_NAME != NULL)
-		free(EXEC_NAME);
+	if (Cmd_Line != NULL)
+		free(Cmd_Line);
+	free_cmd_t(Cmd_List);
+	if (File_Lines != NULL)
+		free_array(File_Lines, Cmd_Lines_Count);
+	if (Envp != NULL)
+		free_array(Envp, Envp_Count);
+	if (Exec_Name != NULL)
+		free(Exec_Name);
 }

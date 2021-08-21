@@ -16,9 +16,13 @@ char str_is_num(char *str)
 	{
 		if (((*(str + i) == '-') && (i == 0))
 			|| is_digit(*(str + i)))
-		i++;
+		{
+			i++;
+		}
 		else
+		{
 			break;
+		}
 	}
 	return (*(str + i) == '\0' ? TRUE : FALSE);
 }

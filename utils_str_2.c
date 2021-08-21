@@ -1,75 +1,6 @@
 #include "main.h"
 
 /**
- * str_replace - Replaces a string with a given string in another string
- * @str: The source string
- * @sub_str: The string to look for in the source string
- * @rep_str: The string to use as a replacement
- * @can_free: Specifies whether the given strings can be freed
- *
- * Return: The string containing the replaced values, otherwise, NULL
-*/
-char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
-{
-	char *res = str != NULL ? str_copy(str) : NULL, *tmp;
-	int rep_len = str_len(rep_str);
-	int sub_len = str_len(sub_str);
-	int res_len = str_len(str);
-	int i = 0, j = 0, a, b, c;
-
-	if (res != NULL && sub_str != NULL && rep_str != NULL)
-	{
-		while (res != NULL && *(res + i) != '\0')
-		{
-			if (*(res + i) == *sub_str)
-			{
-				for (j = 0; (*(sub_str + j) != '\0') && (*(res + i) != '\0'); j++, i++)
-				{
-					if (*(sub_str + j) != *(res + i))
-						break;
-				}
-				i -= j;
-				if (j == sub_len)
-				{
-					/* make replacement */
-					res_len = res_len + (rep_len == sub_len ? 0 : rep_len - sub_len);
-					tmp = malloc(sizeof(char) * (res_len + 1));
-					if (tmp != NULL)
-					{
-						for (a = 0, b = 0, c = 0; a < res_len; a++)
-						{
-							c = (a == i) ? i + sub_len : c;
-							if (a >= i && a < (i + rep_len))
-							{
-								*(tmp + a) = *(rep_str + b);
-								b++;
-							}
-							else
-							{
-								*(tmp + a) = *(res + c);
-								c++;
-							}
-						}
-						*(tmp + a) = '\0';
-					}
-					free(res);
-					res = tmp;
-					i += (rep_len == sub_len ? rep_len : rep_len - sub_len);
-				}
-			}
-			i++;
-		}
-	}
-	if (can_free)
-	{
-		free(str);
-		free(sub_str);
-		free(rep_str);
-	}
-	return (res);
-}
-
-/**
  * long_to_str - Converts a long to its string representation
  * @num: The long integer
  *
@@ -151,6 +82,7 @@ char *rep_range(char *str, char *val, int a, int b)
 /**
  * strs_join - Joins an array of strings into a string
  * @arr: The array of strings
+ * @n: The length of the array of strings
  * @c: The character to join the strings with
  * @can_free: Specifies if the given array can be freed
  *
@@ -224,21 +156,19 @@ void print_error(char *command_name, char *userinput, char *error_message)
  */
 char *_itoa(int value, char *buffer, int base)
 {
-	int n, i;
+	int n, i, r;
 
-	/* invalid input*/
+	/* invalid input */
 	if (base < 2 || base > 32)
 	{
-		return buffer;
+		return (buffer);
 	}
-
-	/* consider the absolute value of the number*/
+	/* consider the absolute value of the number */
 	n = value;
-
 	i = 0;
 	while (n)
 	{
-		int r = n % base;
+		r = n % base;
 
 		if (r >= 10)
 		{
@@ -248,26 +178,16 @@ char *_itoa(int value, char *buffer, int base)
 		{
 			buffer[i++] = 48 + r;
 		}
-
 		n = n / base;
 	}
-
-	/* if the number is 0*/
+	/* if the number is 0 */
 	if (i == 0)
-	{
 		buffer[i++] = '0';
-	}
-
-	/* If the base is 10 and the value is negative, the resulting string*/
-	/* is preceded with a minus sign (-)*/
-	/* With any other base, value is always considered unsigned*/
+	/* If the base is 10 and the value is negative, the resulting string */
+	/* is preceded with a minus sign (-) */
+	/* With any other base, value is always considered unsigned */
 	if (value < 0 && base == 10)
-	{
 		buffer[i++] = '-';
-	}
-
-	buffer[i] = '\0'; /* null terminate string*/
-
-	/* reverse the string and return it*/
-	return reverse(buffer, 0, i - 1);
+	buffer[i] = '\0';
+	return (reverse(buffer, 0, i - 1));
 }

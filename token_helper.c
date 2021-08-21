@@ -26,11 +26,11 @@ void add_token_to_end(token_t **head, token_t *tkn)
 }
 
 /**
- * create_tokenn - Creates a new token
+ * create_token - Creates a new token
  * @value: The value of the token
  * @type: The type of the token
  *
- * Return: a pointer to the newly created token
+ * Return: a pointer to the newly created token, otherwise NULL
  */
 token_t *create_token(char *value, char type)
 {
@@ -64,6 +64,13 @@ void free_token_t(token_t *head)
 	}
 }
 
+/**
+ * get_token_at_index - Retrieves the token at a given index
+ * @idx: The index of the token to retrieve
+ * @head: The pointer to the beginning of the list
+ *
+ * Return: The pointer to the token at the given index, otherwise NULL
+ */
 token_t *get_token_at_index(int idx, token_t **head)
 {
 	int i = 0;

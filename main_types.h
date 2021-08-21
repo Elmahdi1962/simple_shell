@@ -184,11 +184,11 @@ struct processing_table
 };
 
 /**
- * struct built_in_cmd_s - Represents a built-in command node
+ * struct built_in_cmd - Represents a built-in command node
  * @cmd_name: The name of the built-in command
  * @run: The handler for the built-in command
  */
-struct built_in_cmd_s
+struct built_in_cmd
 {
 	/* The name of the built-in command */
 	char *cmd_name;
@@ -224,6 +224,8 @@ struct cmd_help
 
 typedef struct token token_t;
 typedef struct command_node cmd_t;
+typedef struct cmd_help cmd_help_t;
+typedef struct built_in_cmd built_in_cmd_t;
 typedef struct alias alias_t;
 typedef struct processing_table proc_tbl_t;
 #endif

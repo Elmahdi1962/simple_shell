@@ -78,9 +78,8 @@ void skip_comment(char *str, int o, int *len_out)
 char *read_operator(char *str, int o, int *len_out, char *error)
 {
 	int i = 0, j;
-	char buf[3], *op, *buf0, *buf1;
+	char buf[3] = {0}, *op, *buf0, *buf1;
 
-	buf[2] = 0;
 	if ((*(str + 0 + o) == '|') && (*(str + 1 + o) == '|'))
 	{
 		buf[0] = '|';

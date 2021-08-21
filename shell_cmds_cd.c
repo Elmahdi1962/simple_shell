@@ -39,6 +39,12 @@
 }
  */
 
+/**
+ * change_to_old_pwd - Changes the PWD to OLDPWD and OLDPWD to PWD
+ * @pwd: The current working directory
+ * @old_pwd: The previous working directory
+ * @error: The pointer to the error flag
+ */
 void change_to_old_pwd(char *pwd, char *old_pwd, char *error)
 {
 	DIR *old_dir;
@@ -122,14 +128,17 @@ char *resolve_path(char *cwd, char *path, char *error)
 	return (res);
 }
 
+/**
+ * print_failed_dir_nav_error - Prints a failed directory navigation error
+ * @path: The user-given path
+ * @error: The error flag that was set
+ */
 void print_failed_dir_nav_error(char *path, char error)
 {
 	char *buf0, *buf1;
 
 	buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
 	buf1 = long_to_str(get_line_num());
-	/* if (!error) */
-		/* write(STDERR_FILENO, "-", 1); */
 	write(STDERR_FILENO, buf0, str_len(buf0));
 	if (error)
 	{

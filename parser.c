@@ -1,19 +1,5 @@
 #include "main.h"
 
-/* TODO: Remove the function below */
-void print_tokens(token_t *tokens)
-{
-	int i = 0;
-	token_t *cur = tokens;
-
-	while (cur != NULL)
-	{
-		printf("[%d] |%s| - |%d|\n", i, cur->value, cur->type);
-		cur = cur->next;
-		i++;
-	}
-}
-
 /**
  * parse_cmd_line - Processes a line of commands into a list of cmd_list_t
  * @line: The line of commands
@@ -32,7 +18,8 @@ cmd_t *parse_cmd_line(char *line)
 		tokens = process_alias_expansion(&tokens);
 	if (tokens == NULL)
 		return (NULL);
-	if ((proc_tbl = malloc(sizeof(proc_tbl_t))) && (proc_tbl == NULL))
+	proc_tbl = malloc(sizeof(proc_tbl_t));
+	if (proc_tbl == NULL)
 		return (NULL);
 	init_processing_table(&proc_tbl, &tokens, &cmd_list);
 	while ((proc_tbl->cur_token != NULL) && (proc_tbl->error == FALSE))

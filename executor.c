@@ -51,7 +51,7 @@ void execute_cmds_list(cmd_t **cmds_list, int *exit_code)
 int exec_built_in_cmd(cmd_t *node)
 {
 	int i;
-	struct built_in_cmd_s built_in_cmds[] = {
+	built_in_cmd_t built_in_cmds[] = {
 		{"alias", sc_alias},
 		{"cd", sc_cd},
 		{"env", sc_env},

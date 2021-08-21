@@ -18,16 +18,19 @@ static int exp_sz;
  */
 char is_valid_prev_char(char c)
 {
-	if (
-		(c == ' ')
-		|| (c == '\t')
-		|| (c == ';')
-		|| (c == '|')
-		|| (c == '&')
+	if ((c == ' ')
+			|| (c == '\t')
+			|| (c == ';')
+			|| (c == '|')
+			|| (c == '&')
 		)
+	{
 		return (TRUE);
+	}
 	else
+	{
 		return (FALSE);
+	}
 }
 
 /**
@@ -43,7 +46,8 @@ token_t *process_alias_expansion(token_t **tokens)
 	if (tokens == NULL)
 		return (NULL);
 	process_tokens(tokens);
-	expansion = _realloc(expansion, sizeof(char) * exp_sz, sizeof(char) * (exp_sz + 1));
+	expansion = _realloc(expansion, sizeof(char) * exp_sz,
+		sizeof(char) * (exp_sz + 1));
 	if (expansion != NULL)
 	{
 		*(expansion + exp_sz) = '\0';
@@ -53,6 +57,7 @@ token_t *process_alias_expansion(token_t **tokens)
 		exp_sz = 0;
 	}
 	free_token_t(*tokens);
+
 	free_array(expanded_aliases, n);
 	expanded_aliases = NULL;
 	n = 0;
