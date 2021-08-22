@@ -3,61 +3,98 @@
 ." Render on terminal with
 ." man ./man_1_simple_shell or viewman
 ."
-.Dd August 26, 2021
-.Os
-.Dt RASH 1
-.Sh NAME
-.Nm rash
-.Nd command interpreter (shell)
+.TH SIMPLE_SHELL 1 "2021 August 26" "v 1.0" "General Commands Manual"
 
-.Sh SYNOPSIS
-.Nm
-.Bk -words
-.Op file
-.Bk
-.Ek
+.SH  NAME
+simple_shell \- Simple command interpreter (shell)
+.SH SYNOPSIS
+.B simple_shell
+[file]
 
-.Sh DESCRIPTION
-The
-.B _printf
-function produces output according to a
-.IB format
-as described below.
+.SH DESCRIPTION
+SImple SHell is a command language interpreter that executes
+commands read from the standard input or from a file.
 
-.Ss Lexical Structure
-The shell reads input in terms of lines from a file and breaks it up into
-words at whitespace (blanks and tabs), and at certain sequences of
-characters that are special to the shell called
-.Dq operators .
-Following is a list of operators:
-.Bl -ohang -offset indent
-.It "Control operators:"
-.Dl &&  \&;  || \*[Lt]newline\*[Gt]
-.El
+.SH ARGUMENTS
+The only argument that should be supplied to the shell
+is the name of a file. When this happens,
+the shell reads and	executes commands from this	file, then exits.
+The shell's exit status is the exit status of the last command
+executed in the script. If no commands are executed, the exit
+status is 0. An attempt is made to open the file in
+the current directory.
+." and, if no file is found,	then the shell searches	the
+." directories	in PATH	for the	script.
 
-.Ss Quoting
-Quoting is used to remove the special meaning of certain characters or
+.SH DEFINITIONS
+.PP
+The following definitions are used throughout the rest of this
+document.
+.PD 0
+.TP
+.B blank
+A space or tab.
+.TP
+.B word
+A sequence of characters considered as a single unit by the shell.
+.TP
+.B name
+A
+.I word
+consisting only of alphanumeric characters and underscores, and beginning with an alphabetic character or an underscore.
+.TP
+.B control operator
+A
+.I token
+that performs a control function. It is one of the
+following symbols:
+.if t \fB|| && ; <newline>
+
+.SH SHELL GRAMMAR
+.SS Simple Commands
+A
+.I simple command
+is a sequence of
+.B blank
+-separated words that are terminated by a
+.I control operator
+. The first word specifies the command to be
+executed, and is passed as argument zero. The
+remaining words are passed as arguments to the
+invoked command.
+
+.Br
+The return value of a
+.I simple command
+is its exit status or 128+
+.I n
+if the command is terminated by signal
+.I n
+
+.SH Quoting
+.I Quoting
+is used to remove the special meaning of certain characters or
 words to the shell, such as operators or whitespace.
 There are two types of quoting: matched single quotes,
 and matched double quotes.
 
-.Ss Single Quotes
+.SS Single Quotes
 Enclosing characters in single quotes preserves the literal meaning of all
 the characters (except single quotes, making it impossible to put
 single-quotes in a single-quoted string).
 
-.Ss Double Quotes
+.SS Double Quotes
 Enclosing characters within double quotes preserves the literal
 meaning of all characters except dollarsign as they're used to signify
 the start of a variable or special parameters like ? and $.
 
-.Ss Aliases
+.SH Aliases
 An alias is a name and corresponding value set using the alias builtin command.
 Whenever a word is read, the shell
 checks the word to see if it matches an alias.
 If it does, it replaces it in the input stream with its value.
 For example, if there is an alias called
-.Dq put
+"put"
 with the value
 .Dq "echo -e" ,
 then the input:
