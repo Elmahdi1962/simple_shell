@@ -43,11 +43,14 @@ int main(int ac, char *av[], char *envp[])
 			add_to_history(Cmd_Line);
 			Cmd_List = parse_cmd_line(Cmd_Line);
 			execute_cmds_list(&Cmd_List, &Node_Exit_Code);
-			free_cmd_t(Cmd_List);
-			if (Cmd_Line != NULL)
+			free_cmd_t(&Cmd_List);
+			if ((File_Lines == NULL) && (Cmd_Line != NULL))
+			{
 				free(Cmd_Line);
+				Cmd_Line = NULL;
+			}
 		}
-		a += (!Is_Interactive ? 1 : 0);
+		a += (Is_Interactive ? 0 : 1);
 	}
 	clean_up_shell();
 	return (Node_Exit_Code);
@@ -76,6 +79,8 @@ void init_shell(int ac, char *av[], char *envp[])
 		/* TODO: Load first arg as a file */
 		fd = open(av[1], O_RDONLY);
 		File_Lines = read_all_lines(fd, &Cmd_Lines_Count);
+		if (fd >= 0)
+			close(fd);
 	}
 	else
 	{
@@ -133,9 +138,10 @@ void clean_up_shell(void)
 	save_history();
 	manage_aliases(MO_FREE);
 	manage_history(MO_FREE);
-	if (Cmd_Line != NULL)
+	if ((File_Lines == NULL) && (Cmd_Line != NULL))
 		free(Cmd_Line);
-	free_cmd_t(Cmd_List);
+	if (Cmd_List != NULL)
+		free_cmd_t(&Cmd_List);
 	if (File_Lines != NULL)
 		free_array(File_Lines, Cmd_Lines_Count);
 	if (Envp != NULL)

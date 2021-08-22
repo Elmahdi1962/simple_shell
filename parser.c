@@ -35,7 +35,7 @@ cmd_t *parse_cmd_line(char *line)
 	}
 	free_token_t(tokens);
 	if (proc_tbl->error == TRUE)
-		free_cmd_t(cmd_list), cmd_list = NULL;
+		free_cmd_t(&cmd_list);
 	free(proc_tbl);
 	free_array(alias_expansions, n);
 	return (cmd_list);

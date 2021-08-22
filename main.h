@@ -123,7 +123,7 @@ void process_tokens(token_t **tokens);
 /* ******** Cmd_t Helpers (cmd_t_helpers.c) ******** */
 
 cmd_t *new_cmd_node(void);
-void free_cmd_t(cmd_t *head);
+void free_cmd_t(cmd_t **head);
 void add_node_to_end(cmd_t **head, cmd_t **node);
 cmd_t *get_cmd_t_tail(cmd_t *head);
 

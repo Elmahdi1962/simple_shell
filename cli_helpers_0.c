@@ -39,12 +39,12 @@ cmd_t *get_next_command(cmd_t *cur, int exit_code)
 char **get_variables(char *str, int *vars_count)
 {
 	int i = 0, p = 0;
-	char **vars = NULL, *tmp;
+	char **vars = NULL, *tmp = NULL;
 
 	*vars_count = 0;
 	while ((str != NULL) && (*(str + i) != '\0'))
 	{
-		if (*(str + i) == '$')
+		if ((*(str + i) == '$') && (*(str + i + 1) != '\0'))
 		{
 			tmp = read_variable(str, i + 1);
 			if (tmp != NULL)

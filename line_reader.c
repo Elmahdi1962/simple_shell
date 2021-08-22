@@ -34,12 +34,8 @@ char *get_cmd_line(void)
 	while (!stop)
 	{
 		n = read(STDIN_FILENO, (void *)Buf, MAX_BUF_SIZE);
-		if (n < 0)
-		{
-			if (line != NULL)
-				free(line);
-			return (NULL);
-		}
+		if ((Buf[0] == '\n') || (n == 0))
+			break;
 		for (j = 0; (Buf[i + j] != '\n') && (j < n) && (i + j < MAX_BUF_SIZE); j++)
 			;
 		line = _realloc(line, sizeof(char) * len, sizeof(char) * (len + j));
@@ -53,10 +49,10 @@ char *get_cmd_line(void)
 			stop = (Buf[i] == '\n' ? TRUE : stop);
 			i = (i >= MAX_BUF_SIZE ? 0 : i);
 		}
-		stop = (n == 0 ? TRUE : stop);
+		stop = ((n < 0) ? TRUE : stop);
 	}
-	set_error(&error, quote_o, n, line, j), handle_ctrl_d(len);
-	line = _realloc(line, sizeof(char) * len, sizeof(char) * (len + 1));
+	set_error(&error, quote_o, n, line, j), handle_ctrl_d(!n && !len ? 0 : 1);
+	line = !len ? line : _realloc(line, sizeof(char) * len, sizeof(char) * (len + 1));
 	if (line != NULL)
 	{
 		if (error == TRUE)
@@ -103,6 +99,8 @@ void set_error(char *error, char quote_o, int n, char *str, int pos)
 	char *buf0, *buf1;
 	char ops_at_end = FALSE;
 
+	if (str == NULL)
+		return;
 	if (pos > 0)
 		ops_at_end = (str[pos - 1] == '|') || (str[pos - 1] == '&') ? TRUE : FALSE;
 
@@ -146,15 +144,18 @@ void print_prompt(void)
 		{
 			for (j = 0; j < n; j++)
 			{
+				continue;
 				if (str_eql("$?", *(vars + j)))
 					var_val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
 				else if (str_eql("$$", *(vars + j)))
 					var_val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
 				else
 					var_val = str_copy(get_env_var(*(vars + j) + 1));
-				ps1 = str_replace(ps1, *(vars + j), var_val, TRUE);
+				if (var_val != NULL)
+					ps1 = str_replace(ps1, *(vars + j), var_val, TRUE);
 			}
-			free(vars);
+			if (vars != NULL)
+				free(vars);
 		}
 		write(STDOUT_FILENO, ps1, str_len(ps1));
 		fflush(stdout);

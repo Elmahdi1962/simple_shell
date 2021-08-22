@@ -29,7 +29,7 @@ void manage_history(int op)
 		if (file_lines != NULL)
 		{
 			o = n - (n % HISTORY_SIZE);
-			for (i = 0; i < HISTORY_SIZE; i++)
+			for (i = 0; i < n % HISTORY_SIZE; i++)
 				add_to_history(*(file_lines + i + o));
 			free_array(file_lines, n);
 		}
@@ -76,7 +76,7 @@ void add_to_history(char *str)
 void save_history(void)
 {
 	int fd, i;
-	char *file_path;
+	char *file_path = NULL;
 
 	file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
 	fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT, 0777);
@@ -89,7 +89,8 @@ void save_history(void)
 		}
 		close(fd);
 	}
-	free(file_path);
+	if (file_path != NULL)
+		free(file_path);
 }
 
 /**

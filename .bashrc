@@ -7,7 +7,6 @@ if [[ ${#branch_test} > 0 ]]; then
 else
 	export PS1='\[\033]0;$TITLEPREFIX:$PWD\007\]\n\[\033[32m\]\u@PC \[\033[33m\]${PWD##*/}\[\033[36m\]\[\033[0m\]\n$ '
 fi
-export PS1="${PWD##*/}\n$ "
 #endregion
 
 #region Helper Functions

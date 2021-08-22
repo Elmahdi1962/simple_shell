@@ -50,6 +50,4 @@ alias -l='-a --classify'
 ls -l
 ```
 
-If you ask why someone would want to do such a thing I would say I wouldn't know. I guess some people just want to see the world burn.
-
-I recently made a simple shell in **C** with my partner Elmahdi Mamoun during my time at ALX. You can find the entire source code [here](https://github.com/Elmahdi1962/simple_shell) on GitHub. The shell performs some simple operations you would expect a shell to perform. It runs some built-in commands, performs variable expansions, executes programs and can read lines of commands from a text file. We learned so much whilst working on the project. Despite how much trouble it gave us, we believe the trouble we had to go through to make the shell program was completely worth it.
+I recently made a simple shell in **C** with my project partner Elmahdi Mamoun during my time at ALX. You can find the entire source code [here](https://github.com/Elmahdi1962/simple_shell) on GitHub. The shell performs some simple operations you would expect a shell to perform. It runs some built-in commands, performs variable expansions, executes programs and can read lines of commands from a text file. We learned so much whilst working on the project. Despite how much trouble it gave us, we believe the trouble we had to go through to make the shell program was completely worth it.

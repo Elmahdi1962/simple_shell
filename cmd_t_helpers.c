@@ -25,20 +25,20 @@ cmd_t *new_cmd_node()
  * free_cmd_t - Frees a cmd_t list
  * @head: The node at the beginning of the list
  */
-void free_cmd_t(cmd_t *head)
+void free_cmd_t(cmd_t **head)
 {
 	if (head != NULL)
 	{
-		if (head->next != NULL)
-			free_cmd_t(head->next);
-		if (head->command != NULL)
-			free(head->command);
-		head->command = NULL;
-		if (head->args != NULL)
-			free_array(head->args, head->args_count);
-		if (head != NULL)
-			free(head);
-		head = NULL;
+		if ((*head)->next != NULL)
+			free_cmd_t(&((*head)->next));
+		if ((*head)->command != NULL)
+			free((*head)->command);
+		(*head)->command = NULL;
+		if ((*head)->args != NULL)
+			free_array((*head)->args, (*head)->args_count);
+		if (*head != NULL)
+			free(*head);
+		*head = NULL;
 	}
 }
 
