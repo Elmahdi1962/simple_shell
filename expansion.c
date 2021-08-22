@@ -50,7 +50,7 @@ char *dissolve_tokens(char *str, char can_free)
 		}
 		else if (*(str + i) == '$')
 		{
-			if (((quote == '"') && (quote_o == TRUE)) || (quote_o == FALSE))
+			if (is_variable_expandible(str, i, quote, quote_o))
 				expand_variable(str, &i, &res, &j, &size);
 			else
 				*(res + j) = '$', j++, i++;

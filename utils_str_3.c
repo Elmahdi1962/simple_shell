@@ -64,7 +64,7 @@ char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
 {
 	char *res = str != NULL ? str_copy(str) : NULL;
 	int rep_len = str_len(rep_str), sub_len = str_len(sub_str);
-	int i = 0, j = 0, a = 0;
+	int i = 0, j = 0;
 
 	if ((res != NULL) && (sub_str != NULL) && (rep_str != NULL))
 	{
@@ -81,7 +81,7 @@ char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
 				if (j == sub_len)
 				{
 					/* make replacement */
-					res = rep_range(res, rep_str, a, i + rep_len);
+					res = rep_range(res, rep_str, i, i + rep_len);
 					i += (rep_len == sub_len ? rep_len : rep_len - sub_len);
 				}
 			}
@@ -90,9 +90,12 @@ char *str_replace(char *str, char *sub_str, char *rep_str, char can_free)
 	}
 	if (can_free)
 	{
-		free(str);
-		free(sub_str);
-		free(rep_str);
+		if (str != NULL)
+			free(str);
+		if (sub_str != NULL)
+			free(sub_str);
+		if (rep_str != NULL)
+			free(rep_str);
 	}
 	return (res);
 }

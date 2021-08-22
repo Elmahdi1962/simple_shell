@@ -30,45 +30,6 @@ cmd_t *get_next_command(cmd_t *cur, int exit_code)
 }
 
 /**
- * get_variables - Retrieves an array of variables from a string
- * @str: The source string
- * @vars_count: count of vars
- *
- * Return: The list of variables, otherwise NULL
- */
-char **get_variables(char *str, int *vars_count)
-{
-	int i = 0, p = 0;
-	char **vars = NULL, *tmp = NULL;
-
-	*vars_count = 0;
-	while ((str != NULL) && (*(str + i) != '\0'))
-	{
-		if ((*(str + i) == '$') && (*(str + i + 1) != '\0'))
-		{
-			tmp = read_variable(str, i + 1);
-			if (tmp != NULL)
-			{
-				vars = _realloc(vars, sizeof(void *) * p, sizeof(void *) * (p + 1));
-				*(vars + p) = str_cat(str_copy("$"), tmp, TRUE);
-				p++;
-				i += (str_len(tmp));
-			}
-			else
-			{
-				i++;
-			}
-		}
-		else
-		{
-			i++;
-		}
-	}
-	*vars_count = p;
-	return (vars);
-}
-
-/**
  * handle_ctrl_d - Handles Control+D key press
  * @len: The number of characters on the command line
  */

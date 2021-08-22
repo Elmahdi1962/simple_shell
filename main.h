@@ -87,7 +87,6 @@ void set_error(char *error, char quote_o, int n, char *str, int pos);
 void print_prompt(void);
 
 cmd_t *get_next_command(cmd_t *cur, int exit_code);
-char **get_variables(char *str, int *vars_count);
 void handle_ctrl_d(int len);
 /* ******** ---------------- ******** */
 
@@ -213,6 +212,7 @@ char is_digit(char c);
 char is_whitespace(char c);
 char is_letter(char c);
 char is_quote(char c);
+char is_variable_expandible(char *str, int pos, char quote, char quote_o);
 char is_tilde_expansion_char(char c);
 char is_built_in_cmd(cmd_t *cmd);
 char str_is_num(char *str);

@@ -128,9 +128,7 @@ void set_error(char *error, char quote_o, int n, char *str, int pos)
  */
 void print_prompt(void)
 {
-	char *ps1;
-	int j, n;
-	char **vars = NULL, *var_val = NULL;
+	char *ps1 = NULL;
 
 	if (*((char *)get_shell_prop(IS_INTERACTIVE_ID)) == TRUE)
 	{
@@ -139,26 +137,12 @@ void print_prompt(void)
 			ps1 = str_copy(Default_PS1);
 		else
 			ps1 = str_copy(ps1);
-		vars = get_variables(ps1, &n);
-		if (vars != NULL)
+		ps1 = dissolve_tokens(ps1, TRUE);
+		if (ps1 != NULL)
 		{
-			for (j = 0; j < n; j++)
-			{
-				continue;
-				if (str_eql("$?", *(vars + j)))
-					var_val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
-				else if (str_eql("$$", *(vars + j)))
-					var_val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
-				else
-					var_val = str_copy(get_env_var(*(vars + j) + 1));
-				if (var_val != NULL)
-					ps1 = str_replace(ps1, *(vars + j), var_val, TRUE);
-			}
-			if (vars != NULL)
-				free(vars);
+			write(STDOUT_FILENO, ps1, str_len(ps1));
+			fflush(stdout);
+			free(ps1);
 		}
-		write(STDOUT_FILENO, ps1, str_len(ps1));
-		fflush(stdout);
-		free(ps1);
 	}
 }

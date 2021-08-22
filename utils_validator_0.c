@@ -49,3 +49,27 @@ char is_quote(char c)
 {
 	return ((c == '\'' || c == '"') ? TRUE : FALSE);
 }
+
+/**
+ * is_variable_expandible - Checks if a variable in the string can be expanded
+ * @str: The source string
+ * @pos: The current position in the string
+ * @quote: The active quote character in the string
+ * @quote_o: The status of the quote character in the string
+ *
+ * Return: TRUE if the variable can be expanded, otherwise FALSE
+ */
+char is_variable_expandible(char *str, int pos, char quote, char quote_o)
+{
+	if (str == NULL)
+		return (FALSE);
+	if (((quote == '"') && (quote_o == TRUE)) || (quote_o == FALSE))
+	{
+		if ((*(str + pos + 1) == '$')
+			|| (*(str + pos + 1) == '?')
+			|| (*(str + pos + 1) == '_')
+			|| is_letter(*(str + pos + 1)))
+			return (TRUE);
+	}
+	return (FALSE);
+}

@@ -81,8 +81,10 @@ char *str_cat(char *left, char *right, char can_free)
 	}
 	if (can_free)
 	{
-		free(left);
-		free(right);
+		if (left != NULL)
+			free(left);
+		if (right != NULL)
+			free(right);
 	}
 	return (str);
 }
