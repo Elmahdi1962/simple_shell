@@ -43,7 +43,7 @@ token_t *process_alias_expansion(token_t **tokens)
 {
 	token_t *expanded_tokens = NULL;
 
-	if (tokens == NULL)
+	if ((tokens == NULL) || (*tokens == NULL))
 		return (NULL);
 	process_tokens(tokens);
 	expansion = _realloc(expansion, sizeof(char) * exp_sz,
@@ -56,7 +56,7 @@ token_t *process_alias_expansion(token_t **tokens)
 		expansion = NULL;
 		exp_sz = 0;
 	}
-	free_token_t(*tokens);
+	free_token_t(tokens);
 
 	free_array(expanded_aliases, n);
 	expanded_aliases = NULL;
@@ -76,7 +76,7 @@ void process_tokens(token_t **tokens)
 	token_t *cur_token = NULL, *sub_tokens = NULL, *prev_token = NULL;
 	char *alias_val = NULL, prev_char = 0;
 
-	if (tokens == NULL)
+	if ((tokens == NULL) || (*tokens == NULL))
 		return;
 	cur_token = *tokens;
 	while (cur_token != NULL)
@@ -96,7 +96,7 @@ void process_tokens(token_t **tokens)
 				sub_tokens = tokenize_command_string(alias_val);
 				prev_char = *(alias_val + str_len(alias_val) - 1);
 				process_tokens(&sub_tokens);
-				free_token_t(sub_tokens);
+				free_token_t(&sub_tokens);
 			}
 		}
 		else

@@ -12,7 +12,7 @@ token_t *tokenize_command_string(char *str)
 	char error = FALSE;
 	token_t *tokens = NULL;
 
-	while ((str != NULL) && (*(str + i) != '\0') && (error == FALSE))
+	while ((str != NULL) && (*(str + i) != '\0') && (*(str + i) != '#') && (error == FALSE))
 	{
 		if (*(str + i) == '#')
 		{
@@ -41,7 +41,7 @@ token_t *tokenize_command_string(char *str)
 	}
 	if (error)
 	{
-		free_token_t(tokens);
+		free_token_t(&tokens);
 		return (NULL);
 	}
 	return (tokens);
@@ -57,12 +57,12 @@ void skip_comment(char *str, int o, int *len_out)
 {
 	int i = 0;
 
-	if (*(str + o) == '#')
+	if ((str != NULL) && (*(str + o) == '#'))
 	{
 		while (*(str + o + i) != '\0')
 			i++;
 		if (len_out != NULL)
-			*len_out = i;
+			*len_out = i + 1;
 	}
 }
 

@@ -50,17 +50,17 @@ token_t *create_token(char *value, char type)
  * free_token_t - Frees a token_t list
  * @head: The node at the beginning of the list
  */
-void free_token_t(token_t *head)
+void free_token_t(token_t **head)
 {
 	if (head != NULL)
 	{
-		if (head->next != NULL)
-			free_token_t(head->next);
-		if (head->value != NULL)
-			free(head->value);
-		if (head != NULL)
-			free(head);
-		head = NULL;
+		if ((*head)->next != NULL)
+			free_token_t(&((*head)->next));
+		if ((*head)->value != NULL)
+			free((*head)->value);
+		if (*head != NULL)
+			free(*head);
+		*head = NULL;
 	}
 }
 

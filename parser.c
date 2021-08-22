@@ -33,7 +33,7 @@ cmd_t *parse_cmd_line(char *line)
 		proc_tbl->pos++;
 		proc_tbl->cur_token = (proc_tbl->cur_token)->next;
 	}
-	free_token_t(tokens);
+	free_token_t(&tokens);
 	if (proc_tbl->error == TRUE)
 		free_cmd_t(&cmd_list);
 	free(proc_tbl);

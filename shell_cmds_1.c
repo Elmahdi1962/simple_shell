@@ -60,10 +60,15 @@ int sc_setenv(int ac, char *av[])
 			return (EC_GENERAL_ERROR);
 		}
 	}
+	else if (ac < 2)
+	{
+		write(STDERR_FILENO, "setenv: Too few arguments.\n", 27);
+		return (EC_GENERAL_ERROR);
+	}
 	else
 	{
-		write(STDERR_FILENO, "setenv: usage: setenv VARIABLE VALUE\n", 37);
-		return (EC_INVALID_ARGS);
+		write(STDERR_FILENO, "setenv: Too many arguments.\n", 28);
+		return (EC_GENERAL_ERROR);
 	}
 }
 
@@ -91,9 +96,14 @@ int sc_unsetenv(int ac, char *av[])
 			return (EC_GENERAL_ERROR);
 		}
 	}
+	else if (ac < 1)
+	{
+		write(STDERR_FILENO, "unsetenv: Too few arguments.\n", 29);
+		return (EC_GENERAL_ERROR);
+	}
 	else
 	{
-		write(STDERR_FILENO, "unsetenv: usage: unsetenv VARIABLE\n", 35);
-		return (EC_INVALID_ARGS);
+		write(STDERR_FILENO, "unsetenv: Too many arguments.\n", 30);
+		return (EC_GENERAL_ERROR);
 	}
 }

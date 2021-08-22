@@ -129,7 +129,7 @@ cmd_t *get_cmd_t_tail(cmd_t *head);
 
 void add_token_to_end(token_t **head, token_t *tkn);
 token_t *create_token(char *value, char type);
-void free_token_t(token_t *head);
+void free_token_t(token_t **head);
 token_t *get_token_at_index(int idx, token_t **head);
 /* ******** ---------------- ******** */
 
