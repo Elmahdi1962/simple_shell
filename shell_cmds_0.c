@@ -31,6 +31,8 @@ int sc_cd(int ac, char *av[])
 			set_env_var("OLDPWD", pwd);
 			chdir(oldpwd_copy);
 			set_env_var("PWD", oldpwd_copy);
+			write(STDOUT_FILENO, oldpwd_copy, str_len(oldpwd_copy));
+			write(STDOUT_FILENO, "\n", 1);
 			free(oldpwd_copy);
 		} else
 		{
