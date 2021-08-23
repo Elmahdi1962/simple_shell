@@ -59,7 +59,6 @@ void manage_aliases(char op);
 void add_alias(char *name, char *value);
 char *get_alias_value(char *str);
 alias_t **get_aliases(int *len);
-void remove_alias(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** History Manager (history_manager.c) ******** */
@@ -153,15 +152,11 @@ char **copy_environment(char **env, int env_count);
 char **copy_arguments(cmd_t *node);
 /* ******** ---------------- ******** */
 
-char *resolve_path(char *cwd, char *path, char *error);
-
 /* ******** Built-In Commands (shell_cmds_#.c) ******** */
 
 int sc_alias(int ac, char *av[]);
 void print_alias(char *name, char *value);
 int sc_cd(int ac, char *av[]);
-void print_failed_dir_nav_error(char *path, char error);
-void change_to_old_pwd(char *pwd, char *old_pwd, char *error);
 int sc_env(int ac, char *av[]);
 int sc_exit(int ac, char *av[]);
 int sc_help(int ac, char *av[]);

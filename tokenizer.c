@@ -12,7 +12,8 @@ token_t *tokenize_command_string(char *str)
 	char error = FALSE;
 	token_t *tokens = NULL;
 
-	while ((str != NULL) && (*(str + i) != '\0') && (*(str + i) != '#') && (error == FALSE))
+	while (((str != NULL) && (*(str + i) != '\0')) &&
+		((*(str + i) != '#') && (error == FALSE)))
 	{
 		if (*(str + i) == '#')
 		{

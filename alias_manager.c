@@ -108,9 +108,3 @@ alias_t **get_aliases(int *len)
 	*len = Alias_Count;
 	return (Alias_List);
 }
-
-/* TODO: Implement an alias remover */
-void remove_alias(char *str)
-{
-	(void)str;
-}
