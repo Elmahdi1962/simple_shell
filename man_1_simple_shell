@@ -71,7 +71,14 @@ is its exit status or 128+
 if the command is terminated by signal
 .I n
 
-.SH Quoting
+.SH COMMENTS
+In a non-interactive shell or an interactive shell, a word beginning
+with a
+.B #
+causes that word and all remaining characters on that line to be ignored.
+Comments are on by default.
+
+.SH QUOTING
 .I Quoting
 is used to remove the special meaning of certain characters or
 words to the shell, such as operators or whitespace.
@@ -88,7 +95,7 @@ Enclosing characters within double quotes preserves the literal
 meaning of all characters except dollarsign as they're used to signify
 the start of a variable or special parameters like ? and $.
 
-.SH Aliases
+.SH ALIASES
 An alias is a name and corresponding value set using the alias builtin command.
 Whenever a word is read, the shell
 checks the word to see if it matches an alias.
@@ -110,48 +117,164 @@ commands.
 They can also be used to create lexically obscure code.
 This use is discouraged.
 
-."-------------------------------
-." Continue from here
+.SH SIGNALS
+When
+.B simple_shell
+is interactive, it catches and handles
+.B SIGINT
+(so that pressing Control+C does not kill an interactive shell).
 
-
-.SH Option
-Currently no options are supported
-
-.SH Comments
-
-
-.SH
-HISTORY
+.SH HISTORY
 On startup, the history is initialized from the file .simple_shell_history in the $HOME directory.
 This file is truncated to
 contain no more than 4096 lines of command strings. When the shell startsup,
 the first line number is set to  the number of lines in the .simple_shell_history file modulo 4096
 (the history size).
+ If the history file is unwritable, the history is not saved.
 
-.SH
-Shell Builtin Commands
-.SS
+.SH SHELL BUILTIN COMMANDS
+This section lists some built-in commands, which are built-in because
+they are needed to perform some operations which cannot be performed
+by a different process.
+.TP
+\fBalias\fP [\fIname\fP[=\fI'value'\fP] ...]
+Running
 .B alias
-[name[=value] ...]
-Running .B alias with no arguments prints the list of
-aliases in the form
-name='value'
+with no arguments prints the list of aliases in the form
+.I name=
+.I'value'
+. When arguments are supplied, an alias is defined for each
+.I name
+whose
+.I value
+is given. A trailing blank or control operator in
+.I value
+causes the next word to be checked for alias
+substitution when an alias is expanded. For each
+.I name
+in the argument list for which no
+.I value
+is supplied, the name and value of the alias is printed.
+.B Alias
+returns true unless a
+.I name
+is given for which no alias has been defined.
 
-.SH
-AUTHORS
+.TP
+\fBcd\fP [\fIdir\fP]
+Change the current directory to \fIdir\fP.
+If \fIdir\fP is not supplied, the value of the
+.SM
+.B HOME
+shell variable is the default.
+Any additional arguments following \fIdir\fP are ignored.
+An argument of
+.B \-
+switches
+.SM
+.B $OLDPWD
+with \fB$PWD\fP.
+If
+\fB\-\fP is the first argument, and the directory change is
+successful, the absolute pathname of the new working directory is
+written to the standard output.
+The return value is true if the directory was successfully changed;
+false otherwise.
+
+.TP
+.B env
+Prints all the environment variables in the shell.
+
+.TP
+\fBexit\fP [\fIstatus\fP]
+Cause the shell to exit
+with a status code of \fIstatus\fP.  If
+.I status
+is omitted, the exit status
+is that of the last command executed.
+
+.TP
+\fBhelp\fP [\fIBUILTIN\fP]
+Prints the help page of a builtin command \fIstatus\fP. If
+no arguments are provided, a short information about the
+program and built-in commands usage syntax
+are printed.
+If
+.I BUILTIN
+is not a built-in command or there are too many arguments, the
+return value is false and an error message is printed to the
+standard error output.
+
+.TP
+\fBhistory\fP
+Displays all the lines of commands that have
+executed by the shell. Returns false if an argument is
+provided and prints some error to the standard error output.
+
+.TP
+\fBsetenv\fP \fIVARIABLE\fP \fIVALUE\fP
+Sets the environment variable with the name \fIVARIABLE\fP
+to have the value \fIVALUE\fP
+If
+.I VARIABLE
+is not a valid variable or there are too many or insufficient
+arguments, the return value is false and an error message is
+printed to the standard error output.
+
+.TP
+\fBunsetenv\fP \fIVARIABLE\fP
+Removes an environment variable with the name
+\fIVARIABLE\fP. No error is thrown if \fIVARIABLE\fP
+does not exist. Returns false if an argument isn't
+provided or there are too many arguments.
+
+.SH ENVIRONMENT
+.TP
+HOME
+This environment variable functions as the default argument for
+the cd builtin.
+.TP
+PATH
+The default serch path for executables.
+.TP
+PS1
+The primary prompt string, which defaults to "$ ".
+.TP
+PWD
+The logical value of the current working directory. This is set by
+the \fBcd\fP command.
+.TP
+OLDPWD
+The previous logical value of the current working directory. This is set by
+the \fBcd\fP command.
+
+.SH FILES
+.PD 0
+.TP
+.I /bin/simple_shell
+The \fBsimple_shell\fP executable
+.TP
+.I $HOME/.simple_shell_history
+The \fBsimple_shell\fP history file
+.PD
+
+.SH AUTHORS
 Bezaleel Olakunori, ALX
-
+.br
 bezaleeloci@gmail.com
-
+.PP
 Elmahdi Mamoun, ALX
-
+.br
 mamounelmahdi1962@gmail.com
 
-.SH Reporting Bugs
+.SH SEE ALSO
+.PD 0
+.TP
+\fIsh\fP(1), \fIbash\fP(1), \fIksh\fP(1), \fIcsh\fP(1)
+.PD
+
+.SH BUG REPORTS
 Report
 .SB simple_shell
 bugs to <https://github.com/Elmahdi1962/simple_shell/issues>
 
-.SH SEE ALSO
-https://linux.die.net/man/1/sh
-https://linux.die.net/man/1/bash
