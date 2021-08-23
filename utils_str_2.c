@@ -136,14 +136,14 @@ void print_error(char *command_name, char *userinput, char *error_message)
 	_itoa(get_line_num(), line_number, 10);
 	number_len = str_len(line_number);
 
-	write(STDOUT_FILENO, shell_name, 14);
-	write(STDOUT_FILENO, line_number, number_len);
-	write(STDOUT_FILENO, ": ", 2);
-	write(STDOUT_FILENO, command_name, str_len(command_name));
-	write(STDOUT_FILENO, ": ", 2);
-	write(STDOUT_FILENO, error_message, str_len(error_message));
-	write(STDOUT_FILENO, userinput, str_len(userinput));
-	write(STDOUT_FILENO, "\n", 1);
+	write(STDERR_FILENO, shell_name, 14);
+	write(STDERR_FILENO, line_number, number_len);
+	write(STDERR_FILENO, ": ", 2);
+	write(STDERR_FILENO, command_name, str_len(command_name));
+	write(STDERR_FILENO, ": ", 2);
+	write(STDERR_FILENO, error_message, str_len(error_message));
+	write(STDERR_FILENO, userinput, str_len(userinput));
+	write(STDERR_FILENO, "\n", 1);
 }
 
 /**

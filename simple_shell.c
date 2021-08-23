@@ -77,7 +77,6 @@ void init_shell(int ac, char *av[], char *envp[])
 	}
 	if (ac == 2)
 	{
-		/* TODO: Load first arg as a file */
 		fd = open(av[1], O_RDONLY);
 		File_Lines = read_all_lines(fd, &Cmd_Lines_Count);
 		if (fd >= 0)
