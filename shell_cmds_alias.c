@@ -37,7 +37,7 @@ int sc_alias(int ac, char *av[])
 			}
 			else
 			{
-				return (EC_INVALID_ARGS);
+				exit_code = EC_GENERAL_ERROR;
 			}
 		}
 	}

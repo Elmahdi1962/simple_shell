@@ -130,7 +130,7 @@ int sc_help(int ac, char *av[])
 		{"unsetenv", help_unsetenv}
 	};
 
-	if (ac > 0)
+	if (ac == 1)
 	{
 		for (i = 0; i < 9; i++)
 		{
@@ -140,10 +140,19 @@ int sc_help(int ac, char *av[])
 				return (EC_SUCCESS);
 			}
 		}
+		write(STDERR_FILENO, "help: ", 6);
+		write(STDERR_FILENO, av[0], str_len(av[0]));
+		write(STDERR_FILENO, ": not a built-in command\n", 25);
+		return (EC_GENERAL_ERROR);
+	}
+	else if (ac > 1)
+	{
+		write(STDERR_FILENO, "help: Too many arguments.\n", 26);
+		return (EC_GENERAL_ERROR);
 	}
 	else
 	{
 		help_program();
+		return (EC_SUCCESS);
 	}
-	return (EC_SUCCESS);
 }

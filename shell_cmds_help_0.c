@@ -6,7 +6,7 @@
 void help_program(void)
 {
 	char *help_text[] = {
-		"ALX rash, version 1.0(1)-release (x86_64-pc-linux-gnu)\n",
+		"ALX simple_shell, version 1.0(1)-release (x86_64-pc-linux-gnu)\n",
 		"These shell commands are defined internally.  Type `help' to see this list.\n",
 		"Type `help name' to find out more about the command `name'.\n",
 		"Use `man -k' or `info' to find out more about commands not in this list.\n\n",
