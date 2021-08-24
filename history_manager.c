@@ -61,6 +61,8 @@ void add_to_history(char *str)
 {
 	int size = Is_Full ? HISTORY_SIZE : Line_Num;
 
+	if (str == NULL)
+		return;
 	Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
 		sizeof(void *) * (size + 1));
 	if (Is_Full)

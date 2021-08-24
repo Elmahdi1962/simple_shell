@@ -61,7 +61,7 @@ int sc_cd(int ac, char *av[])
 int sc_exit(int ac, char *av[])
 {
 	char *buf0, *buf1;
-	int status = *((int *)get_shell_prop(NODE_EXIT_CODE_ID));
+	int status = *((uchar_t *)get_shell_prop(NODE_EXIT_CODE_ID));
 
 	if (ac > 0)
 	{
@@ -125,6 +125,7 @@ int sc_help(int ac, char *av[])
 	cmd_help_t cmds_help[] = {
 		{"alias", help_alias},
 		{"cd", help_cd},
+		{"env", help_env},
 		{"exit", help_exit},
 		{"help", help_help},
 		{"history", help_history},

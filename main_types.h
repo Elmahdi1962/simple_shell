@@ -222,6 +222,7 @@ struct cmd_help
 	void (*run)(void);
 };
 
+typedef unsigned char uchar_t;
 typedef struct token token_t;
 typedef struct command_node cmd_t;
 typedef struct cmd_help cmd_help_t;

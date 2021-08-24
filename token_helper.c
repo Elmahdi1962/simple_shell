@@ -54,12 +54,14 @@ void free_token_t(token_t **head)
 {
 	if (head != NULL)
 	{
-		if ((*head)->next != NULL)
-			free_token_t(&((*head)->next));
-		if ((*head)->value != NULL)
-			free((*head)->value);
 		if (*head != NULL)
+		{
+			if ((*head)->next != NULL)
+				free_token_t(&((*head)->next));
+			if ((*head)->value != NULL)
+				free((*head)->value);
 			free(*head);
+		}
 		*head = NULL;
 	}
 }

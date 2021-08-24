@@ -35,8 +35,12 @@ cmd_t *parse_cmd_line(char *line)
 	}
 	free_token_t(&tokens);
 	if (proc_tbl->error == TRUE)
+	{
 		free_cmd_t(&cmd_list);
-	free(proc_tbl);
+		*((uchar_t *)get_shell_prop(NODE_EXIT_CODE_ID)) = EC_INVALID_ARGS;
+	}
+	if (proc_tbl != NULL)
+		free(proc_tbl);
 	free_array(alias_expansions, n);
 	return (cmd_list);
 }
@@ -65,17 +69,23 @@ void init_processing_table(proc_tbl_t **proc_tbl,
 void process_commands_separator(proc_tbl_t *proc_tbl)
 {
 	char *prog_name = *((char **)get_shell_prop(EXEC_NAME_ID));
+	char *line_num = NULL;
 	token_t *tmp_tkn = NULL;
 
 	tmp_tkn = get_token_at_index(proc_tbl->pos - 1, proc_tbl->tokens_list);
 	if ((tmp_tkn == NULL) || (tmp_tkn->type != TKN_WORD))
 	{
-		write(STDERR_FILENO, "-", 1);
+		line_num = long_to_str(get_line_num());
 		write(STDERR_FILENO, prog_name, str_len(prog_name));
-		write(STDERR_FILENO, ": syntax error near unexpected token `", 38);
+		write(STDERR_FILENO, ": ", 2);
+		if (line_num != NULL)
+			write(STDERR_FILENO, line_num, str_len(line_num));
+		write(STDERR_FILENO, ": Syntax error: \"", 17);
 		write(STDERR_FILENO, proc_tbl->cur_token->value,
 			str_len(proc_tbl->cur_token->value));
-		write(STDERR_FILENO, "'\n", 2);
+		write(STDERR_FILENO, "\" unexpected\n", 13);
+		if (line_num != NULL)
+			free(line_num);
 		proc_tbl->error = TRUE;
 	}
 	else
@@ -92,17 +102,24 @@ void process_commands_separator(proc_tbl_t *proc_tbl)
 void process_operator(proc_tbl_t *proc_tbl)
 {
 	char *prog_name = *((char **)get_shell_prop(EXEC_NAME_ID));
+	char *line_num = NULL;
 	token_t *tmp_tkn = NULL;
 
 	tmp_tkn = get_token_at_index(proc_tbl->pos - 1, proc_tbl->tokens_list);
 	if ((tmp_tkn == NULL) || (tmp_tkn->type != TKN_WORD))
 	{
-		write(STDERR_FILENO, "-", 1);
+		line_num = long_to_str(get_line_num());
 		write(STDERR_FILENO, prog_name, str_len(prog_name));
-		write(STDERR_FILENO, ": syntax error near unexpected token `", 38);
+		write(STDERR_FILENO, ": ", 2);
+		if (line_num != NULL)
+			write(STDERR_FILENO, line_num, str_len(line_num));
+		write(STDERR_FILENO, ": Syntax error: \"", 17);
 		write(STDERR_FILENO, proc_tbl->cur_token->value,
 			str_len(proc_tbl->cur_token->value));
-		write(STDERR_FILENO, "'\n", 2);
+		write(STDERR_FILENO, "\" unexpected\n", 13);
+		if (line_num != NULL)
+			free(line_num);
+		proc_tbl->error = TRUE;
 	}
 	else
 	{

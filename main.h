@@ -145,7 +145,7 @@ void free_array(char **list, int length);
 
 /* ******** Executors (executor.c) ******** */
 
-void execute_cmds_list(cmd_t **cmds_list, int *exit_code);
+void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code);
 int exec_built_in_cmd(cmd_t *node);
 int exec_program(cmd_t *node, char *program_path);
 char **copy_environment(char **env, int env_count);

@@ -9,7 +9,7 @@ static char *Exec_Name;
 /* The process ID of the current instance of this shell program */
 static int Shell_PID;
 /* The exit code of the last executed process in this shell program */
-static int Node_Exit_Code;
+static uchar_t Node_Exit_Code;
 /* Specifies the interactiveness of this shell program */
 static char Is_Interactive;
 /* The lines of the file passed to this shell program */

@@ -6,7 +6,7 @@
  * @cmds_list: The pointer to the list of commands to execute
  * @exit_code: The pointer to the exit code
  */
-void execute_cmds_list(cmd_t **cmds_list, int *exit_code)
+void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 {
 	char *buf0, *buf1, *buf2;
 	cmd_t *cur = *cmds_list;

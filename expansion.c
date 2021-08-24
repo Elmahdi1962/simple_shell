@@ -130,7 +130,7 @@ void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size)
 
 	var = read_variable(str, *i + 1);
 	if (str_eql("?", var))
-		val = long_to_str(*((int *)get_shell_prop(NODE_EXIT_CODE_ID)));
+		val = long_to_str(*((uchar_t *)get_shell_prop(NODE_EXIT_CODE_ID)));
 	else if (str_eql("$", var))
 		val = long_to_str(*((int *)get_shell_prop(SHELL_PID_ID)));
 	else if (var != NULL)

@@ -13,7 +13,7 @@ void handle_signal(int sig_num)
 	signal(SIGINT, handle_signal);
 	if (sig_num == SIGINT)
 	{
-		*((int *)get_shell_prop(NODE_EXIT_CODE_ID)) = EC_CONTROL_C_TERMINATION;
+		*((uchar_t *)get_shell_prop(NODE_EXIT_CODE_ID)) = EC_CONTROL_C_TERMINATION;
 		write(STDOUT_FILENO, "\n", 1);
 		print_prompt();
 	}

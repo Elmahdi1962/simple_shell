@@ -54,8 +54,11 @@ void free_array(char **arr, int length)
 	{
 		for (i = 0; (i < length) && (arr[i] != NULL); i++)
 		{
-			free(arr[i]);
-			arr[i] = NULL;
+			if (arr[i] != NULL)
+			{
+				free(arr[i]);
+				arr[i] = NULL;
+			}
 		}
 		if (arr != NULL)
 			free(arr);
