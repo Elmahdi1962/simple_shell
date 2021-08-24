@@ -1,4 +1,6 @@
-# Typing `ls -l *.c` In The Shell
+# Typing <b style="color: #34b53ce6">`ls -l *.c`</b> In The Shell
+
+<img src="./img-0.png"/>
 
 When you type a line of command in the shell, it has to be processed by the underlying shell program and some result is produced. The result could mean either a successful or an unsuccessful output. However as programmers, computer geeks or just people with knowledge about the computer, we know there's a lot more that goes on behind the scenes for that to happen. I would be explaining much of what happens behind the scenes in the best way that I currently can.
 
