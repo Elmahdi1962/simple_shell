@@ -61,18 +61,18 @@ int sc_setenv(int ac, char *av[])
 			write(STDERR_FILENO, "setenv: ", 8);
 			write(STDERR_FILENO, av[0], str_len(av[0]));
 			write(STDERR_FILENO, ": not a variable\n", 17);
-			return (EC_GENERAL_ERROR);
+			return (EC_INVALID_ARGS);
 		}
 	}
 	else if (ac < 2)
 	{
 		write(STDERR_FILENO, "setenv: Too few arguments.\n", 27);
-		return (EC_GENERAL_ERROR);
+		return (EC_INVALID_ARGS);
 	}
 	else
 	{
 		write(STDERR_FILENO, "setenv: Too many arguments.\n", 28);
-		return (EC_GENERAL_ERROR);
+		return (EC_INVALID_ARGS);
 	}
 }
 
