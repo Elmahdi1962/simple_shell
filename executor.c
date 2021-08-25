@@ -40,7 +40,8 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 				err_type ? 20 : 12);
 			if (buf1 != NULL)
 				free(buf1);
-			*exit_code = (err_type ? EC_CANNOT_EXECUTE : EC_COMMAND_NOT_FOUND);
+			*exit_code = EC_CANNOT_EXECUTE;
+			/* *exit_code = (err_type ? EC_CANNOT_EXECUTE : EC_COMMAND_NOT_FOUND); */
 		}
 		cur = get_next_command(cur, *exit_code);
 	}
