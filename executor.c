@@ -13,6 +13,7 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 
 	while (cur != NULL)
 	{
+		add_env_var("_", cur->command);
 		dissolve_cmd_parts(cur);
 		if (is_built_in_cmd(cur) == TRUE)
 		{
