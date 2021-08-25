@@ -9,16 +9,13 @@
  */
 int sc_cd(int ac, char *av[])
 {
-	size_t bufsize = 0;
-	char *pwd = NULL;
-	char *home = get_env_var("HOME"), *home_copy;
+	char *pwd = NULL, *home = get_env_var("HOME"), *home_copy;
 	char *oldpwd = get_env_var("OLDPWD"), *oldpwd_copy;
 
-	pwd = getcwd(pwd, bufsize);
+	pwd = getcwd(pwd, 0);
 	if (pwd == NULL)
 		return (errno);
-
-	if (ac <= 0 ||str_eql(av[0], "--"))
+	if (ac <= 0 || str_eql(av[0], "--"))
 	{
 		home_copy = str_copy(home);
 		set_env_var("OLDPWD", pwd);
@@ -44,9 +41,8 @@ int sc_cd(int ac, char *av[])
 			set_env_var("OLDPWD", pwd);
 			if (chdir(av[0]) == 0)
 			{
-				getcwd(pwd, bufsize);
-				set_env_var("PWD", pwd);
-				free(pwd);
+				getcwd(pwd, 0);
+				set_env_var("PWD", pwd), free(pwd);
 			} else
 			{
 				print_error("cd", av[0], "can't cd to ");
