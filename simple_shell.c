@@ -34,6 +34,7 @@ int main(int ac, char *av[], char *envp[])
 	int a = 0;
 
 	init_shell(ac, av, envp);
+	malloc(3);
 	while (a < Cmd_Lines_Count)
 	{
 		print_prompt();
