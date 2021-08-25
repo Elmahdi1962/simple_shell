@@ -36,7 +36,7 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 			write(STDERR_FILENO, ": ", 2);
 			write(STDERR_FILENO, cur->command, str_len(cur->command));
 			if (err_type)
-				write(STDERR_FILENO, ": Permission denied\n", 21);
+				write(STDERR_FILENO, ": Permission denied\n", 20);
 			else
 				write(STDERR_FILENO, ": not found\n", 12);
 			if (buf1 != NULL)
