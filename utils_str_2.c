@@ -8,13 +8,13 @@
  */
 char *long_to_str(long num)
 {
-	char *str;
+	char *str = NULL;
 	long rem = num;
 	char sign = rem < 0 ? -1 : 1;
 	char size = 20, j;
 
 	str = malloc(sizeof(char) * (size + 1));
-	if (str)
+	if (str != NULL)
 	{
 		*(str + size) = '\0';
 		mem_set(str, size, '0');
@@ -31,7 +31,12 @@ char *long_to_str(long num)
 		if (sign < 0)
 			*(str + j) = '-';
 		str = trim_start(str, '0', TRUE);
-		str = num == 0 ? str_cat("0", "", FALSE) : str;
+		if (num == 0)
+		{
+			if (str != NULL)
+				free(str);
+			return (str_copy("0"));
+		}
 	}
 	return (str);
 }

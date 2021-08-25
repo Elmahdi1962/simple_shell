@@ -14,7 +14,6 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 	while (cur != NULL)
 	{
 		dissolve_cmd_parts(cur);
-		add_env_var("_", cur->command);
 		if (is_built_in_cmd(cur) == TRUE)
 		{
 			*exit_code = exec_built_in_cmd(cur);

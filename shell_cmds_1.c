@@ -12,11 +12,14 @@ int sc_history(int ac, char *av[])
 	int i, j, max_width, width;
 	int hist_count;
 	char **history = get_history(&hist_count);
-	char *num;
+	char *num = NULL, *buf = NULL;
 
 	if (ac == 0)
 	{
-		max_width = str_len(long_to_str(hist_count));
+		buf = long_to_str(hist_count);
+		max_width = str_len(buf);
+		if (buf != NULL)
+			free(buf);
 		for (i = 0; i < hist_count; i++)
 		{
 			num = long_to_str(i);
@@ -29,7 +32,8 @@ int sc_history(int ac, char *av[])
 			write(STDOUT_FILENO, " ", 1);
 			write(STDOUT_FILENO, *(history + i), str_len(*(history + i)));
 			write(STDOUT_FILENO, "\n", 1);
-			free(num);
+			if (num != NULL)
+				free(num);
 		}
 	}
 	(void)av;

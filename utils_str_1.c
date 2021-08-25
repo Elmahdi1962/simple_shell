@@ -125,31 +125,35 @@ char *copy_range(char *str, int a, int b)
 */
 char **str_split(char *str, char c, int *len_out, char can_free)
 {
-	int i, j = 0, n = 0;
+	int i = 0, j = 0, o = 0, s = 0, n = 0;
 	char **strs = NULL;
 
 	if (str == NULL)
 		return (NULL);
 	for (i = 0; *(str + i) != '\0'; i++)
 	{
-		if (*(str + i) == c)
+		if (((*(str + i) == c))
+			|| ((*(str + i) != c) && (*(str + i + 1) == '\0')))
 		{
 			strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
-			*(strs + n) = copy_range(str, j, i - 1);
-			j = i + 1;
-			n++;
+			if (strs != NULL)
+			{
+				s = *(str + i) == c ? i - j : i - j + 1;
+				*(strs + n) = malloc(sizeof(char) * (s + 1));
+				if (*(strs + n) != NULL)
+				{
+					for (o = 0; o < s; o++)
+						*(*(strs + n) + o) = *(str + j + o);
+					*(*(strs + n) + o) = '\0';
+					j = i + 1;
+					n++;
+				}
+			}
 		}
 	}
-	if ((i > 0) && (*(str + i) != c))
-	{
-		strs = _realloc(strs, sizeof(void *) * n, sizeof(void *) * (n + 1));
-		*(strs + n) = copy_range(str, j, i - 1);
-		n++;
-	}
-
 	if (len_out != NULL)
 		*len_out = n;
-	if (can_free && str != NULL)
+	if (can_free)
 		free(str);
 	return (strs);
 }
