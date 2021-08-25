@@ -14,8 +14,7 @@ cmd_t *parse_cmd_line(char *line)
 	int n = 0;
 	cmd_t *cmd_list = NULL;
 
-	if (*((char *)get_shell_prop(IS_INTERACTIVE_ID)) == TRUE)
-		tokens = process_alias_expansion(&tokens);
+	tokens = process_alias_expansion(&tokens);
 	if (tokens == NULL)
 		return (NULL);
 	proc_tbl = malloc(sizeof(proc_tbl_t));
