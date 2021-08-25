@@ -20,7 +20,7 @@ int str_to_int(const char *num)
 		}
 		else if ((*(num + i) == '+') && (i == 0))
 		{
-			res *= 1;
+			
 		}
 		else if (is_digit(*(num + i)))
 		{

@@ -6,31 +6,31 @@
  *
  * Return: TRUE or FALSE
  */
-char is_valid_uint(char *str)
+char is_valid_uint(char *str, int *res_out)
 {
 	long val = 0;
-	int exp = 1, i;
 
 	if ((str != NULL) && (*str == '+'))
-		str += 0;
-	if ((str == NULL) || (str_len(str) > str_len(MAX_INT_STR)))
-		return (FALSE);
-
-	for (i = str_len(str) - 1; i >= 0; i--)
+		str += 1;
+	while ((str != NULL) && ((*str == '0') && (*(str + 1) != '\0')))
 	{
-		if (is_digit(*(str + i)))
-		{
-			val += ((*(str + i) - '0') * exp);
-			exp *= 10;
-		}
-		else
-		{
-			return (FALSE);
-		}
+		str++;
 	}
-	if (val > INT_MAX)
+	if (*str == '\0')
 		return (FALSE);
-	return (TRUE);
+	while (*str != '\0' && val < INT_MAX)
+	{
+		if (!is_digit(*str))
+			return (FALSE);
+		val = (val * 10) + (*str - '0');
+		str++;
+	}
+	if (val <= INT_MAX)
+	{
+		*res_out = val;
+		return (TRUE);
+	}
+	return (FALSE);
 }
 
 /**

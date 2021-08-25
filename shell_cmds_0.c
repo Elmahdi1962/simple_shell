@@ -14,9 +14,9 @@ int sc_exit(int ac, char *av[])
 
 	if (ac > 0)
 	{
-		if (is_valid_uint(av[0]))
+		if (is_valid_uint(av[0], &status))
 		{
-			status = str_to_int(av[0]);
+			/* status = str_to_int(av[0]); */
 		}
 		else
 		{
