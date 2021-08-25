@@ -18,7 +18,7 @@ int sc_cd(int ac, char *av[])
 	if (pwd == NULL)
 		return (errno);
 
-	if (ac <= 0)
+	if (ac <= 0 ||str_eql(av[0], "--"))
 	{
 		home_copy = str_copy(home);
 		set_env_var("OLDPWD", pwd);
