@@ -119,7 +119,7 @@ char is_variable(char *str)
 
 /**
  * is_exec_file - Checks if a file is executable
- * @fn: file path
+ * @fp: file path
  *
  * Return: True or False
  */

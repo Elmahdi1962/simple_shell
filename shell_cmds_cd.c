@@ -53,7 +53,7 @@ void switch_dirs(char *new_dir, char *pwd, int *status)
 	{
 		add_env_var("OLDPWD", pwd);
 		if (getcwd(buf0, PATH_MAX) != NULL)
-				add_env_var("PWD", buf0);
+			add_env_var("PWD", buf0);
 	}
 	else
 	{
