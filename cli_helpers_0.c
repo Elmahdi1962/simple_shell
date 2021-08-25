@@ -50,27 +50,34 @@ void handle_ctrl_d(int len)
  */
 char check_args(int ac, char *av[])
 {
-	if (ac > 2)
+	char *buf = NULL;
+
+	/* if (ac > 2) */
+	/* { */
+	/* 	write(STDERR_FILENO, "Usage: ", 7); */
+	/* 	write(STDERR_FILENO, av[0], str_len(av[0])); */
+	/* 	write(STDERR_FILENO, " [file]", 7); */
+	/* 	write(STDERR_FILENO, "\n", 1); */
+	/* 	exit(EC_INVALID_ARGS); */
+	/* } */
+	if (ac > 1)
 	{
-		write(STDERR_FILENO, "Usage: ", 7);
-		write(STDERR_FILENO, av[0], str_len(av[0]));
-		write(STDERR_FILENO, " [file]", 7);
-		write(STDERR_FILENO, "\n", 1);
-		exit(EC_INVALID_ARGS);
-	}
-	else if (ac == 2)
-	{
-		if (access(av[1], R_OK) >= 0)
+		if (access(av[1], R_OK | F_OK | X_OK) == 0)
 		{
 			return (TRUE);
 		}
 		else
 		{
+			buf = long_to_str(get_line_num());
 			write(STDERR_FILENO, av[0], str_len(av[0]));
 			write(STDERR_FILENO, ": ", 2);
+			write(STDERR_FILENO, buf, str_len(buf));
+			write(STDERR_FILENO, ": Can't open ", 13);
 			write(STDERR_FILENO, av[1], str_len(av[1]));
-			write(STDERR_FILENO, ": No such file\n", 15);
-			exit(EC_INVALID_ARGS);
+			write(STDERR_FILENO, "\n", 1);
+			if (buf != NULL)
+				free(buf);
+			exit(EC_COMMAND_NOT_FOUND);
 		}
 	}
 	return (FALSE);

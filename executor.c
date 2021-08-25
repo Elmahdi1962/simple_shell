@@ -83,16 +83,24 @@ int exec_built_in_cmd(cmd_t *node)
 int exec_program(cmd_t *node, char *program_path)
 {
 	int exit_stat = 0, rc;
-	int env_count = *(int *)get_shell_prop(ENVP_COUNT_ID);
-	char **env = *(char ***)get_shell_prop(ENVP_ID);
-	char **env_c = NULL, **arg_list_c = NULL;
+	int env_count = *((int *)get_shell_prop(ENVP_COUNT_ID));
+	char **env = *((char ***)get_shell_prop(ENVP_ID));
+	char **env_c = NULL, **arg_list_c = NULL, *buf0 = NULL, *buf1 = NULL;
 
 	env_c = copy_environment(env, env_count);
 	arg_list_c = copy_arguments(node);
 	rc = fork();
 	if (rc < 0)
 	{
-		write(STDERR_FILENO, "Failed to create process\n", 25);
+		buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
+		buf1 = long_to_str(get_line_num());
+		write(STDERR_FILENO, buf0, str_len(buf0));
+		write(STDERR_FILENO, ": ", 2);
+		write(STDERR_FILENO, buf1, str_len(buf1));
+		write(STDERR_FILENO, ": Failed to create process\n", 27);
+		if (buf1 != NULL)
+			free(buf1);
+		return (EC_CANNOT_EXECUTE);
 	}
 	else if (rc == 0)
 	{

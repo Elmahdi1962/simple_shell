@@ -87,7 +87,7 @@ void init_shell(int ac, char *av[], char *envp[])
 	}
 	Exec_Name = str_copy(av[0]);
 	Shell_PID = getpid();
-	Is_Interactive = (!isatty(STDIN_FILENO) || (ac == 2) ? FALSE : TRUE);
+	Is_Interactive = (!isatty(STDIN_FILENO) || (ac > 1) ? FALSE : TRUE);
 	signal(SIGINT, handle_signal);
 	Node_Exit_Code = 0;
 	manage_aliases(MO_INIT);
