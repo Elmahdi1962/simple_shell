@@ -35,11 +35,9 @@ char *dissolve_tokens(char *str, char can_free)
 	for (i = 0; *(str + i) != '\0';)
 	{
 		adjust_block(&res, j, &size, incr);
-		if ((str[i] == '~') && (i == 0))
-		{
-			expand_tilde(str, &i, &res, &j, &size);
-		}
-		else if (is_quote(*(str + i)))
+		/* if ((str[i] == '~') && (i == 0)) */
+		/* 	expand_tilde(str, &i, &res, &j, &size); */
+		if (is_quote(*(str + i)))
 		{
 			if (quote == FALSE)
 				quote = *(str + i), quote_o = TRUE, i++;
