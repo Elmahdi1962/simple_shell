@@ -60,7 +60,7 @@ int sc_cd(int ac, char *av[])
  */
 int sc_exit(int ac, char *av[])
 {
-	char *buf0, *buf1;
+	char *buf0 = NULL, *buf1 = NULL;
 	int status = *((uchar_t *)get_shell_prop(NODE_EXIT_CODE_ID));
 
 	if (ac > 0)

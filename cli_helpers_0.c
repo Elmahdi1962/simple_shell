@@ -52,14 +52,6 @@ char check_args(int ac, char *av[])
 {
 	char *buf = NULL;
 
-	/* if (ac > 2) */
-	/* { */
-	/* 	write(STDERR_FILENO, "Usage: ", 7); */
-	/* 	write(STDERR_FILENO, av[0], str_len(av[0])); */
-	/* 	write(STDERR_FILENO, " [file]", 7); */
-	/* 	write(STDERR_FILENO, "\n", 1); */
-	/* 	exit(EC_INVALID_ARGS); */
-	/* } */
 	if (ac > 1)
 	{
 		if (access(av[1], R_OK | F_OK | X_OK) == 0)
