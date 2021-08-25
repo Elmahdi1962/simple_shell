@@ -150,6 +150,7 @@ void print_error(char *command_name, char *userinput, char *error_message)
 	write(STDERR_FILENO, error_message, str_len(error_message));
 	write(STDERR_FILENO, userinput, str_len(userinput));
 	write(STDERR_FILENO, "\n", 1);
+	fflush(stderr);
 }
 
 /**
