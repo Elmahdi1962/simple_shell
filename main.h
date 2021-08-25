@@ -90,6 +90,7 @@ void print_prompt(void);
 cmd_t *get_next_command(cmd_t *cur, int exit_code);
 void handle_ctrl_d(int len);
 char check_args(int ac, char *av[]);
+char is_blank(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** CLI Parser (cli_parser.c) ******** */

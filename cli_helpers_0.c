@@ -75,3 +75,23 @@ char check_args(int ac, char *av[])
 	}
 	return (FALSE);
 }
+
+/**
+ * is_blank - Checks if the given string consists of whitespaces only
+ * @str: The string to check
+ *
+ * Return: TRUE if there are only whitespaces, otherwise NULL
+ */
+char is_blank(char *str)
+{
+	int i = 0, j = 0, len = str_len(str);
+
+	if ((str == NULL) || (len == 0))
+		return (TRUE);
+	for (i = 0; *(str + i) != '\0'; i++)
+	{
+		if (is_whitespace(*(str + i)))
+			j++;
+	}
+	return (j == len ? TRUE : FALSE);
+}
