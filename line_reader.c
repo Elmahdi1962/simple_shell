@@ -1,7 +1,10 @@
 #include "main.h"
 
+/* The maximum size of the buffer in get_cmd_line */
 static const short MAX_BUF_SIZE = 1024;
+/* The default prompt string shown */
 static const char Default_PS1[] = "($) ";
+/* The current index in the buffer of get_cmd_line */
 static int i;
 
 /**
@@ -130,21 +133,13 @@ void set_error(char *error, char quote_o, int n, char *str, int pos)
  */
 void print_prompt(void)
 {
-	char *ps1 = NULL;
-
+	/* char *ps1 = NULL; */
 	if (*((char *)get_shell_prop(IS_INTERACTIVE_ID)) == TRUE)
 	{
-		ps1 = get_env_var("PS1");
-		if (ps1 == NULL)
-			ps1 = str_copy(Default_PS1);
-		else
-			ps1 = str_copy(ps1);
-		ps1 = dissolve_tokens(ps1, TRUE);
-		if (ps1 != NULL)
-		{
-			write(STDOUT_FILENO, ps1, str_len(ps1));
-			fflush(stdout);
-			free(ps1);
-		}
+		/* ps1 = get_env_var("PS1"); */
+		/* ps1 = str_copy(Default_PS1); */
+		/* ps1 = dissolve_tokens(ps1, TRUE); */
+		write(STDOUT_FILENO, Default_PS1, str_len(Default_PS1));
+		fflush(stdout);
 	}
 }
