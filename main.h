@@ -78,15 +78,18 @@ void add_env_var(char *var, char *val);
 void remove_env_var(char *var);
 /* ******** ---------------- ******** */
 
-/* ******** CLI Helpers (cli_helpers_#.c) ******** */
+/* ******** Line Reader (line_reader.c) ******** */
 
 char *get_cmd_line(void);
 void check_chars(char *quote, char *quote_o, char current_char);
 void set_error(char *error, char quote_o, int n, char *str, int pos);
 void print_prompt(void);
+/* ******** ---------------- ******** */
+/* ******** CLI Helpers (cli_helpers_#.c) ******** */
 
 cmd_t *get_next_command(cmd_t *cur, int exit_code);
 void handle_ctrl_d(int len);
+char check_args(int ac, char *av[]);
 /* ******** ---------------- ******** */
 
 /* ******** CLI Parser (cli_parser.c) ******** */

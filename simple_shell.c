@@ -67,15 +67,7 @@ void init_shell(int ac, char *av[], char *envp[])
 {
 	int fd, i;
 
-	if (ac > 2)
-	{
-		write(STDERR_FILENO, "Usage: ", 7);
-		write(STDERR_FILENO, av[0], str_len(av[0]));
-		write(STDERR_FILENO, " [file]", 7);
-		write(STDERR_FILENO, "\n", 1);
-		exit(EC_INVALID_ARGS);
-	}
-	if (ac == 2)
+	if (check_args(ac, av))
 	{
 		fd = open(av[1], O_RDONLY);
 		File_Lines = read_all_lines(fd, &Cmd_Lines_Count);
