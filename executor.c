@@ -18,11 +18,11 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 		{
 			*exit_code = exec_built_in_cmd(cur);
 		}
-		else if (is_normal_program(cur, &buf2))
+		else if (is_system_command(cur->command, &buf2))
 		{
 			*exit_code = exec_program(cur, buf2);
-			if (buf2 != NULL)
-				free(buf2);
+			free(buf2);
+			buf2 = NULL;
 		}
 		else
 		{

@@ -74,3 +74,51 @@ char *search_path(char *command)
 	free_array(paths, length);
 	return (NULL);
 }
+
+/**
+ * is_system_command - Checks if a command is a system command
+ * @command: The command to check
+ * @abs_path: A pointer to the location of the resolved path
+ *
+ * Return: TRUE if the command can be found, otherwise FALSE
+ */
+char is_system_command(char *command, char **abs_path)
+{
+	char *tmp0 = NULL, *tmp1 = NULL, *path = NULL, **path_dirs = NULL;
+	struct stat path_stat;
+	int path_dirs_count = 0, i;
+
+	if (abs_path == NULL)
+		return (FALSE);
+	*abs_path = NULL;
+	if ((*command == '.') || (*command == '/'))
+	{
+		stat(command, &path_stat);
+		if ((access(command, R_OK | F_OK | X_OK) == 0)
+			&& (S_ISREG(path_stat.st_mode)))
+		{
+			*abs_path = str_copy(command);
+			return (TRUE);
+		}
+	}
+	else
+	{
+		if ((path = get_env_var("PATH")) && (path != NULL))
+		{
+			path_dirs = str_split(path, ':', &path_dirs_count, FALSE);
+			for (i = 0; i < path_dirs_count; i++)
+			{
+				tmp0 = str_cat(*(path_dirs + i), "/", FALSE);
+				tmp1 = str_cat(tmp0, command, FALSE), stat(tmp1, &path_stat);
+				if ((access(tmp1, R_OK | F_OK | X_OK) == 0) && (S_ISREG(path_stat.st_mode)))
+				{
+					free_array(path_dirs, path_dirs_count), *abs_path = tmp1, free(tmp0);
+					return (TRUE);
+				}
+				free(tmp0), free(tmp1), tmp0 = NULL, tmp1 = NULL;
+			}
+			free_array(path_dirs, path_dirs_count);
+		}
+	}
+	return (FALSE);
+}

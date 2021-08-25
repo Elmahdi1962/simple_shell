@@ -224,6 +224,7 @@ char is_alias_assignment(char *str, char **name_out, char **value_out);
 int is_regular_file(const char *path);
 char is_binary_file(char *fn);
 char is_normal_program(cmd_t *node, char **path_out);
+char is_system_command(char *command, char **abs_path);
 /* ******** ---------------- ******** */
 
 /* ******** DATA Validator (data_validators_#.c) ******** */
