@@ -1,57 +1,6 @@
 #include "main.h"
 
 /**
- * sc_cd - Changes the current working directory
- * @ac: arguments count
- * @av: array of arguments
- *
- * Return: The function's exit code
- */
-int sc_cd(int ac, char *av[])
-{
-	size_t bufsize = 1024;
-	char pwd[1024];
-	char *home = get_env_var("HOME"), *home_copy;
-	char *oldpwd = get_env_var("OLDPWD"), *oldpwd_copy;
-
-	getcwd(pwd, bufsize);
-	if (ac <= 0)
-	{
-		home_copy = str_copy(home);
-		set_env_var("OLDPWD", pwd);
-		chdir(home_copy);
-		set_env_var("PWD", home_copy);
-		free(home_copy);
-	}
-	else
-	{
-		if (str_eql(av[0], "-"))
-		{
-			oldpwd_copy = str_copy(oldpwd);
-			set_env_var("OLDPWD", pwd);
-			chdir(oldpwd_copy);
-			set_env_var("PWD", oldpwd_copy);
-			write(STDOUT_FILENO, oldpwd_copy, str_len(oldpwd_copy));
-			write(STDOUT_FILENO, "\n", 1);
-			free(oldpwd_copy);
-		} else
-		{
-			set_env_var("OLDPWD", pwd);
-			if (chdir(av[0]) == 0)
-			{
-				getcwd(pwd, bufsize);
-				set_env_var("PWD", pwd);
-			} else
-			{
-				print_error("cd", av[0], "can't cd to ");
-				return (errno > 9 ? errno / 10 : errno);
-			}
-		}
-	}
-	return (EC_SUCCESS);
-}
-
-/**
  * sc_exit - Exits the shell with an optional status code
  * @ac: The number of arguments
  * @av: The arguments

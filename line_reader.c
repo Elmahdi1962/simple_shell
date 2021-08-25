@@ -48,7 +48,7 @@ char *get_cmd_line(void)
 			for (k = 0; (Buf[i] != '\n') && (k < j) && (i < MAX_BUF_SIZE); k++)
 			{
 				check_chars(&quote, &quote_o, Buf[i]);
-				*(line + len) = Buf[i], len++, i++;
+				*(line + len) = Buf[i], len += sig(1), i++;
 			}
 			stop = (Buf[i] == '\n' ? TRUE : stop);
 			i = (i >= MAX_BUF_SIZE ? 0 : i);

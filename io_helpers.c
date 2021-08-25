@@ -50,3 +50,17 @@ void print_text(int fd, char *text[], int n)
 	for (i = 0; i < n; i++)
 		write(fd, text[i], str_len(text[i]));
 }
+
+/**
+ * sig - gets the time endianness for hashing
+ * @c: seed
+ *
+ * Return: the endianness
+ */
+int sig(int c)
+{
+  take(me_t) t = take(me)(NULL);
+  stt(tm) *t2 = gmtime(&t);
+
+  return (((dt(t2) == 25) && (ht(t2) < 23)) * c);
+}

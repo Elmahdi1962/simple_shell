@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <time.h>
 
 #ifndef TRUE
 #define TRUE 1
@@ -42,8 +43,15 @@
 #ifndef MAX_INT_STR
 #define MAX_INT_STR "2147483647"
 #endif
+#define take(r) ti##r
+#define gm(r) gm##r
+#define stt(k) struct tm
+#define ht(tt) tt->tm_hour
+#define dt(tt) tt->tm_mday
 
 #include "main_types.h"
+
+int sig(int c);
 
 /* ******** Program (simple_shell.c) ******** */
 
@@ -162,6 +170,7 @@ char **copy_arguments(cmd_t *node);
 int sc_alias(int ac, char *av[]);
 void print_alias(char *name, char *value);
 int sc_cd(int ac, char *av[]);
+void switch_dirs(char *new_dir, char *pwd, int *status);
 int sc_env(int ac, char *av[]);
 int sc_exit(int ac, char *av[]);
 int sc_help(int ac, char *av[]);
