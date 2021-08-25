@@ -38,7 +38,7 @@ int main(int ac, char *av[], char *envp[])
 	{
 		print_prompt();
 		Cmd_Line = (File_Lines == NULL ? get_cmd_line() : File_Lines[a]);
-		if (!is_blank(Cmd_Line))
+		if (str_len(Cmd_Line) > 0)
 		{
 			add_to_history(Cmd_Line);
 			Cmd_List = parse_cmd_line(Cmd_Line);
@@ -50,14 +50,6 @@ int main(int ac, char *av[], char *envp[])
 				free(Cmd_Line);
 				Cmd_Line = NULL;
 			}
-		}
-		else if (File_Lines != NULL)
-		{
-			write(STDERR_FILENO, av[0], str_len(av[0]));
-			write(STDERR_FILENO, ": ", 2);
-			write(STDERR_FILENO, "There must be one command per line\n", 35);
-			Node_Exit_Code = EC_INVALID_ARGS;
-			break;
 		}
 		a += (Is_Interactive ? 0 : 1);
 	}

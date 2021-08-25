@@ -9,7 +9,7 @@
  */
 char **read_all_lines(int fd, int *lines_out)
 {
-	int j, n, buf_size = 1 << 7;
+	int n = 0, buf_size = 1 << 7;
 	char *buf = NULL;
 	char *str = NULL;
 
@@ -20,12 +20,11 @@ char **read_all_lines(int fd, int *lines_out)
 		buf = malloc(sizeof(char) * (buf_size + 1));
 		if (buf != NULL)
 		{
-			while (1 && buf != NULL)
+			while (1 && (buf != NULL))
 			{
-				for (j = 0; j <= buf_size; j++)
-					buf[j] = 0;
+				mem_set(buf, buf_size, '\0');
 				n = read(fd, (void *)buf, buf_size);
-				if (n == 0)
+				if (n <= 0)
 					break;
 				buf[n] = '\0';
 				str = str_cat(str, buf, TRUE);

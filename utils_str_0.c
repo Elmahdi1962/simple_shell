@@ -56,7 +56,7 @@ void mem_set(char *str, int n, char c)
 {
 	int i;
 
-	for (i = 0; str != NULL && i < n; i++)
+	for (i = 0; (str != NULL) && (i < n); i++)
 		*(str + i) = c;
 }
 
