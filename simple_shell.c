@@ -45,11 +45,11 @@ int main(int ac, char *av[], char *envp[])
 			execute_cmds_list(&Cmd_List, &Node_Exit_Code);
 			if (Cmd_List != NULL)
 				free_cmd_t(&Cmd_List);
-			if ((File_Lines == NULL) && (Cmd_Line != NULL))
-			{
-				free(Cmd_Line);
-				Cmd_Line = NULL;
-			}
+		}
+		if ((File_Lines == NULL) && (Cmd_Line != NULL))
+		{
+			free(Cmd_Line);
+			Cmd_Line = NULL;
 		}
 		a += (Is_Interactive ? 0 : 1);
 	}
