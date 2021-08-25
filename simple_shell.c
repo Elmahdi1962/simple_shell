@@ -38,14 +38,11 @@ int main(int ac, char *av[], char *envp[])
 	{
 		print_prompt();
 		Cmd_Line = (File_Lines == NULL ? get_cmd_line() : File_Lines[a]);
-		/* if (!is_blank(Cmd_Line)) */
-		/* { */
 		add_to_history(Cmd_Line);
 		Cmd_List = parse_cmd_line(Cmd_Line);
 		execute_cmds_list(&Cmd_List, &Node_Exit_Code);
 		if (Cmd_List != NULL)
 			free_cmd_t(&Cmd_List);
-		/* } */
 		if ((File_Lines == NULL) && (Cmd_Line != NULL))
 		{
 			free(Cmd_Line);
