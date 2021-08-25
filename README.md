@@ -49,6 +49,8 @@ Install GCC on your system.
 Load the bash script into your BASH terminal using `source .bashrc`. This would enable the following functions to be used:
 
 1. `build` - Builds the program
-2. `run` - Runs the built version of the program
-3. `install` - Installs the built version of the program
-4. `viewman` - Opens the man page for the program
+2. `build_dbg` - Creates a debugging build of the program
+3. `run` - Runs the built version of the program
+4. `install` - Installs the built version of the program
+5. `val` - Launches the program with **Valgrind** (should be used after **build_dbg**)
+6. `viewman` - Opens the man page for the program

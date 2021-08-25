@@ -14,10 +14,15 @@ fi
 SHELL_NAME="simple_shell"
 
 build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o $SHELL_NAME; }
+build_dbg () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g -ggdb3 *.c -o $SHELL_NAME; }
 run () { ./$SHELL_NAME; }
-install () { mv ./$SHELL_NAME /usr/bin; tar -czvf $SHELL_NAME.1.gz man_1_simple_shell; mv ./$SHELL_NAME.1.gz /usr/share/man/man1/$SHELL_NAME.1.gz; }
+install () {
+	mv ./$SHELL_NAME /usr/bin;
+	tar -czvf $SHELL_NAME.1.gz man_1_simple_shell;
+	mv ./$SHELL_NAME.1.gz /usr/share/man/man1/$SHELL_NAME.1.gz;
+}
 viewman () { man ./man_1_simple_shell; }
-val () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g -ggdb3 *.c -o $SHELL_NAME && valgrind -s --leak-check=full --track-origins=yes --show-leak-kinds=all ./$SHELL_NAME; }
+val () { valgrind -s --leak-check=full --track-origins=yes --show-leak-kinds=all ./$SHELL_NAME; }
 
 #endregion
 
