@@ -21,8 +21,7 @@ int sc_cd(int ac, char *av[])
 		set_env_var("OLDPWD", pwd);
 		chdir(home_copy);
 		set_env_var("PWD", home_copy);
-		free(home_copy);
-		free(pwd);
+		free(home_copy), free(pwd);
 	}
 	else
 	{
@@ -34,8 +33,7 @@ int sc_cd(int ac, char *av[])
 			set_env_var("PWD", oldpwd_copy);
 			write(STDOUT_FILENO, oldpwd_copy, str_len(oldpwd_copy));
 			write(STDOUT_FILENO, "\n", 1);
-			free(oldpwd_copy);
-			free(pwd);
+			free(oldpwd_copy), free(pwd);
 		} else
 		{
 			set_env_var("OLDPWD", pwd);
@@ -45,8 +43,7 @@ int sc_cd(int ac, char *av[])
 				set_env_var("PWD", pwd), free(pwd);
 			} else
 			{
-				print_error("cd", av[0], "can't cd to ");
-				free(pwd);
+				print_error("cd", av[0], "can't cd to "), free(pwd);
 				return (errno > 9 ? errno / 10 : errno);
 			}
 		}
