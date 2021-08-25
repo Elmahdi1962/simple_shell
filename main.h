@@ -5,6 +5,7 @@
 #include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -224,6 +225,8 @@ char is_alias_assignment(char *str, char **name_out, char **value_out);
 int is_regular_file(const char *path);
 char is_binary_file(char *fn);
 char is_normal_program(cmd_t *node, char **path_out);
+char is_system_command(char *command, char **abs_path);
+char is_valid_uint(char *str);
 /* ******** ---------------- ******** */
 
 /* ******** DATA Validator (data_validators_#.c) ******** */

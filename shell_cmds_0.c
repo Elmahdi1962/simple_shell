@@ -65,7 +65,7 @@ int sc_exit(int ac, char *av[])
 
 	if (ac > 0)
 	{
-		if (str_is_num(av[0]) && (*av[0] != '-') && (*av[0] != '+'))
+		if (is_valid_uint(av[0]))
 		{
 			status = str_to_int(av[0]);
 		}
@@ -80,7 +80,8 @@ int sc_exit(int ac, char *av[])
 			write(STDERR_FILENO, "Illegal number: ", 16);
 			write(STDERR_FILENO, av[0], str_len(av[0]));
 			write(STDERR_FILENO, "\n", 1);
-			free(buf1);
+			if (buf1 != NULL)
+				free(buf1);
 			return (EC_INVALID_ARGS);
 		}
 	}

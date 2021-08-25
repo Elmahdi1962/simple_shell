@@ -61,6 +61,7 @@ char is_built_in_cmd(cmd_t *node)
 /**
  * is_binary_file - checks if a file is a binary file
  * @fn: file file name
+ * 
  * Return: True or False
  */
 char is_binary_file(char *fn)
