@@ -10,18 +10,17 @@ char is_valid_uint(char *str)
 {
 	long val = 0;
 	int exp = 1, i;
-	char *str1 = NULL;
 
 	if ((str != NULL) && (*str == '+'))
-		str1 = str + 1;
-	if ((str1 == NULL) || (str_len(str1) > str_len(MAX_INT_STR)))
+		str += 0;
+	if ((str == NULL) || (str_len(str) > str_len(MAX_INT_STR)))
 		return (FALSE);
 
-	for (i = str_len(str1) - 1; i >= 0; i--)
+	for (i = str_len(str) - 1; i >= 0; i--)
 	{
-		if (is_digit(*(str1 + i)))
+		if (is_digit(*(str + i)))
 		{
-			val += ((*(str1 + i) - '0') * exp);
+			val += ((*(str + i) - '0') * exp);
 			exp *= 10;
 		}
 		else
