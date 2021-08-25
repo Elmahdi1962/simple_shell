@@ -129,14 +129,15 @@ char *strs_join(char **arr, int n, char c, char can_free)
  */
 void print_error(char *command_name, char *userinput, char *error_message)
 {
-	char *shell_name = "simple_shell: ";
+	char *shell_name = *((char **)get_shell_prop(EXEC_NAME_ID));
 	char line_number[5];
 	int number_len;
 
 	_itoa(get_line_num(), line_number, 10);
 	number_len = str_len(line_number);
 
-	write(STDERR_FILENO, shell_name, 14);
+	write(STDERR_FILENO, shell_name, str_len(shell_name));
+	write(STDERR_FILENO, ": ", 2);
 	write(STDERR_FILENO, line_number, number_len);
 	write(STDERR_FILENO, ": ", 2);
 	write(STDERR_FILENO, command_name, str_len(command_name));
