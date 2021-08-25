@@ -54,7 +54,7 @@ char check_args(int ac, char *av[])
 
 	if (ac > 1)
 	{
-		if ((access(av[1], R_OK | F_OK | X_OK) == 0))
+		if ((access(av[1], R_OK) == 0))
 		{
 			return (TRUE);
 		}

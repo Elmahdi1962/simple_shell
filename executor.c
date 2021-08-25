@@ -10,6 +10,7 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 {
 	char *buf0 = NULL, *buf1 = NULL, *buf2 = NULL, err_type = 0;
 	cmd_t *cur = *cmds_list;
+	struct stat path_stat;
 
 	while (cur != NULL)
 	{
@@ -28,17 +29,15 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 		{
 			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
 			buf1 = long_to_str(get_line_num());
-			err_type = (access(cur->command, R_OK | F_OK | X_OK) == -1)
-				&& ((*(cur->command) == '.') || (*(cur->command) == '/'));
+			err_type = (access(cur->command, X_OK) == -1)
+				&& (stat(cur->command, &path_stat) == 0);
 			write(STDERR_FILENO, buf0, str_len(buf0));
 			write(STDERR_FILENO, ": ", 2);
 			write(STDERR_FILENO, buf1, str_len(buf1));
 			write(STDERR_FILENO, ": ", 2);
 			write(STDERR_FILENO, cur->command, str_len(cur->command));
-			if (err_type)
-				write(STDERR_FILENO, ": Permission denied\n", 20);
-			else
-				write(STDERR_FILENO, ": not found\n", 12);
+			write(STDERR_FILENO, err_type ? ": Permission denied\n" : ": not found\n",
+				err_type ? 20 : 12);
 			if (buf1 != NULL)
 				free(buf1);
 			*exit_code = (err_type ? EC_CANNOT_EXECUTE : EC_COMMAND_NOT_FOUND);
