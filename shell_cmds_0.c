@@ -44,7 +44,7 @@ int sc_cd(int ac, char *av[])
 			} else
 			{
 				print_error("cd", av[0], "can't cd to ");
-				return (errno);
+				return (errno > 9 ? errno / 10 : errno);
 			}
 		}
 	}
