@@ -9,12 +9,12 @@
  */
 int sc_cd(int ac, char *av[])
 {
-	size_t bufsize = 1024;
-	char pwd[1024];
+	
+	char pwd;
 	char *home = get_env_var("HOME"), *home_copy;
 	char *oldpwd = get_env_var("OLDPWD"), *oldpwd_copy;
 
-	getcwd(pwd, bufsize);
+	pwd = getcwd();
 	if (pwd == NULL)
 		return (errno);
 
