@@ -15,6 +15,7 @@ void handle_signal(int sig_num)
 	{
 		*((uchar_t *)get_shell_prop(NODE_EXIT_CODE_ID)) = EC_CONTROL_C_TERMINATION;
 		write(STDOUT_FILENO, "\n", 1);
+		fflush(stdout);
 		print_prompt();
 	}
 }

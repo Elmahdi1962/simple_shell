@@ -14,7 +14,7 @@ fi
 SHELL_NAME="simple_shell"
 
 build () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o $SHELL_NAME; }
-build_dbg () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g -ggdb3 *.c -o $SHELL_NAME; }
+build_dbg () { gcc -Wall -Werror -Wextra -pedantic -std=gnu89 -g -ggdb3 *.c -o $SHELL_NAME.dbg; }
 run () { ./$SHELL_NAME; }
 install () {
 	mv ./$SHELL_NAME /usr/bin;
@@ -22,7 +22,7 @@ install () {
 	mv ./$SHELL_NAME.1.gz /usr/share/man/man1/$SHELL_NAME.1.gz;
 }
 viewman () { man ./man_1_simple_shell; }
-val () { valgrind -s --leak-check=full --track-origins=yes --show-leak-kinds=all ./$SHELL_NAME; }
+val () { valgrind -s --leak-check=full --track-origins=yes --show-leak-kinds=all ./$SHELL_NAME.dbg; }
 
 #endregion
 
