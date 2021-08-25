@@ -14,28 +14,26 @@ int sc_history(int ac, char *av[])
 	char **history = get_history(&hist_count);
 	char *num = NULL, *buf = NULL;
 
-	if (ac == 0)
+	buf = long_to_str(hist_count);
+	max_width = str_len(buf);
+	if (buf != NULL)
+		free(buf);
+	for (i = 0; i < hist_count; i++)
 	{
-		buf = long_to_str(hist_count);
-		max_width = str_len(buf);
-		if (buf != NULL)
-			free(buf);
-		for (i = 0; i < hist_count; i++)
-		{
-			num = long_to_str(i);
-			width = str_len(num);
+		num = long_to_str(i);
+		width = str_len(num);
 
+		write(STDOUT_FILENO, " ", 1);
+		for (j = 0; j < (max_width - width); j++)
 			write(STDOUT_FILENO, " ", 1);
-			for (j = 0; j < (max_width - width); j++)
-				write(STDOUT_FILENO, " ", 1);
-			write(STDOUT_FILENO, num, width);
-			write(STDOUT_FILENO, " ", 1);
-			write(STDOUT_FILENO, *(history + i), str_len(*(history + i)));
-			write(STDOUT_FILENO, "\n", 1);
-			if (num != NULL)
-				free(num);
-		}
+		write(STDOUT_FILENO, num, width);
+		write(STDOUT_FILENO, " ", 1);
+		write(STDOUT_FILENO, *(history + i), str_len(*(history + i)));
+		write(STDOUT_FILENO, "\n", 1);
+		if (num != NULL)
+			free(num);
 	}
+	(void)ac;
 	(void)av;
 	return (EC_SUCCESS);
 }
@@ -49,7 +47,9 @@ int sc_history(int ac, char *av[])
  */
 int sc_setenv(int ac, char *av[])
 {
-	if (ac == 2)
+	char *buf0 = NULL, *buf1 = NULL;
+
+	if (ac > 1)
 	{
 		if (is_variable(av[0]))
 		{
@@ -58,20 +58,29 @@ int sc_setenv(int ac, char *av[])
 		}
 		else
 		{
+			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
+			buf1 = long_to_str(get_line_num());
+			write(STDERR_FILENO, buf0, str_len(buf0));
+			write(STDERR_FILENO, ": ", 2);
+			write(STDERR_FILENO, buf1, str_len(buf1));
 			write(STDERR_FILENO, "setenv: ", 8);
 			write(STDERR_FILENO, av[0], str_len(av[0]));
 			write(STDERR_FILENO, ": not a variable\n", 17);
+			if (buf1 != NULL)
+				free(buf1);
 			return (EC_INVALID_ARGS);
 		}
 	}
-	else if (ac < 2)
-	{
-		write(STDERR_FILENO, "setenv: Too few arguments.\n", 27);
-		return (EC_INVALID_ARGS);
-	}
 	else
 	{
-		write(STDERR_FILENO, "setenv: Too many arguments.\n", 28);
+		buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
+		buf1 = long_to_str(get_line_num());
+		write(STDERR_FILENO, buf0, str_len(buf0));
+		write(STDERR_FILENO, ": ", 2);
+		write(STDERR_FILENO, buf1, str_len(buf1));
+		write(STDERR_FILENO, ": setenv: Too few arguments.\n", 29);
+		if (buf1 != NULL)
+			free(buf1);
 		return (EC_INVALID_ARGS);
 	}
 }
@@ -85,7 +94,9 @@ int sc_setenv(int ac, char *av[])
  */
 int sc_unsetenv(int ac, char *av[])
 {
-	if (ac == 1)
+	char *buf0 = NULL, *buf1 = NULL;
+
+	if (ac > 0)
 	{
 		if (get_env_var(av[0]) != NULL)
 		{
@@ -94,20 +105,29 @@ int sc_unsetenv(int ac, char *av[])
 		}
 		else
 		{
-			write(STDERR_FILENO, "unsetenv: ", 10);
+			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
+			buf1 = long_to_str(get_line_num());
+			write(STDERR_FILENO, buf0, str_len(buf0));
+			write(STDERR_FILENO, ": ", 2);
+			write(STDERR_FILENO, buf1, str_len(buf1));
+			write(STDERR_FILENO, ": unsetenv: ", 12);
 			write(STDERR_FILENO, av[0], str_len(av[0]));
-			write(STDERR_FILENO, " not found\n", 11);
+			write(STDERR_FILENO, ": not found\n", 12);
+			if (buf1 != NULL)
+				free(buf1);
 			return (EC_GENERAL_ERROR);
 		}
 	}
-	else if (ac < 1)
-	{
-		write(STDERR_FILENO, "unsetenv: Too few arguments.\n", 29);
-		return (EC_GENERAL_ERROR);
-	}
 	else
 	{
-		write(STDERR_FILENO, "unsetenv: Too many arguments.\n", 30);
-		return (EC_GENERAL_ERROR);
+		buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
+		buf1 = long_to_str(get_line_num());
+		write(STDERR_FILENO, buf0, str_len(buf0));
+		write(STDERR_FILENO, ": ", 2);
+		write(STDERR_FILENO, buf1, str_len(buf1));
+		write(STDERR_FILENO, ": unsetenv: Too few arguments.\n", 31);
+		if (buf1 != NULL)
+			free(buf1);
+		return (EC_INVALID_ARGS);
 	}
 }
