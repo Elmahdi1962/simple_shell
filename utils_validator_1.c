@@ -71,12 +71,10 @@ char is_binary_file(char *fn)
 
 	if (fd == -1)
 	{
-		perror("couldn't open the file in is_binary_file\n");
 		return (-1);
 	}
 	if (read(fd, buf, n) == -1)
 	{
-		perror("couldn't read the file in is_binary_file\n");
 		close(fd);
 		return (-1);
 	}
