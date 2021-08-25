@@ -29,7 +29,7 @@ int sc_cd(int ac, char *av[])
 		}
 		else
 		{
-			set_env_var("PWD", pwd), set_env_var("OLDPWD", pwd);
+			add_env_var("PWD", pwd), add_env_var("OLDPWD", pwd);
 		}
 	}
 	else
@@ -51,9 +51,9 @@ void switch_dirs(char *new_dir, char *pwd, int *status)
 
 	if ((new_dir != NULL) && (chdir(new_dir) == 0))
 	{
-		set_env_var("OLDPWD", pwd);
+		add_env_var("OLDPWD", pwd);
 		if (getcwd(buf0, PATH_MAX) != NULL)
-				set_env_var("PWD", buf0);
+				add_env_var("PWD", buf0);
 	}
 	else
 	{
