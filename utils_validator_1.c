@@ -124,7 +124,7 @@ char is_variable(char *str)
  */
 char is_exec_file(char *fp)
 {
-	if (access(fp, R_OK | F_OK | X_OK) == 0)
+	if (access(fp, F_OK | R_OK | X_OK) == 0)
 		return (TRUE);
 	return (FALSE);
 }
