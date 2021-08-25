@@ -65,7 +65,7 @@ int sc_exit(int ac, char *av[])
 
 	if (ac > 0)
 	{
-		if (str_is_num(av[0]) && (*av[0] != '-') && (*av[0] != '+'))
+		if (is_valid_uint(av[0]))
 		{
 			status = str_to_int(av[0]);
 		}
