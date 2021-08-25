@@ -9,22 +9,15 @@
 char *check_path(char *str)
 {
 	char *file_path = str_copy(str), *full_path = NULL;
-	int fd;
 
 	if (*str == '.' || *str == '/')
 	{
-		fd = open(file_path, O_RDONLY);
-		if (fd >= 0)
+		if (is_exec_file(file_path) && is_regular_file(file_path))
 		{
-			close(fd);
-
-			if (is_exec_file(file_path) && is_regular_file(file_path))
-			{
-				return (file_path);
-			}
-			free(file_path);
-			return (NULL);
+			return (file_path);
 		}
+		printf("file not exec");
+		free(file_path);
 		return (NULL);
 	}
 

@@ -119,18 +119,14 @@ char is_variable(char *str)
 }
 
 /**
- * is_exec_file - Checks if a file is a binary file
- * @fn: The name of the file
+ * is_exec_file - Checks if a file is executable
+ * @fn: file path
  *
  * Return: True or False
  */
-char is_exec_file(char *fn)
+char is_exec_file(char *fp)
 {
-	struct stat sb;
-
-	if (stat(fn, &sb) == 0 && sb.st_mode & S_IXUSR)
-	{
+	if (access(fp, R_OK | F_OK | X_OK) == 0)
 		return (TRUE);
-	}
 	return (FALSE);
 }
