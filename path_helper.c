@@ -104,14 +104,16 @@ char is_system_command(char *command, char **abs_path)
 	}
 	else
 	{
-		if ((path = get_env_var("PATH")) && (path != NULL))
+		path = get_env_var("PATH");
+		if (path && (path != NULL))
 		{
 			path_dirs = str_split(path, ':', &path_dirs_count, FALSE);
 			for (i = 0; i < path_dirs_count; i++)
 			{
 				tmp0 = str_cat(*(path_dirs + i), "/", FALSE);
 				tmp1 = str_cat(tmp0, command, FALSE), stat(tmp1, &path_stat);
-				if ((access(tmp1, R_OK | F_OK | X_OK) == 0) && (S_ISREG(path_stat.st_mode)))
+				if ((access(tmp1, R_OK | F_OK | X_OK) == 0) &&
+				(S_ISREG(path_stat.st_mode)))
 				{
 					free_array(path_dirs, path_dirs_count), *abs_path = tmp1, free(tmp0);
 					return (TRUE);

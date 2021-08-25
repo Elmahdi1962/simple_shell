@@ -25,6 +25,7 @@ int sc_cd(int ac, char *av[])
 			switch_dirs(oldpwd, pwd, &status);
 			getcwd(pwd, PATH_MAX);
 			write(STDOUT_FILENO, pwd, str_len(pwd));
+			write(STDOUT_FILENO, "\n", 1);
 		}
 		else
 		{
