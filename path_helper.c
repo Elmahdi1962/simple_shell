@@ -92,7 +92,7 @@ char is_system_command(char *command, char **abs_path)
 	if (abs_path == NULL)
 		return (FALSE);
 	*abs_path = NULL;
-	if ((*command == '.') || (*command == '/'))
+	if (contains_char(command, '/'))
 	{
 		stat(command, &path_stat);
 		if ((access(command, R_OK | F_OK | X_OK) == 0)

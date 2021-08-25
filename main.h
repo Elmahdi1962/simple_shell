@@ -227,6 +227,7 @@ char is_binary_file(char *fn);
 char is_normal_program(cmd_t *node, char **path_out);
 char is_system_command(char *command, char **abs_path);
 char is_valid_uint(char *str);
+char contains_char(char *str, char c);
 /* ******** ---------------- ******** */
 
 /* ******** DATA Validator (data_validators_#.c) ******** */

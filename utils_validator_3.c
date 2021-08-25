@@ -30,3 +30,24 @@ char is_valid_uint(char *str)
 		return (FALSE);
 	return (TRUE);
 }
+
+/**
+ * contains_char - Checks if the given string contains a given character
+ * @str: The string to check
+ * @c: The character to look for
+ *
+ * Return: TRUE if the character exists, otherwise FALSE
+ */
+char contains_char(char *str, char c)
+{
+	int i;
+
+	if (str == NULL)
+		return (FALSE);
+	for (i = 0; *(str + i) != '\0'; i++)
+	{
+		if (*(str + i) == c)
+			return (TRUE);
+	}
+	return (FALSE);
+}

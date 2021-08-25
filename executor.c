@@ -29,8 +29,8 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 		{
 			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
 			buf1 = long_to_str(get_line_num());
-			err_type = (access(cur->command, X_OK) == -1)
-				&& (stat(cur->command, &path_stat) == 0);
+			err_type = (stat(cur->command, &path_stat) == 0)
+				&& (S_ISDIR(path_stat.st_mode) || (access(cur->command, X_OK) == -1));
 			write(STDERR_FILENO, buf0, str_len(buf0));
 			write(STDERR_FILENO, ": ", 2);
 			write(STDERR_FILENO, buf1, str_len(buf1));
