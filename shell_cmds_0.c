@@ -15,7 +15,7 @@ int sc_cd(int ac, char *av[])
 	char *oldpwd = get_env_var("OLDPWD"), *oldpwd_copy;
 
 	getcwd(pwd, bufsize);
-	if (ac <= 0 || str_eql(av[0], "~"))
+	if (ac <= 0)
 	{
 		home_copy = str_copy(home);
 		set_env_var("OLDPWD", pwd);
