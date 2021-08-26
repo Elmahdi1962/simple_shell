@@ -164,7 +164,7 @@ char **copy_arguments(cmd_t *node);
 int sc_alias(int ac, char *av[]);
 void print_alias(char *name, char *value);
 int sc_cd(int ac, char *av[]);
-void switch_dirs(char *new_dir, char *pwd, int *status);
+char switch_dirs(char *new_dir, char *pwd, int *status);
 int sc_env(int ac, char *av[]);
 int sc_exit(int ac, char *av[]);
 int sc_help(int ac, char *av[]);
