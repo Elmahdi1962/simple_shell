@@ -63,7 +63,7 @@ int sc_setenv(int ac, char *av[])
 			write(STDERR_FILENO, buf0, str_len(buf0));
 			write(STDERR_FILENO, ": ", 2);
 			write(STDERR_FILENO, buf1, str_len(buf1));
-			write(STDERR_FILENO, "setenv: ", 8);
+			write(STDERR_FILENO, ": setenv: ", 10);
 			write(STDERR_FILENO, av[0], str_len(av[0]));
 			write(STDERR_FILENO, ": not a variable\n", 17);
 			if (buf1 != NULL)
