@@ -87,7 +87,7 @@ char is_alias_assignment(char *str, char **name_out, char **value_out)
 	i++;
 	for (; (str != NULL) && (*(str + i) != '\0'); i++)
 		value_len++;
-	if (name_out != NULL)
+	if ((name_out != NULL) && (is_assignment == TRUE))
 	{
 		*name_out = malloc(sizeof(char) * (name_len + 1));
 		if (*name_out != NULL)

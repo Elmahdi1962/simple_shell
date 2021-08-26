@@ -12,14 +12,12 @@ int sc_alias(int ac, char *av[])
 {
 	int i, n, exit_code = EC_SUCCESS;
 	alias_t **aliases = (ac == 0 ? get_aliases(&n) : NULL);
-	char *name, *value;
+	char *name = NULL, *value = NULL;
 
 	if (ac <= 0)
 	{
 		for (i = 0; i < n; i++)
-		{
 			print_alias((*(aliases + i))->name, (*(aliases + i))->value);
-		}
 	}
 	else
 	{
@@ -27,13 +25,19 @@ int sc_alias(int ac, char *av[])
 		{
 			if (is_alias_name(av[i]))
 			{
-				value = get_alias_value(av[i]);
-				print_alias(av[i], value);
-				exit_code = value == NULL ? EC_GENERAL_ERROR : exit_code;
+				print_alias(av[i], get_alias_value(av[i]));
+				if (!is_alias(av[i]))
+					exit_code = EC_GENERAL_ERROR;
 			}
 			else if (is_alias_assignment(av[i], &name, &value))
 			{
 				add_alias(name, value);
+				if (name != NULL)
+					free(name);
+				if (value != NULL)
+					free(value);
+				name = NULL;
+				value = NULL;
 			}
 			else
 			{
