@@ -37,13 +37,13 @@ int main(int ac, char *av[], char *envp[])
 	while (a < Cmd_Lines_Count)
 	{
 		print_prompt();
-		Cmd_Line = (File_Lines == NULL ? get_cmd_line() : File_Lines[a]);
+		Cmd_Line = (Is_Interactive == TRUE ? get_cmd_line() : File_Lines[a]);
 		add_to_history(Cmd_Line);
 		Cmd_List = parse_cmd_line(Cmd_Line);
 		execute_cmds_list(&Cmd_List, &Node_Exit_Code);
 		if (Cmd_List != NULL)
 			free_cmd_t(&Cmd_List);
-		if ((File_Lines == NULL) && (Cmd_Line != NULL))
+		if ((Is_Interactive == TRUE) && (Cmd_Line != NULL))
 		{
 			free(Cmd_Line);
 			Cmd_Line = NULL;
@@ -64,17 +64,20 @@ void init_shell(int ac, char *av[], char *envp[])
 {
 	int fd, i;
 
+	Is_Interactive = ((ac < 2) && isatty(STDIN_FILENO) ? TRUE : FALSE);
 	if (check_args(ac, av))
 	{
 		fd = open(av[1], O_RDONLY);
 		File_Lines = read_all_lines(fd, &Cmd_Lines_Count);
-		if (fd >= 0)
+		if ((fd >= 0))
 			close(fd);
 	}
 	else
 	{
 		Cmd_Lines_Count = 1;
 		File_Lines = NULL;
+		if (!isatty(STDIN_FILENO))
+			File_Lines = read_all_lines(STDIN_FILENO, &Cmd_Lines_Count);
 	}
 	for (i = 0; (envp != NULL) && (envp[i] != NULL); i++)
 	{
@@ -84,7 +87,6 @@ void init_shell(int ac, char *av[], char *envp[])
 	}
 	Exec_Name = str_copy(av[0]);
 	Shell_PID = getpid();
-	Is_Interactive = (!isatty(STDIN_FILENO) || (ac > 1) ? FALSE : TRUE);
 	signal(SIGINT, handle_signal);
 	Node_Exit_Code = 0;
 	manage_aliases(MO_INIT);
