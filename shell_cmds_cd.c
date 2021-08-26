@@ -29,6 +29,9 @@ int sc_cd(int ac, char *av[])
 		}
 		else
 		{
+			getcwd(pwd, PATH_MAX);
+			write(STDOUT_FILENO, pwd, str_len(pwd));
+			write(STDOUT_FILENO, "\n", 1);
 			add_env_var("PWD", pwd), add_env_var("OLDPWD", pwd);
 		}
 	}
