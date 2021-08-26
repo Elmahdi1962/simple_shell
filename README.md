@@ -54,3 +54,5 @@ Load the bash script into your BASH terminal using `source .bashrc`. This would 
 4. `install` - Installs the built version of the program
 5. `val` - Launches the program with **Valgrind** (should be used after **build_dbg**)
 6. `viewman` - Opens the man page for the program
+
+You can find the test suite [here](https://github.com/Elmahdi1962/0x16_Tests).

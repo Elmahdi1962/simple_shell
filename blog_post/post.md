@@ -50,3 +50,8 @@ To prevent the shell from terminating after executing the file using the **execv
 You can find the entire source code of the shell we made [here](https://medium.com/r/?url=https%3A%2F%2Fgithub.com%2FElmahdi1962%2Fsimple_shell) on GitHub. The shell performs some simple operations you would expect a shell to perform. It runs some built-in commands, performs variable expansions, executes programs and can read lines of commands from a text file.
 
 I hope this has given you a piece of short information on what you need to know before creating your own shell.
+
+## Shared URLS
+
++ [Medium](https://medium.com/@bezaleelolakunori/making-a-basic-unix-shell-70004f3167ae)
++ [LinkedIn](https://www.linkedin.com/posts/bezaleel-olakunori-34335513a_making-a-basic-unix-shell-activity-6836033361480351744-44vR)
