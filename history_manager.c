@@ -28,9 +28,10 @@ void manage_history(int op)
 		fd = open(file_path, O_RDONLY);
 		file_lines = read_all_lines(fd, &n);
 		Pos = 0;
+		Line_Num = 1;
 		if (file_lines != NULL)
 		{
-			Line_Num = n % HISTORY_SIZE;
+			Line_Num = (n + 1) % HISTORY_SIZE;
 			/* o = n - (n % HISTORY_SIZE); */
 			/* for (i = 0; i < n % HISTORY_SIZE; i++) */
 				/* add_to_history(*(file_lines + i + o)); */

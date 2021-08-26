@@ -1,0 +1,631 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo $_; help; echo $_; echo foo;echo $_
+exit
+
+
+
+
+
+
+exit
+exit
+exit e
+exit 5
+exit 4
+echo $ff
+echo $USER
+exit 45
+exit
+setenv test 2
+echo $test
+ds
+history
+exit 
+history
+exit 4
+history
+exit
+history
+exit
+echo $''?
+echo $''?
+exit 4
+exit 3
+exit fgg
+exit 12233333333
+exit
+exit
+exit
+setenv fgh 234
+$fgh
+echo $?
+echo $fgh
+unsetenv fgh
+echo $?
+echo $fgh
+exit 4
+cd 0x16_Tests
+exit s
+exit 2
+cd 0x16_Tests
+echo $PWD
+exit 2
+exit s
+exit 2
+ls --&&echo fortnox; echo -e "\e[41mGamma\e[0m"
+exit 34
+cd df
+cd $_
+cd ././
+echo $PWD
+cd -
+echo $OLDPWD
+cd ..
+echo $PWD
+cd -
+cd -
+cd -
+cd $HOME
+echo $PWD
+cd -
+exit 56
+setenv test 2
+echo $test
+setenv test 2
+echo $test
+echo fgo
+echo $fgh
+exit
+ls /var/run/sudo
+ls /usr/libexec /usr/config
+echo My shell is awe""some
+echo My shell is awe"  "some
+t
+r
+ls /var/run/sudo
+ls /usr/libexec /usr/config
+echo My shell is awe""some
+echo My shell is awe"  "some
+t
+r
+cd ./0x16_Tests
+cd ..
+cd /tmp
+cd "/tmp"
+cd -
+cd ~
+cd $HOME
+cd ./0x16_Tests/task-14.py
+cd .git
+cd
+cd ./././.. -
+cd 225566Foobar
+cd ./0x16_Tests ../
+cd /var/run/sudo
+cd ./0x16_Tests/task-14.py
+echo $?
+exit
+setenv test 2
+echo $test
+setenv test 2
+echo $test
+setenv test 2
+echo $test
+/home/b3zaleel/alx/test.txt
+exit
+/home/b3zaleel/alx/test.txt
+kj
+exit
+jk
+/home/b3zaleel/alx/test.txt
+exit
+/home/b3zaleel/alx/test.txt
+echo $?
+exit
+/home/b3zaleel/alx/test.txt
+kk
+echo $?
+/home/b3zaleel/alx/test.txt
+echo $?
+exit
+ls
+/home/b3zaleel/alx/test.txt:
+/home/b3zaleel/alx/test.txt
+/home/b3zaleel/alx/test.
+/home/b3zaleel/
+echo $PWD
+exit 5
+/home
+exit
+/g
+/fggd
+/home
+exit
+ls
+/bin/ls
+man bash
+exit 4
+ls
+exit
+man man
+echo -f
+exit 45
+exit 555555555555555555555555555555555555555555555555555555555555555555566666666666666666666666666666666
+exit -45
+exit 2147483648
+exit 2147483647
+exit 3
+exit 34567
+exit 4444444444444444
+exit
+eexit 4555555553334
+echo $?
+exit 45566666666666666
+echo $?
+exit
+./fg
+exit 4
+./dd
+exit
+./fg
+df
+ss
+fgg
+exit
+./mm
+exit
+./kkk
+exit
+./lk
+exit
+./lk
+/home/b3zaleel/alx/test.txt
+echo $?
+exit $?
+./fgfsefs
+exit
+/
+exit
+/
+exit
+/
+0x16_Tests/test_runner.py
+echo $?
+exit
+/
+/home
+exit
+../open_in_wsl
+exit
+../simple_shel
+../simple_shell
+setenv PS1 ":) "
+sh
+unsetenv PS1
+sh
+setenv PS1 ":) "
+exit
+cd 0x16_Tests
+exit
+echo $PWD
+cd 0x16_Tests
+cd -
+exit
+cd -
+echo $PWD
+cd -
+echo $PWD
+cd gh
+cd /var/run/sudo
+echo $PWD
+echo $OLDPWD
+setenv OLDPWD 
+exit 6
+setenv OLDPWD
+echo $OLDPWD
+echo $PWD
+cd ../
+echo $PWD
+echo $OLDPWD
+bash
+echo $?
+exit
+ echo $foo ; exit 3; echo $HOME
+cd ../;echo $PWD; cd -;echo $PWD
+exit 45
+cd /usr
+ls
+sh
+cd /home/b3zaleel/alx
+echo $PWD
+ls -l
+cd test
+cd ..
+chmod u-x test
+cd test
+ls -l
+exit 5
+cd .git
+echo $PWD
+echo ~
+exit
+setenv PATH
+echo $PATH
+ls
+exit
+echo foo
+exit
+exit +54
+exit +45
+exit 45
+exit +45
+exit +45
+exit ++45
+exit +-45
+exit -45
+exit +45+
+exit
+exit 45+
+exit ++
+echo $?
+exit
+exit 21474836478
+exit 0000000000000000000044
+exit
+exit 0000000000000000000044
+exit +
+exit ++
+exit +-2
+exit -23
+exit ++2
+exit 222222222222222222222333333333
+exit 2147483648
+exit 2147483647
+echo foo
+exit 34
+gk
+sjsdn fdd;56
+./././fd
+./.git
+sh
+echo $?
+\
+\fffgf
+history
+/..
+/..45
+/bin/ls
+exit
+/bin/kd
+ls
+;j
+exit
+cd main.h
+echo $?
+exit
+\m
+/ls
+ls
+/home
+ls /home
+echo hh
+echo PATH
+exit
+pwd
+$PATH
+echo f
+exit
+gh
+ls
+pwd
+cd -
+cd -
+exit
+emacs
+fg
+ls -l
+exit 56
+alias put=echo
+exit
+alias pt
+alias pt=echo
+pt fgh
+exit
+ls /var/run/sudo
+ls /usr/libexec /usr/config
+echo My shell is awe""some
+echo My shell is awe"  "some
+t
+r
+exit
+"exit"
+'exit'
+env
+"env"
+'env'
+exit foo
+exit 124
+exit 2345667
+exit 256
+exit 258
+exit 22 bar
+exit bar 35
+"exit" 27
+'exit' 27
+'exit ' 27
+'exit;' 27
+cd ./0x16_Tests
+cd ..
+cd /tmp
+cd "/tmp"
+cd -
+cd ~
+cd $HOME
+cd ./0x16_Tests/task-14.py
+cd .git
+cd
+cd ./././.. -
+cd 225566Foobar
+cd ./0x16_Tests ../
+cd /var/run/sudo
+; echo foo
+echo HOME;
+echo HOME; ;
+ls ;56
+ls ';56'
+ls /sdfdf; ls /usr; ls /.3455; ls /usr/games
+echo Hello && echo World
+||ls main.h
+ls && echo coop
+echo Hello "&& echo World"
+|ls main.h
+& echo coop
+echo $HOME
+echo $_
+ls /usr/main-- ; echo $?;
+cat $ ./ || echo $?
+echo $$
+echo "$$"
+echo $$ && echo $?
+setenv me whoami; echo $me
+l
+#
+a
+help
+help alias
+help cd
+help env
+help exit
+help help
+help history
+help setenv
+help unsetenv
+help foobar
+help cd alias
+history
+"history"
+'history'
+history 34
+kl
+exit
+exit
+/bin/ls
+/bin/ls
+exit
+/bin/ls
+/bin/ls
+/bin/ls
+/bin/ls
+/bin/ls
+/bin/ls
+op
+exit -98
+exit
+f
+dss
+exit
+/bin/ls
+/bin/ls
+/bin/ls
+exit HBTN
+setenv HBTN
+env
+exit -5
+exit -98
+exit
+cd /hbtn
+/bin/pwd
+cd /hbtn
+/bin/pwd
+alias alias1=ls alias2 alias3=echo
+echo $?
+exit
+alias alias1=ls alias2 alias3=echo
+alias
+alias3 rtg
+exit
+alias alias1=ls alias2 alias3=echo
+echo $?
+alias TEST_OVERWRITE=b
+alias TEST_OVERWRITE=hbtn
+alias
+alias alias1=/bin/ls alias1=/bin/echo alias1=/bin/pwd
+alias
+exit
+alias alias1=/bin/ls alias1=/bin/echo alias1=/bin/pwd
+alias
+exit
+alias dfg=
+alias
+dfg echo fgh
+exit
