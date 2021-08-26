@@ -29,9 +29,10 @@ void manage_history(int op)
 		file_lines = read_all_lines(fd, &n);
 		Pos = 0;
 		Line_Num = 1;
+		Is_Full = FALSE;
 		if (file_lines != NULL)
 		{
-			Line_Num = (n + 1) % HISTORY_SIZE;
+			Line_Num = n % HISTORY_SIZE;
 			/* o = n - (n % HISTORY_SIZE); */
 			/* for (i = 0; i < n % HISTORY_SIZE; i++) */
 				/* add_to_history(*(file_lines + i + o)); */
@@ -121,5 +122,5 @@ char **get_history(int *size)
  */
 int get_line_num(void)
 {
-	return (Line_Num);
+	return (Line_Num + 1);
 }
