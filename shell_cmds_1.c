@@ -53,7 +53,8 @@ int sc_setenv(int ac, char *av[])
 	{
 		if (is_variable(av[0]))
 		{
-			add_env_var(av[0], ac > 1 ? av[1] : "");
+			if (ac > 1)
+				add_env_var(av[0], av[1]);
 			return (EC_SUCCESS);
 		}
 		else
