@@ -7,7 +7,7 @@ static char **Cmd_History;
 /* Specifies if the history buffer is full. If TRUE, command_strings */
 /* in the buffer would be replaced by newer commands */
 static char Is_Full;
-/* The current line number of the shell program */
+/* The first line number in the history file */
 static int Line_Num;
 static int Pos;
 
@@ -28,14 +28,10 @@ void manage_history(int op)
 		fd = open(file_path, O_RDONLY);
 		file_lines = read_all_lines(fd, &n);
 		Pos = 0;
-		Line_Num = 0;
 		Is_Full = FALSE;
 		if (file_lines != NULL)
 		{
-			Pos = n % HISTORY_SIZE;
-			/* o = n - (n % HISTORY_SIZE); */
-			/* for (i = 0; i < n % HISTORY_SIZE; i++) */
-				/* add_to_history(*(file_lines + i + o)); */
+			Line_Num = n % HISTORY_SIZE;
 			free_array(file_lines, n);
 		}
 		if (file_path != NULL)
@@ -87,6 +83,7 @@ void save_history(void)
 	int fd, i;
 	char *file_path = NULL;
 
+	return;
 	file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
 	fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT, 0777);
 	if (fd >= 0)
