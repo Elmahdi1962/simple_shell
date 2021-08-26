@@ -3,6 +3,7 @@
 /**
  * is_valid_uint - Checks if the given string is a valid unsigned integer
  * @str: The string to check
+ * @res_out: The pointer to the output number
  *
  * Return: TRUE or FALSE
  */

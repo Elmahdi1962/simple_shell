@@ -18,10 +18,6 @@ int str_to_int(const char *num)
 		{
 			res *= -1;
 		}
-		else if ((*(num + i) == '+') && (i == 0))
-		{
-			
-		}
 		else if (is_digit(*(num + i)))
 		{
 			res += (*(num + i) - '0') * exp;
