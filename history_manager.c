@@ -28,11 +28,11 @@ void manage_history(int op)
 		fd = open(file_path, O_RDONLY);
 		file_lines = read_all_lines(fd, &n);
 		Pos = 0;
-		Line_Num = 1;
+		Line_Num = 0;
 		Is_Full = FALSE;
 		if (file_lines != NULL)
 		{
-			Line_Num = n % HISTORY_SIZE;
+			Pos = n % HISTORY_SIZE;
 			/* o = n - (n % HISTORY_SIZE); */
 			/* for (i = 0; i < n % HISTORY_SIZE; i++) */
 				/* add_to_history(*(file_lines + i + o)); */
@@ -66,7 +66,8 @@ void add_to_history(char *str)
 {
 	int size = Is_Full ? HISTORY_SIZE : Pos;
 
-	if (str == NULL)
+	Line_Num++;
+	if ((str == NULL) || (str_len(str) == 0))
 		return;
 	Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
 		sizeof(void *) * (size + 1));
@@ -76,7 +77,6 @@ void add_to_history(char *str)
 	Is_Full = Is_Full ? Is_Full : (Pos + 1 == HISTORY_SIZE ? TRUE : FALSE);
 	Pos = ((Pos + 1) % HISTORY_SIZE);
 	/* Line_Num = ((Line_Num + 1) % HISTORY_SIZE); */
-	Line_Num++;
 }
 
 /**
@@ -122,5 +122,5 @@ char **get_history(int *size)
  */
 int get_line_num(void)
 {
-	return (Line_Num + 1);
+	return (Line_Num);
 }

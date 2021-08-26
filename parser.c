@@ -74,7 +74,7 @@ void process_commands_separator(proc_tbl_t *proc_tbl)
 	tmp_tkn = get_token_at_index(proc_tbl->pos - 1, proc_tbl->tokens_list);
 	if ((tmp_tkn == NULL) || (tmp_tkn->type != TKN_WORD))
 	{
-		line_num = long_to_str(get_line_num());
+		line_num = long_to_str(*((int *)get_shell_prop(LINE_NUMBER_ID)));
 		write(STDERR_FILENO, prog_name, str_len(prog_name));
 		write(STDERR_FILENO, ": ", 2);
 		if (line_num != NULL)
@@ -107,7 +107,7 @@ void process_operator(proc_tbl_t *proc_tbl)
 	tmp_tkn = get_token_at_index(proc_tbl->pos - 1, proc_tbl->tokens_list);
 	if ((tmp_tkn == NULL) || (tmp_tkn->type != TKN_WORD))
 	{
-		line_num = long_to_str(get_line_num());
+		line_num = long_to_str(*((int *)get_shell_prop(LINE_NUMBER_ID)));
 		write(STDERR_FILENO, prog_name, str_len(prog_name));
 		write(STDERR_FILENO, ": ", 2);
 		if (line_num != NULL)

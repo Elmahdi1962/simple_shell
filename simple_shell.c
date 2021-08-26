@@ -4,6 +4,8 @@
 static char **Envp;
 /* The number of environment variable in this shell program */
 static int Envp_Count;
+/* The current line number in this shell program */
+static int Line_Num;
 /* The name of the current instance of this shell program */
 static char *Exec_Name;
 /* The process ID of the current instance of this shell program */
@@ -39,6 +41,7 @@ int main(int ac, char *av[], char *envp[])
 		print_prompt();
 		Cmd_Line = (Is_Interactive == TRUE ? get_cmd_line() : File_Lines[a]);
 		add_to_history(Cmd_Line);
+		Line_Num++;
 		Cmd_List = parse_cmd_line(Cmd_Line);
 		execute_cmds_list(&Cmd_List, &Node_Exit_Code);
 		if (Cmd_List != NULL)
@@ -85,6 +88,7 @@ void init_shell(int ac, char *av[], char *envp[])
 		*(Envp + i) = str_copy(envp[i]);
 		Envp_Count++;
 	}
+	Line_Num = 0;
 	Exec_Name = str_copy(av[0]);
 	Shell_PID = getpid();
 	signal(SIGINT, handle_signal);
@@ -107,6 +111,8 @@ void *get_shell_prop(char prop_id)
 		return (&Envp);
 	case ENVP_COUNT_ID:
 		return (&Envp_Count);
+	case LINE_NUMBER_ID:
+		return (&Line_Num);
 	case EXEC_NAME_ID:
 		return (&Exec_Name);
 	case SHELL_PID_ID:

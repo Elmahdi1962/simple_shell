@@ -4,6 +4,7 @@
  * enum Shell_Prop_Ids - Consists of the shell's property ids
  * @ENVP_ID: The prop id for the shell's environment variables
  * @ENVP_COUNT_ID: The prop id for the shell's environment variables count
+ * @LINE_NUMBER_ID: The current line number in the shell program
  * @EXEC_NAME_ID: The prop id for the shell's given executale file name
  * @SHELL_PID_ID: The prop id for the shell's process identifier
  * @NODE_EXIT_CODE_ID: The prop id for the last executed command's exit code
@@ -15,6 +16,8 @@ enum Shell_Prop_Ids
 	ENVP_ID = 0,
 	/* The prop id for the shell's environment variables count */
 	ENVP_COUNT_ID = 1,
+	/* The current line number in the shell program */
+	LINE_NUMBER_ID = 2,
 	/* The prop id for the shell's given executale file name */
 	EXEC_NAME_ID = 6,
 	/* The prop id for the shell's process identifier */

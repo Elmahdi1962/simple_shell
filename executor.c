@@ -28,7 +28,7 @@ void execute_cmds_list(cmd_t **cmds_list, uchar_t *exit_code)
 		else
 		{
 			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
-			buf1 = long_to_str(get_line_num());
+			buf1 = long_to_str(*((int *)get_shell_prop(LINE_NUMBER_ID)));
 			err_type = (stat(cur->command, &path_stat) == 0)
 				&& (S_ISDIR(path_stat.st_mode) || (access(cur->command, X_OK) == -1));
 			write(STDERR_FILENO, buf0, str_len(buf0));
@@ -97,7 +97,7 @@ int exec_program(cmd_t *node, char *program_path)
 	if (rc < 0)
 	{
 		buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
-		buf1 = long_to_str(get_line_num());
+		buf1 = long_to_str(*((int *)get_shell_prop(LINE_NUMBER_ID)));
 		write(STDERR_FILENO, buf0, str_len(buf0));
 		write(STDERR_FILENO, ": ", 2);
 		write(STDERR_FILENO, buf1, str_len(buf1));

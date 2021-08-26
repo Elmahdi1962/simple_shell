@@ -138,7 +138,7 @@ void print_error(char *command_name, char *userinput, char *error_message)
 	char line_number[5];
 	int number_len;
 
-	_itoa(get_line_num(), line_number, 10);
+	_itoa(*((int *)get_shell_prop(LINE_NUMBER_ID)), line_number, 10);
 	number_len = str_len(line_number);
 
 	write(STDERR_FILENO, shell_name, str_len(shell_name));

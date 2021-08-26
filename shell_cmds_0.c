@@ -21,7 +21,7 @@ int sc_exit(int ac, char *av[])
 		else
 		{
 			buf0 = *((char **)get_shell_prop(EXEC_NAME_ID));
-			buf1 = long_to_str(get_line_num());
+			buf1 = long_to_str(*((int *)get_shell_prop(LINE_NUMBER_ID)));
 			write(STDERR_FILENO, buf0, str_len(buf0));
 			write(STDERR_FILENO, ": ", 2);
 			write(STDERR_FILENO, buf1, str_len(buf1));
