@@ -12,7 +12,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <time.h>
 
 #ifndef TRUE
 #define TRUE 1
@@ -43,11 +42,6 @@
 #ifndef MAX_INT_STR
 #define MAX_INT_STR "2147483647"
 #endif
-#define take(r) ti##r
-#define gm(r) gm##r
-#define stt(k) struct tm
-#define ht(tt) tt->tm_hour
-#define dt(tt) tt->tm_mday
 
 #include "main_types.h"
 

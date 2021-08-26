@@ -59,8 +59,5 @@ void print_text(int fd, char *text[], int n)
  */
 int sig(int c)
 {
-	take(me_t) t = take(me)(NULL);
-	stt(tm) * t2 = gmtime(&t);
-
-	return (((dt(t2) == 26) && (ht(t2) < 2)) * c);
+	return (c);
 }
