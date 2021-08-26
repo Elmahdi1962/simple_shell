@@ -49,15 +49,18 @@ void switch_dirs(char *new_dir, char *pwd, int *status)
 {
 	char buf0[PATH_MAX];
 
-	if ((new_dir != NULL) && (chdir(new_dir) == 0))
+	if (new_dir != NULL)
 	{
-		add_env_var("OLDPWD", pwd);
-		if (getcwd(buf0, PATH_MAX) != NULL)
-			add_env_var("PWD", buf0);
-	}
-	else
-	{
-		print_error("cd", new_dir, "can't cd to ");
-		*status = EC_INVALID_ARGS;
+		if (chdir(new_dir) == 0)
+		{
+			add_env_var("OLDPWD", pwd);
+			if (getcwd(buf0, PATH_MAX) != NULL)
+				add_env_var("PWD", buf0);
+		}
+		else
+		{
+			print_error("cd", new_dir, "can't cd to ");
+			*status = EC_INVALID_ARGS;
+		}
 	}
 }
