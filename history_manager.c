@@ -65,20 +65,21 @@ void add_to_history(char *str)
 {
 	int size = Is_Full ? HISTORY_SIZE : Pos;
 
-	if ((str == NULL) || (str_len(str) == 0))
-		return;
-	if (Is_Full)
+	if ((str != NULL) && (str_len(str) > 0))
 	{
-		free(*(Cmd_History + Pos));
+		if (Is_Full)
+		{
+			free(*(Cmd_History + Pos));
+		}
+		else
+		{
+			Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
+				sizeof(void *) * (size + 1));
+		}
+		*(Cmd_History + Pos) = str_copy(str);
+		Is_Full = Is_Full ? Is_Full : (Pos + 1 == HISTORY_SIZE ? TRUE : FALSE);
+		Pos = ((Pos + 1) % HISTORY_SIZE);
 	}
-	else
-	{
-		Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
-			sizeof(void *) * (size + 1));
-	}
-	*(Cmd_History + Pos) = str_copy(str);
-	Is_Full = Is_Full ? Is_Full : (Pos + 1 == HISTORY_SIZE ? TRUE : FALSE);
-	Pos = ((Pos + 1) % HISTORY_SIZE);
 }
 
 /**
@@ -90,7 +91,7 @@ void save_history(void)
 	char *file_path = NULL;
 
 	file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
-	fd = open(file_path, O_RDWR | O_APPEND | O_CREAT, 0777);
+	fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT, 0777);
 	if (fd >= 0)
 	{
 		for (i = 0; i < (Is_Full ? HISTORY_SIZE : Pos); i++)
