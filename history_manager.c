@@ -7,8 +7,9 @@ static char **Cmd_History;
 /* Specifies if the history buffer is full. If TRUE, command_strings */
 /* in the buffer would be replaced by newer commands */
 static char Is_Full;
-/* The first line number in the history file */
-static int Line_Num;
+/* The first line number for storing commands in the history file */
+static int First_Line_Num;
+/* The current position in the history block */
 static int Pos;
 
 /**
@@ -31,7 +32,9 @@ void manage_history(int op)
 		Is_Full = FALSE;
 		if (file_lines != NULL)
 		{
-			Line_Num = n % HISTORY_SIZE;
+			First_Line_Num = n % HISTORY_SIZE;
+			for (i = 0; i < n; i++)
+				add_to_history(*(file_lines + i));
 			free_array(file_lines, n);
 		}
 		if (file_path != NULL)
@@ -62,17 +65,20 @@ void add_to_history(char *str)
 {
 	int size = Is_Full ? HISTORY_SIZE : Pos;
 
-	Line_Num++;
 	if ((str == NULL) || (str_len(str) == 0))
 		return;
-	Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
-		sizeof(void *) * (size + 1));
 	if (Is_Full)
+	{
 		free(*(Cmd_History + Pos));
+	}
+	else
+	{
+		Cmd_History = _realloc(Cmd_History, sizeof(void *) * size,
+			sizeof(void *) * (size + 1));
+	}
 	*(Cmd_History + Pos) = str_copy(str);
 	Is_Full = Is_Full ? Is_Full : (Pos + 1 == HISTORY_SIZE ? TRUE : FALSE);
 	Pos = ((Pos + 1) % HISTORY_SIZE);
-	/* Line_Num = ((Line_Num + 1) % HISTORY_SIZE); */
 }
 
 /**
@@ -83,9 +89,8 @@ void save_history(void)
 	int fd, i;
 	char *file_path = NULL;
 
-	return;
 	file_path = str_cat(get_env_var("HOME"), HISTORY_FILE, FALSE);
-	fd = open(file_path, O_RDWR | O_TRUNC | O_CREAT, 0777);
+	fd = open(file_path, O_RDWR | O_APPEND | O_CREAT, 0777);
 	if (fd >= 0)
 	{
 		for (i = 0; i < (Is_Full ? HISTORY_SIZE : Pos); i++)
@@ -110,14 +115,4 @@ char **get_history(int *size)
 	if (size != NULL)
 		*size = (Is_Full ? HISTORY_SIZE : Pos);
 	return (Cmd_History);
-}
-
-/**
- * get_line_num - Retrieves this shell's current line number
- *
- * Return: The current line number of the shell
- */
-int get_line_num(void)
-{
-	return (Line_Num);
 }

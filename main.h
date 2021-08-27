@@ -70,7 +70,6 @@ void manage_history(int op);
 void add_to_history(char *str);
 void save_history(void);
 char **get_history(int *size);
-int get_line_num(void);
 /* ******** ---------------- ******** */
 
 /* ******** Environment Variable Helpers (env_var_helpers.c) ******** */
