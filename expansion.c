@@ -115,7 +115,7 @@ void expand_tilde(char *str, size_t *i, char **res, size_t *j, size_t *size)
  * expand_variable - Expands a variable
  * @str: The string containing the variable
  * @i: The pointer to the current position in the string
- * @res: The pointer to the expandion buffer
+ * @res: The pointer to the expansion buffer
  * @j: The pointer to the new buffer's index
  * @size: The pointer to the new buffer's size
  */
@@ -138,7 +138,8 @@ void expand_variable(char *str, size_t *i, char **res, size_t *j, size_t *size)
 	{
 		/* allocate space for extra data */
 		*res = _realloc(*res, sizeof(char) * *size,
-			sizeof(char) * (*size + (*j + val_len - *size)));
+			sizeof(char) * (*j + val_len));
+		*size = *j + val_len;
 	}
 	for (k = 0; k < val_len; k++)
 	{
