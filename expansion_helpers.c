@@ -14,18 +14,19 @@ char *read_variable(char *str, int pos)
 
 	while (*(str + i) != '\0')
 	{
-		if (((*(str + i) == '$') && (i == pos))
-			|| ((*(str + i) == '?') && (i == pos)))
+		if (is_digit(*(str + i))
+			|| is_letter(*(str + i))
+			|| (*(str + i) == '_'))
 		{
+			if (is_digit(*(str + pos)) && !is_digit(*(str + i)))
+				break;
 			i++;
+		}
+		else
+		{
+			i += (i > pos ? 0 : 1);
 			break;
 		}
-		else if ((is_digit(*(str + i)) && (i > pos))
-			|| (is_letter(*(str + i)))
-			|| (*(str + i) == '_'))
-			i++;
-		else
-			break;
 	}
 	len = i - pos;
 	var = len > 0 ? malloc(sizeof(char) * (len + 1)) : NULL;
