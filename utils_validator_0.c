@@ -51,7 +51,8 @@ char is_quote(char c)
 }
 
 /**
- * is_variable_expandible - Checks if a variable in the string can be expanded
+ * is_variable_expandible - Checks if the next character after the variable
+ * insertion character ($) in the string can be expanded
  * @str: The source string
  * @pos: The current position in the string
  * @quote: The active quote character in the string
@@ -61,14 +62,23 @@ char is_quote(char c)
  */
 char is_variable_expandible(char *str, int pos, char quote, char quote_o)
 {
+	char extra_expansion_chars[] = "$?-*!";
+	char next_char;
+	int i;
+
 	if (str == NULL)
 		return (FALSE);
-	if (((quote == '"') && (quote_o == TRUE)) || (quote_o == FALSE))
+	if ((*(str + pos + 1) != '\0')
+		&& (((quote == '"') && (quote_o == TRUE)) || (quote_o == FALSE)))
 	{
-		if ((*(str + pos + 1) == '$')
-			|| (*(str + pos + 1) == '?')
-			|| (*(str + pos + 1) == '_')
-			|| is_letter(*(str + pos + 1)))
+		next_char = *(str + pos + 1);
+		for (i = 0; extra_expansion_chars[i] != '\0'; i++)
+		{
+			if (next_char == extra_expansion_chars[i])
+				return (TRUE);
+		}
+		if (is_digit(next_char)
+			|| is_letter(next_char))
 			return (TRUE);
 	}
 	return (FALSE);
