@@ -1,15 +1,4 @@
 #!/bin/bash
-
-#region Prompt Modifier
-branch_test=`git branch`
-if [[ ${#branch_test} > 0 ]]; then
-	export PS1='\[\033]0;$TITLEPREFIX:$PWD\007\]\n\[\033[32m\]\u@PC \[\033[33m\]${PWD##*/}\[\033[36m\] (`git branch | cut -c 3-`)\[\033[0m\]\n$ '
-else
-	export PS1='\[\033]0;$TITLEPREFIX:$PWD\007\]\n\[\033[32m\]\u@PC \[\033[33m\]${PWD##*/}\[\033[36m\]\[\033[0m\]\n$ '
-fi
-# export PS1='$PWD \\n$ '
-#endregion
-
 #region Helper Functions
 SHELL_NAME="simple_shell"
 
