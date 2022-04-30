@@ -47,8 +47,7 @@ consisting only of alphanumeric characters and underscores, and beginning with a
 A
 .I token
 that performs a control function. It is one of the
-following symbols:
-.if t \fB|| && ; <newline>
+following symbols: \fB || && ;
 
 .SH SHELL GRAMMAR
 .SS Simple Commands
